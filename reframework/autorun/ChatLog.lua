@@ -1,31 +1,34 @@
 -- local MessageLanguageIndex         = sdk.find_type_definition("via.gui.GUISystem"):get_method("get_MessageLanguage()"):call(nil)
 
 -- Skill list
-local Pl_EquipSkill                = {}
+local function init()
+    Pl_EquipSkill_001 = false
+    Pl_EquipSkill_002 = false
+    Pl_EquipSkill_003 = false
+    Pl_EquipSkill_004 = false
+    Pl_EquipSkill_008 = false
+    Pl_EquipSkill_009 = { false }
+    Pl_EquipSkill_036 = false
+    Pl_EquipSkill_042 = false
+    Pl_EquipSkill_056 = false -- TODO
+    Pl_EquipSkill_090 = false
+    Pl_EquipSkill_091 = false -- TODO
+    Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
+    Pl_EquipSkill_105 = false
+    Pl_EquipSkill_204 = false
+    Pl_EquipSkill_206 = false
+    Pl_EquipSkill_207 = false -- TODO ?
+    Pl_EquipSkill_208 = false
+    Pl_EquipSkill_220 = false -- TODO
+    Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
+    Pl_EquipSkill_224 = false
+    Pl_EquipSkill_228 = false -- TODO
+    Pl_EquipSkill_231 = false
+    Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
+    Reset             = false
+end
 
-local Pl_EquipSkill_001            = false
-local Pl_EquipSkill_002            = false
-local Pl_EquipSkill_003            = false
-local Pl_EquipSkill_004            = false
-local Pl_EquipSkill_008            = false
-local Pl_EquipSkill_009            = { false }
-local Pl_EquipSkill_036            = false
-local Pl_EquipSkill_042            = false
-local Pl_EquipSkill_056            = false -- TODO
-local Pl_EquipSkill_090            = false
-local Pl_EquipSkill_091            = false -- TODO
-local Pl_EquipSkill_102            = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
-local Pl_EquipSkill_105            = false
-local Pl_EquipSkill_204            = false
-local Pl_EquipSkill_206            = false
-local Pl_EquipSkill_207            = false -- TODO ?
-local Pl_EquipSkill_208            = false
-local Pl_EquipSkill_220            = false -- TODO
-local Pl_EquipSkill_221            = { false, { 300, 480, 720 } }
-local Pl_EquipSkill_224            = false
-local Pl_EquipSkill_228            = false -- TODO
-local Pl_EquipSkill_231            = false
-local Pl_EquipSkill_232            = { false, { 1800, 3600, 5400 } }
+local Pl_EquipSkill                = {}
 
 local GUI_COMMON_MEAL_SKILL_NOTICE = 2030472943
 
@@ -37,6 +40,10 @@ local getGuidByName                = guiMessage:get_method("getGuidByName")
 local Guid                         = {}
 Guid[1]                            = getGuidByName:call(nil, "ChatLog_Pl_Skill_01")
 Guid[2]                            = getGuidByName:call(nil, "ChatLog_Pl_Skill_02")
+Guid[3]                            = getGuidByName:call(nil, "ChatLog_Ot_Skill_01")
+Guid[4]                            = getGuidByName:call(nil, "ChatLog_Ot_Skill_02")
+Guid[5]                            = getGuidByName:call(nil, "ChatLog_Ot_Skill_03")
+Guid[6]                            = getGuidByName:call(nil, "ChatLog_Co_Skill_01")
 local message                      = guiMessage:get_method("get(System.Guid)")
 
 
@@ -51,26 +58,21 @@ end
 
 local function SkillMessage()
     local playerManager = sdk.get_managed_singleton("snow.player.PlayerManager")
-    if not playerManager then return end
-
     local playerItem = playerManager:call("get_RefItemParameter()")
-    if not playerItem then return end
-
     local playerID = playerManager:call("getMasterPlayerID")
-    if not playerID or playerID > 4 then return end
-
     local player = playerManager:get_field("PlayerListPrivate"):call("get_Item", playerID)
-    if not player then return end
-
-    if not player:get_type_definition():is_a("snow.player.PlayerQuestBase") then return end
     local playerData = playerManager:call("get_PlayerData"):call("get_Item", playerID)
-    if not playerData then return end
-
     local playerBase = playerManager:call("getPlayer", playerID)
-    if not playerBase then return end
-
     local playerSkillList = playerManager:call("get_PlayerSkill()"):call("get_Item", playerID)
-    if not playerSkillList then return end
+
+    if not playerManager or not playerItem or not playerID or playerID > 4 or not player or not player:get_type_definition():is_a("snow.player.PlayerQuestBase") or not playerData or not playerBase or not playerSkillList then
+        if Reset then
+            init()
+        end
+        return
+    else
+        Reset = true
+    end
 
 
     for i = 1, 146 do
