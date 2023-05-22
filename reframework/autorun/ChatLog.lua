@@ -2,30 +2,32 @@
 
 -- Skill list
 local function init()
-    Pl_EquipSkill_001 = false
-    Pl_EquipSkill_002 = false
-    Pl_EquipSkill_003 = false
-    Pl_EquipSkill_004 = false
-    Pl_EquipSkill_008 = false
-    Pl_EquipSkill_009 = { false }
-    Pl_EquipSkill_036 = false
-    Pl_EquipSkill_042 = false
-    Pl_EquipSkill_056 = false -- TODO
-    Pl_EquipSkill_090 = false
-    Pl_EquipSkill_091 = false -- TODO
-    Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
-    Pl_EquipSkill_105 = false
-    Pl_EquipSkill_204 = false
-    Pl_EquipSkill_206 = false
-    Pl_EquipSkill_207 = false -- TODO ?
-    Pl_EquipSkill_208 = false
-    Pl_EquipSkill_220 = false -- TODO
-    Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
-    Pl_EquipSkill_224 = false
-    Pl_EquipSkill_228 = false -- TODO
-    Pl_EquipSkill_231 = false
-    Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
-    Reset             = false
+    if Reset then
+        Pl_EquipSkill_001 = false
+        Pl_EquipSkill_002 = false
+        Pl_EquipSkill_003 = false
+        Pl_EquipSkill_004 = false
+        Pl_EquipSkill_008 = false
+        Pl_EquipSkill_009 = { false }
+        Pl_EquipSkill_036 = false
+        Pl_EquipSkill_042 = false
+        Pl_EquipSkill_056 = false -- TODO
+        Pl_EquipSkill_090 = false
+        Pl_EquipSkill_091 = false -- TODO
+        Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
+        Pl_EquipSkill_105 = false
+        Pl_EquipSkill_204 = false
+        Pl_EquipSkill_206 = false
+        Pl_EquipSkill_207 = false -- TODO ?
+        Pl_EquipSkill_208 = false
+        Pl_EquipSkill_215 = false
+        Pl_EquipSkill_220 = false -- TODO
+        Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
+        Pl_EquipSkill_224 = false
+        Pl_EquipSkill_231 = false
+        Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
+        Reset             = false
+    end
 end
 
 local Pl_EquipSkill                = {}
@@ -33,18 +35,20 @@ local Pl_EquipSkill                = {}
 local GUI_COMMON_MEAL_SKILL_NOTICE = 2030472943
 
 local getSkillName                 = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlEquipSkillId)")
-local chatManager                  = sdk.get_managed_singleton("snow.gui.ChatManager")
+local function getChatManager()
+    return sdk.get_managed_singleton("snow.gui.ChatManager")
+end
 
-local guiMessage                   = sdk.find_type_definition("via.gui.message")
-local getGuidByName                = guiMessage:get_method("getGuidByName")
-local Guid                         = {}
-Guid[1]                            = getGuidByName:call(nil, "ChatLog_Pl_Skill_01")
-Guid[2]                            = getGuidByName:call(nil, "ChatLog_Pl_Skill_02")
-Guid[3]                            = getGuidByName:call(nil, "ChatLog_Ot_Skill_01")
-Guid[4]                            = getGuidByName:call(nil, "ChatLog_Ot_Skill_02")
-Guid[5]                            = getGuidByName:call(nil, "ChatLog_Ot_Skill_03")
-Guid[6]                            = getGuidByName:call(nil, "ChatLog_Co_Skill_01")
-local message                      = guiMessage:get_method("get(System.Guid)")
+local guiMessage    = sdk.find_type_definition("via.gui.message")
+local getGuidByName = guiMessage:get_method("getGuidByName")
+local Guid          = {}
+Guid[1]             = getGuidByName:call(nil, "ChatLog_Pl_Skill_01")
+Guid[2]             = getGuidByName:call(nil, "ChatLog_Pl_Skill_02")
+Guid[3]             = getGuidByName:call(nil, "ChatLog_Ot_Skill_01")
+Guid[4]             = getGuidByName:call(nil, "ChatLog_Ot_Skill_02")
+Guid[5]             = getGuidByName:call(nil, "ChatLog_Ot_Skill_03")
+Guid[6]             = getGuidByName:call(nil, "ChatLog_Co_Skill_01")
+local message       = guiMessage:get_method("get(System.Guid)")
 
 
 local function AddChatInfomation(skillID, isSActiveSkill)
@@ -53,58 +57,73 @@ local function AddChatInfomation(skillID, isSActiveSkill)
     elseif not isSActiveSkill then
         ChatLog = message:call(nil, Guid[2])
     end
-    chatManager:call("reqAddChatInfomation", string.gsub(ChatLog, "{0}", getSkillName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
+    getChatManager():call("reqAddChatInfomation", string.gsub(ChatLog, "{0}", getSkillName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
 end
 
 local function SkillMessage()
     local playerManager = sdk.get_managed_singleton("snow.player.PlayerManager")
-    local playerItem = playerManager:call("get_RefItemParameter()")
+
+    if not playerManager or not playerManager:call("get_RefItemParameter()") then
+        init()
+        return
+    end
+
     local playerID = playerManager:call("getMasterPlayerID")
+
+    if not playerID or playerID > 4 then
+        init()
+        return
+    end
+
     local player = playerManager:get_field("PlayerListPrivate"):call("get_Item", playerID)
+
+    if not player or not player:get_type_definition():is_a("snow.player.PlayerQuestBase") then
+        init()
+        return
+    end
+
     local playerData = playerManager:call("get_PlayerData"):call("get_Item", playerID)
     local playerBase = playerManager:call("getPlayer", playerID)
     local playerSkillList = playerManager:call("get_PlayerSkill()"):call("get_Item", playerID)
 
-    if not playerManager or not playerItem or not playerID or playerID > 4 or not player or not player:get_type_definition():is_a("snow.player.PlayerQuestBase") or not playerData or not playerBase or not playerSkillList then
-        if Reset then
-            init()
-        end
+    if not playerData or not playerBase or not playerSkillList then
+        init()
         return
-    else
-        Reset = true
     end
 
+    Reset = true
 
     for i = 1, 146 do
         Pl_EquipSkill[i] = playerSkillList:call("getSkillData", i)
     end
 
     -- Player
-    local playerHealth                = playerData:call("get_vital()")      -- System.Int32
-    local playerMaxHealth             = player:call("getVitalMax()")        -- System.Int32
-    local playerRawRedHealth          = playerData:get_field("_r_Vital")
-    local playerRedHealth             = player:call("getRedVital()")        -- System.Int32
+    local playerHealth                 = playerData:call("get_vital()")      -- System.Int32
+    local playerMaxHealth              = player:call("getVitalMax()")        -- System.Int32
+    local playerRawRedHealth           = playerData:get_field("_r_Vital")
+    local playerRedHealth              = player:call("getRedVital()")        -- System.Int32
 
-    local playerStamina               = playerData:get_field("_stamina")    -- System.Single
-    local playerMaxStamina            = playerData:get_field("_staminaMax") -- System.Single
+    local playerStamina                = playerData:get_field("_stamina")    -- System.Single
+    local playerMaxStamina             = playerData:get_field("_staminaMax") -- System.Single
 
     -- Timer and State
-    local _ChallengeTimer             = playerData:get_field("_ChallengeTimer")             -- System.Single
-    local isDebuffState               = player:call("isDebuffState")                        -- System.Boolean
-    local _PowerFreedomTimer          = playerBase:get_field("_PowerFreedomTimer")          -- System.Single
-    local _WholeBodyTimer             = playerData:get_field("_WholeBodyTimer")             -- System.Single
-    local _EquipSkill_036_Timer       = playerData:get_field("_EquipSkill_036_Timer")       -- System.Single
-    local _SlidingPowerupTimer        = playerData:get_field("_SlidingPowerupTimer")        -- System.Single
-    local _CounterattackPowerupTimer  = playerData:get_field("_CounterattackPowerupTimer")  -- System.Single
-    local _DisasterTurnPowerUpTimer   = playerData:get_field("_DisasterTurnPowerUpTimer")   -- System.Single
-    local _FightingSpiritTimer        = playerData:get_field("_FightingSpiritTimer")        -- System.Single
-    local _EquipSkill208_AtkUpTimer   = playerData:get_field("_EquipSkill208_AtkUpTimer")   -- System.Single
-    local _EquipSkill222_Timer        = playerData:get_field("_EquipSkill222_Timer")        -- System.Single
-    local isHateTarget                = player:call("isHateTarget()")                       -- System.Boolean
-    local get_IsEnableEquipSkill225   = player:call("get_IsEnableEquipSkill225()")          -- System.Boolean
-    local isActiveEquipSkill230       = player:call("isActiveEquipSkill230()")              -- System.Boolean
-    local _EquipSkill231_WireNumTimer = playerData:get_field("_EquipSkill231_WireNumTimer") -- System.Single
-    local _EquipSkill231_WpOffTimer   = playerData:get_field("_EquipSkill231_WpOffTimer")   -- System.Single
+    local _ChallengeTimer              = playerData:get_field("_ChallengeTimer")             -- System.Single
+    local isDebuffState                = player:call("isDebuffState")                        -- System.Boolean
+    local _PowerFreedomTimer           = playerBase:get_field("_PowerFreedomTimer")          -- System.Single
+    local _WholeBodyTimer              = playerData:get_field("_WholeBodyTimer")             -- System.Single
+    local _EquipSkill_036_Timer        = playerData:get_field("_EquipSkill_036_Timer")       -- System.Single
+    local _SlidingPowerupTimer         = playerData:get_field("_SlidingPowerupTimer")        -- System.Single
+    local _CounterattackPowerupTimer   = playerData:get_field("_CounterattackPowerupTimer")  -- System.Single
+    local _DisasterTurnPowerUpTimer    = playerData:get_field("_DisasterTurnPowerUpTimer")   -- System.Single
+    local _FightingSpiritTimer         = playerData:get_field("_FightingSpiritTimer")        -- System.Single
+    local _EquipSkill208_AtkUpTimer    = playerData:get_field("_EquipSkill208_AtkUpTimer")   -- System.Single
+    local _EquipSkill216_BottleUpTimer = player:get_field("_EquipSkill216_BottleUpTimer")    -- System.Single
+    local _EquipSkill222_Timer         = playerData:get_field("_EquipSkill222_Timer")        -- System.Single
+    local isHateTarget                 = player:call("isHateTarget()")                       -- System.Boolean
+    local get_IsEnableEquipSkill225    = player:call("get_IsEnableEquipSkill225()")          -- System.Boolean
+    local isActiveEquipSkill230        = player:call("isActiveEquipSkill230()")              -- System.Boolean
+    local _EquipSkill231_WireNumTimer  = playerData:get_field("_EquipSkill231_WireNumTimer") -- System.Single
+    local _EquipSkill231_WpOffTimer    = playerData:get_field("_EquipSkill231_WpOffTimer")   -- System.Single
 
 
     -- 1 Pl_EquipSkill_000 攻撃
@@ -369,6 +388,14 @@ local function SkillMessage()
     -- 126 Pl_EquipSkill_213 チューンアップ
     -- 127 Pl_EquipSkill_214 研磨術【鋭】
     -- 128 Pl_EquipSkill_215 刃鱗磨き
+    if Pl_EquipSkill[128] then
+        if _EquipSkill216_BottleUpTimer == 1800 then
+            Pl_EquipSkill_215 = true
+        elseif Pl_EquipSkill_215 and _EquipSkill216_BottleUpTimer == 0 then
+            Pl_EquipSkill_215 = false
+            AddChatInfomation(128, Pl_EquipSkill_215)
+        end
+    end
     -- 129 Pl_EquipSkill_216 壁面移動【翔】
     -- 133 Pl_EquipSkill_217 疾之息吹
     -- 130 Pl_EquipSkill_218 弱点特効【属性】
@@ -399,9 +426,6 @@ local function SkillMessage()
     -- 139 Pl_EquipSkill_226 粉塵纏
     -- 137 Pl_EquipSkill_227 狂化
     -- 145 Pl_EquipSkill_228 奮闘
-    if Pl_EquipSkill[145] then
-
-    end
     -- 140 Pl_EquipSkill_229 冰気錬成
     -- 141 Pl_EquipSkill_230 龍気変換
     -- 142 Pl_EquipSkill_231 天衣無崩
