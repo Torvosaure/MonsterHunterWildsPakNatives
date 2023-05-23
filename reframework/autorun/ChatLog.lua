@@ -1,6 +1,31 @@
 -- local MessageLanguageIndex         = sdk.find_type_definition("via.gui.GUISystem"):get_method("get_MessageLanguage()"):call(nil)
 
 -- Skill list
+local Pl_EquipSkill_001 = false
+local Pl_EquipSkill_002 = false
+local Pl_EquipSkill_003 = false
+local Pl_EquipSkill_004 = false
+local Pl_EquipSkill_008 = false
+local Pl_EquipSkill_009 = { false }
+local Pl_EquipSkill_036 = false
+local Pl_EquipSkill_042 = false
+local Pl_EquipSkill_056 = false -- TODO
+local Pl_EquipSkill_090 = false
+local Pl_EquipSkill_091 = { false, 0 }
+local Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
+local Pl_EquipSkill_105 = false
+local Pl_EquipSkill_204 = false
+local Pl_EquipSkill_206 = false
+local Pl_EquipSkill_207 = false -- TODO ?
+local Pl_EquipSkill_208 = false
+local Pl_EquipSkill_215 = false
+local Pl_EquipSkill_220 = false -- TODO
+local Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
+local Pl_EquipSkill_224 = false
+local Pl_EquipSkill_228 = false -- TODO
+local Pl_EquipSkill_231 = false
+local Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
+
 local function init()
     if Reset then
         Pl_EquipSkill_001 = false
@@ -13,7 +38,7 @@ local function init()
         Pl_EquipSkill_042 = false
         Pl_EquipSkill_056 = false -- TODO
         Pl_EquipSkill_090 = false
-        Pl_EquipSkill_091 = false -- TODO
+        Pl_EquipSkill_091 = { false, 0 }
         Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
         Pl_EquipSkill_105 = false
         Pl_EquipSkill_204 = false
@@ -24,6 +49,7 @@ local function init()
         Pl_EquipSkill_220 = false -- TODO
         Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
         Pl_EquipSkill_224 = false
+        Pl_EquipSkill_228 = false -- TODO
         Pl_EquipSkill_231 = false
         Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
         Reset             = false
@@ -113,6 +139,8 @@ local function SkillMessage()
     local _WholeBodyTimer              = playerData:get_field("_WholeBodyTimer")             -- System.Single
     local _EquipSkill_036_Timer        = playerData:get_field("_EquipSkill_036_Timer")       -- System.Single
     local _SlidingPowerupTimer         = playerData:get_field("_SlidingPowerupTimer")        -- System.Single
+    local isEquipSkill091              = playerBase:call("isEquipSkill091()")                -- System.Boolean
+    local _DieCount                    = playerData:get_field("_DieCount")                   -- System.Uint32
     local _CounterattackPowerupTimer   = playerData:get_field("_CounterattackPowerupTimer")  -- System.Single
     local _DisasterTurnPowerUpTimer    = playerData:get_field("_DisasterTurnPowerUpTimer")   -- System.Single
     local _FightingSpiritTimer         = playerData:get_field("_FightingSpiritTimer")        -- System.Single
@@ -125,6 +153,12 @@ local function SkillMessage()
     local _EquipSkill231_WireNumTimer  = playerData:get_field("_EquipSkill231_WireNumTimer") -- System.Single
     local _EquipSkill231_WpOffTimer    = playerData:get_field("_EquipSkill231_WpOffTimer")   -- System.Single
 
+    local _EquipSkillParameter         = playerManager:get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
+
+    -- snow.player.PlayerQuestDefine
+
+    -- Parameter
+    local _EquipSkill_042_CtlAddTime   = _EquipSkillParameter:get_field("_EquipSkill_042_CtlAddTime")
 
     -- 1 Pl_EquipSkill_000 攻撃
     -- 2 Pl_EquipSkill_001 挑戦者
@@ -241,7 +275,7 @@ local function SkillMessage()
     -- 42 Pl_EquipSkill_041 スタミナ奪取
     -- 43 Pl_EquipSkill_042 滑走強化
     if Pl_EquipSkill[43] then
-        if _SlidingPowerupTimer == 1800 then
+        if not Pl_EquipSkill_042 and _SlidingPowerupTimer == _EquipSkill_042_CtlAddTime * 60 then
             Pl_EquipSkill_042 = true
             AddChatInfomation(43, Pl_EquipSkill_042)
         elseif Pl_EquipSkill_042 and _SlidingPowerupTimer == 0 then
@@ -308,7 +342,18 @@ local function SkillMessage()
         end
     end
     -- 92 Pl_EquipSkill_091 不屈
-
+    if isEquipSkill091 then
+        if Pl_EquipSkill[92] then
+            if _DieCount - Pl_EquipSkill_091[2] > 0 or (_DieCount > 0 and not Pl_EquipSkill_091[2]) then
+                Pl_EquipSkill_091[2] = _DieCount
+                Pl_EquipSkill_091[1] = true
+                AddChatInfomation(92, Pl_EquipSkill_091[1])
+            end
+        elseif not Pl_EquipSkill[92] and Pl_EquipSkill_091[1] then
+            Pl_EquipSkill_091[1] = false
+            AddChatInfomation(92, Pl_EquipSkill_091[1])
+        end
+    end
     -- 93 Pl_EquipSkill_092 ひるみ軽減
     -- 94 Pl_EquipSkill_093 ジャンプ鉄人
     -- 95 Pl_EquipSkill_094 剥ぎ取り鉄人
