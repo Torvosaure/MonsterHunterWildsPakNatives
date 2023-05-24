@@ -1,235 +1,262 @@
--- local MessageLanguageIndex         = sdk.find_type_definition("via.gui.GUISystem"):get_method("get_MessageLanguage()"):call(nil)
-
--- Skill list
-local Pl_EquipSkill_001 = false
-local Pl_EquipSkill_002 = false
-local Pl_EquipSkill_003 = false
-local Pl_EquipSkill_004 = false
-local Pl_EquipSkill_008 = false
-local Pl_EquipSkill_009 = { false }
-local Pl_EquipSkill_036 = false
-local Pl_EquipSkill_042 = false
-local Pl_EquipSkill_056 = false -- TODO
-local Pl_EquipSkill_090 = false
-local Pl_EquipSkill_091 = { false, 0 }
-local Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
-local Pl_EquipSkill_105 = false
-local Pl_EquipSkill_204 = false
-local Pl_EquipSkill_206 = false
-local Pl_EquipSkill_207 = false -- TODO ?
-local Pl_EquipSkill_208 = false
-local Pl_EquipSkill_215 = false
-local Pl_EquipSkill_220 = false -- TODO
-local Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
-local Pl_EquipSkill_224 = false
-local Pl_EquipSkill_228 = false -- TODO
-local Pl_EquipSkill_231 = false
-local Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
-
-local function init()
-    if Reset then
-        Pl_EquipSkill_001 = false
-        Pl_EquipSkill_002 = false
-        Pl_EquipSkill_003 = false
-        Pl_EquipSkill_004 = false
-        Pl_EquipSkill_008 = false
-        Pl_EquipSkill_009 = { false }
-        Pl_EquipSkill_036 = false
-        Pl_EquipSkill_042 = false
-        Pl_EquipSkill_056 = false -- TODO
-        Pl_EquipSkill_090 = false
-        Pl_EquipSkill_091 = { false, 0 }
-        Pl_EquipSkill_102 = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } }
-        Pl_EquipSkill_105 = false
-        Pl_EquipSkill_204 = false
-        Pl_EquipSkill_206 = false
-        Pl_EquipSkill_207 = false -- TODO ?
-        Pl_EquipSkill_208 = false
-        Pl_EquipSkill_215 = false
-        Pl_EquipSkill_220 = false -- TODO
-        Pl_EquipSkill_221 = { false, { 300, 480, 720 } }
-        Pl_EquipSkill_224 = false
-        Pl_EquipSkill_228 = false -- TODO
-        Pl_EquipSkill_231 = false
-        Pl_EquipSkill_232 = { false, { 1800, 3600, 5400 } }
-        Reset             = false
-    end
+local function getPlayerManager()
+    return sdk.get_managed_singleton("snow.player.PlayerManager")
+end
+local function getMasterPlayerID()
+    return getPlayerManager():call("getMasterPlayerID")
+end
+local function getPlayerListPrivate()
+    return getPlayerManager():get_field("PlayerListPrivate"):call("get_Item", getMasterPlayerID())
+end
+local function getPlayerData()
+    return getPlayerManager():call("get_PlayerData"):call("get_Item", getMasterPlayerID())
+end
+local function getPlayer()
+    return getPlayerManager():call("getPlayer", getMasterPlayerID())
+end
+local function getPlayerSkill()
+    return getPlayerManager():call("get_PlayerSkill()"):call("get_Item", getMasterPlayerID())
 end
 
-local Pl_EquipSkill                = {}
+local function init()
+    local _EquipSkillParameter  = getPlayerManager():get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
+    local _OdangoSkillParameter = getPlayerManager():get_field("_PlayerUserDataSkillParameter"):get_field("_OdangoSkillParameter")
+    Reset                       = true
+    print("Reset")
+    return {
+        EquipSkill_001   = false,
+        EquipSkill_002   = false,
+        EquipSkill_003   = false,
+        EquipSkill_004   = false,
+        EquipSkill_008   = false,
+        EquipSkill_009   = { false },
+        EquipSkill_036   = false,
+        EquipSkill_042   = { false, _EquipSkillParameter:get_field("_EquipSkill_042_CtlAddTime") },
+        EquipSkill_090   = false,
+        EquipSkill_091   = { false, 0 },
+        EquipSkill_102   = { false, { 0.5, 0.5, 0.7, 0.7, 0.8 } },
+        EquipSkill_105   = false,
+        EquipSkill_204   = false,
+        EquipSkill_206   = false,
+        EquipSkill_207   = false, -- TODO ?
+        EquipSkill_208   = false,
+        EquipSkill_215   = false,
+        EquipSkill_220   = false, -- TODO
+        EquipSkill_221   = { false, { 300, 480, 720 } },
+        EquipSkill_222   = { false, { 0.5, 0.3 }, _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax") },
+        EquipSkill_224   = false,
+        EquipSkill_231   = false,
+        EquipSkill_232   = { false, { 1800, 3600, 5400 } },
 
-local GUI_COMMON_MEAL_SKILL_NOTICE = 2030472943
+        KitchenSkill_048 = {
+            false,
+            {
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Damage"),
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Damage"),
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Damage"),
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Damage")
+            },
+            {
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Reduce"),
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Reduce"),
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Reduce"),
+                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Reduce")
+            }
+        }
+    }
+end
 
-local getSkillName                 = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlEquipSkillId)")
+local function getState()
+    local player     = getPlayerListPrivate()
+    local playerData = getPlayerData()
+    local playerBase = getPlayer()
+    return {
+        playerHealth                 = playerData:call("get_vital()"),
+        playerMaxHealth              = player:call("getVitalMax()"),
+        playerRawRedHealth           = playerData:get_field("_r_Vital"),
+        playerRedHealth              = player:call("getRedVital()"),
+        playerStamina                = playerData:get_field("_stamina"),
+        playerMaxStamina             = playerData:get_field("_staminaMax"),
+
+        -- Timer etc.
+        _ChallengeTimer              = playerData:get_field("_ChallengeTimer"),
+        isDebuffState                = player:call("isDebuffState"),
+        _PowerFreedomTimer           = playerBase:get_field("_PowerFreedomTimer"),
+        _WholeBodyTimer              = playerData:get_field("_WholeBodyTimer"),
+        _EquipSkill_036_Timer        = playerData:get_field("_EquipSkill_036_Timer"),
+        _SlidingPowerupTimer         = playerData:get_field("_SlidingPowerupTimer"),
+        isEquipSkill091              = playerBase:call("isEquipSkill091()"),
+        _DieCount                    = playerData:get_field("_DieCount"),
+        _CounterattackPowerupTimer   = playerData:get_field("_CounterattackPowerupTimer"),
+        _DisasterTurnPowerUpTimer    = playerData:get_field("_DisasterTurnPowerUpTimer"),
+        _FightingSpiritTimer         = playerData:get_field("_FightingSpiritTimer"),
+        _EquipSkill208_AtkUpTimer    = playerData:get_field("_EquipSkill208_AtkUpTimer"),
+        _EquipSkill216_BottleUpTimer = player:get_field("_EquipSkill216_BottleUpTimer"),
+        _EquipSkill222_Timer         = playerData:get_field("_EquipSkill222_Timer"),
+        _EquipSkill223Accumulator    = playerData:get_field("_EquipSkill223Accumulator"),
+        isHateTarget                 = player:call("isHateTarget()"),
+        get_IsEnableEquipSkill225    = player:call("get_IsEnableEquipSkill225()"),
+        isActiveEquipSkill230        = player:call("isActiveEquipSkill230()"),
+        _EquipSkill231_WireNumTimer  = playerData:get_field("_EquipSkill231_WireNumTimer"),
+        _EquipSkill231_WpOffTimer    = playerData:get_field("_EquipSkill231_WpOffTimer"),
+
+        _KitchenSkill048_Damage      = playerData:get_field("_KitchenSkill048_Damage")
+    }
+end
+
+local function getSkillData()
+    local Ed = { EquipSkill = {} }
+    for i = 1, 146 do
+        Ed.EquipSkill[i] = getPlayerSkill():call("getSkillData", i)
+    end
+    return Ed
+end
+local function getKitchenSkillData()
+    local Kd = { KitchenSkill = {} }
+    for i = 1, 56 do
+        Kd.KitchenSkill[i] = getPlayerSkill():call("getKitchenSkillData", i)
+    end
+    return Kd
+end
+
 local function getChatManager()
     return sdk.get_managed_singleton("snow.gui.ChatManager")
 end
 
-local guiMessage    = sdk.find_type_definition("via.gui.message")
-local getGuidByName = guiMessage:get_method("getGuidByName")
-local Guid          = {}
-Guid[1]             = getGuidByName:call(nil, "ChatLog_Pl_Skill_01")
-Guid[2]             = getGuidByName:call(nil, "ChatLog_Pl_Skill_02")
-Guid[3]             = getGuidByName:call(nil, "ChatLog_Ot_Skill_01")
-Guid[4]             = getGuidByName:call(nil, "ChatLog_Ot_Skill_02")
-Guid[5]             = getGuidByName:call(nil, "ChatLog_Ot_Skill_03")
-Guid[6]             = getGuidByName:call(nil, "ChatLog_Co_Skill_01")
-local message       = guiMessage:get_method("get(System.Guid)")
+local getGuidByName = sdk.find_type_definition("via.gui.message"):get_method("getGuidByName")
+local message       = sdk.find_type_definition("via.gui.message"):get_method("get(System.Guid)")
+local function getMessageByName(Name)
+    local Guid = getGuidByName:call(nil, Name)
+    return message:call(nil, Guid)
+end
+-- ChatLog_Pl_Skill_01
+-- ChatLog_Pl_Skill_02
+-- ChatLog_Ot_Skill_01
+-- ChatLog_Ot_Skill_02
+-- ChatLog_Ot_Skill_03
+-- ChatLog_Co_Skill_01
 
-
-local function AddChatInfomation(skillID, isSActiveSkill)
-    if isSActiveSkill then
-        ChatLog = message:call(nil, Guid[1])
-    elseif not isSActiveSkill then
-        ChatLog = message:call(nil, Guid[2])
+local getEquipSkillName            = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlEquipSkillId)")
+local getKitchenSkillName          = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlKitchenSkillId)")
+local GUI_COMMON_MEAL_SKILL_NOTICE = 2030472943
+local function AddChatInfomation(skillID, isSkillActive)
+    if isSkillActive then
+        ChatLog = getMessageByName("ChatLog_Pl_Skill_01")
+    elseif not isSkillActive then
+        ChatLog = getMessageByName("ChatLog_Pl_Skill_02")
     end
-    getChatManager():call("reqAddChatInfomation", string.gsub(ChatLog, "{0}", getSkillName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
+    getChatManager():call("reqAddChatInfomation", string.gsub(ChatLog, "{0}", getEquipSkillName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
 end
 
-local function SkillMessage()
-    local playerManager = sdk.get_managed_singleton("snow.player.PlayerManager")
+local Pl
+local Ed
+local Kd
+local St
+local Reset
 
+local function update()
+    local playerManager = getPlayerManager()
     if not playerManager or not playerManager:call("get_RefItemParameter()") then
-        init()
+        if not Reset then Pl = init() end
         return
     end
 
-    local playerID = playerManager:call("getMasterPlayerID")
-
+    local playerID = getMasterPlayerID()
     if not playerID or playerID > 4 then
-        init()
+        if not Reset then Pl = init() end
         return
     end
 
-    local player = playerManager:get_field("PlayerListPrivate"):call("get_Item", playerID)
-
+    local player = getPlayerListPrivate()
     if not player or not player:get_type_definition():is_a("snow.player.PlayerQuestBase") then
-        init()
+        if not Reset then Pl = init() end
         return
     end
 
-    local playerData = playerManager:call("get_PlayerData"):call("get_Item", playerID)
-    local playerBase = playerManager:call("getPlayer", playerID)
-    local playerSkillList = playerManager:call("get_PlayerSkill()"):call("get_Item", playerID)
-
+    local playerData      = getPlayerData()
+    local playerBase      = getPlayer()
+    local playerSkillList = getPlayerSkill()
     if not playerData or not playerBase or not playerSkillList then
-        init()
+        if not Reset then Pl = init() end
         return
     end
 
-    Reset = true
+    if not Pl then Pl = init() end
+    Ed    = getSkillData()
+    Kd    = getKitchenSkillData()
+    St    = getState()
 
-    for i = 1, 146 do
-        Pl_EquipSkill[i] = playerSkillList:call("getSkillData", i)
-    end
-
-    -- Player
-    local playerHealth                 = playerData:call("get_vital()")      -- System.Int32
-    local playerMaxHealth              = player:call("getVitalMax()")        -- System.Int32
-    local playerRawRedHealth           = playerData:get_field("_r_Vital")
-    local playerRedHealth              = player:call("getRedVital()")        -- System.Int32
-
-    local playerStamina                = playerData:get_field("_stamina")    -- System.Single
-    local playerMaxStamina             = playerData:get_field("_staminaMax") -- System.Single
-
-    -- Timer and State
-    local _ChallengeTimer              = playerData:get_field("_ChallengeTimer")             -- System.Single
-    local isDebuffState                = player:call("isDebuffState")                        -- System.Boolean
-    local _PowerFreedomTimer           = playerBase:get_field("_PowerFreedomTimer")          -- System.Single
-    local _WholeBodyTimer              = playerData:get_field("_WholeBodyTimer")             -- System.Single
-    local _EquipSkill_036_Timer        = playerData:get_field("_EquipSkill_036_Timer")       -- System.Single
-    local _SlidingPowerupTimer         = playerData:get_field("_SlidingPowerupTimer")        -- System.Single
-    local isEquipSkill091              = playerBase:call("isEquipSkill091()")                -- System.Boolean
-    local _DieCount                    = playerData:get_field("_DieCount")                   -- System.Uint32
-    local _CounterattackPowerupTimer   = playerData:get_field("_CounterattackPowerupTimer")  -- System.Single
-    local _DisasterTurnPowerUpTimer    = playerData:get_field("_DisasterTurnPowerUpTimer")   -- System.Single
-    local _FightingSpiritTimer         = playerData:get_field("_FightingSpiritTimer")        -- System.Single
-    local _EquipSkill208_AtkUpTimer    = playerData:get_field("_EquipSkill208_AtkUpTimer")   -- System.Single
-    local _EquipSkill216_BottleUpTimer = player:get_field("_EquipSkill216_BottleUpTimer")    -- System.Single
-    local _EquipSkill222_Timer         = playerData:get_field("_EquipSkill222_Timer")        -- System.Single
-    local isHateTarget                 = player:call("isHateTarget()")                       -- System.Boolean
-    local get_IsEnableEquipSkill225    = player:call("get_IsEnableEquipSkill225()")          -- System.Boolean
-    local isActiveEquipSkill230        = player:call("isActiveEquipSkill230()")              -- System.Boolean
-    local _EquipSkill231_WireNumTimer  = playerData:get_field("_EquipSkill231_WireNumTimer") -- System.Single
-    local _EquipSkill231_WpOffTimer    = playerData:get_field("_EquipSkill231_WpOffTimer")   -- System.Single
-
-    local _EquipSkillParameter         = playerManager:get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
-
-    -- snow.player.PlayerQuestDefine
-
-    -- Parameter
-    local _EquipSkill_042_CtlAddTime   = _EquipSkillParameter:get_field("_EquipSkill_042_CtlAddTime")
+    Reset = false
 
     -- 1 Pl_EquipSkill_000 攻撃
     -- 2 Pl_EquipSkill_001 挑戦者
-    if Pl_EquipSkill[2] then
-        if not Pl_EquipSkill_001 and _ChallengeTimer == 180 then
-            Pl_EquipSkill_001 = true
-            AddChatInfomation(2, Pl_EquipSkill_001)
-        elseif Pl_EquipSkill_001 and _ChallengeTimer == 0 then
-            Pl_EquipSkill_001 = false
-            AddChatInfomation(2, Pl_EquipSkill_001)
+    if Ed.EquipSkill[2] then
+        if not Pl.EquipSkill_001 and St._ChallengeTimer == 180 then
+            Pl.EquipSkill_001 = true
+            AddChatInfomation(2, Pl.EquipSkill_001)
+        elseif Pl.EquipSkill_001 and St._ChallengeTimer == 0 then
+            Pl.EquipSkill_001 = false
+            AddChatInfomation(2, Pl.EquipSkill_001)
         end
     end
     -- 3 Pl_EquipSkill_002 フルチャージ
-    if Pl_EquipSkill[3] then
-        if not Pl_EquipSkill_002 and playerHealth == playerMaxHealth then
-            Pl_EquipSkill_002 = true
-            AddChatInfomation(3, Pl_EquipSkill_002)
-        elseif Pl_EquipSkill_002 and playerHealth < playerMaxHealth then
-            Pl_EquipSkill_002 = false
-            AddChatInfomation(3, Pl_EquipSkill_002)
+    if Ed.EquipSkill[3] then
+        if not Pl.EquipSkill_002 and St.playerHealth == St.playerMaxHealth then
+            Pl.EquipSkill_002 = true
+            AddChatInfomation(3, Pl.EquipSkill_002)
+        elseif Pl.EquipSkill_002 and St.playerHealth < St.playerMaxHealth then
+            Pl.EquipSkill_002 = false
+            AddChatInfomation(3, Pl.EquipSkill_002)
         end
     end
     -- 4 Pl_EquipSkill_003 逆恨み
-    if Pl_EquipSkill[4] then
-        if not Pl_EquipSkill_003 then
-            if get_IsEnableEquipSkill225 or playerRedHealth > 0 then
-                Pl_EquipSkill_003 = true
-                AddChatInfomation(4, Pl_EquipSkill_003)
+    if Ed.EquipSkill[4] then
+        if not Pl.EquipSkill_003 then
+            if St.get_IsEnableEquipSkill225 or St.playerRedHealth > 0 then
+                Pl.EquipSkill_003 = true
+                AddChatInfomation(4, Pl.EquipSkill_003)
             end
-        elseif Pl_EquipSkill_003 and not get_IsEnableEquipSkill225 and playerHealth == playerRawRedHealth and playerRedHealth == 0 then
-            Pl_EquipSkill_003 = false
-            AddChatInfomation(4, Pl_EquipSkill_003)
+        elseif Pl.EquipSkill_003 and not St.get_IsEnableEquipSkill225 and St.playerHealth == St.playerRawRedHealth and St.playerRedHealth == 0 then
+            Pl.EquipSkill_003 = false
+            AddChatInfomation(4, Pl.EquipSkill_003)
         end
     end
     -- 5 Pl_EquipSkill_004 死中に活
-    if Pl_EquipSkill[5] then
-        if not Pl_EquipSkill_004 and isDebuffState then
-            Pl_EquipSkill_004 = true
-            AddChatInfomation(5, Pl_EquipSkill_004)
-        elseif Pl_EquipSkill_004 and not isDebuffState then
-            Pl_EquipSkill_004 = false
-            AddChatInfomation(5, Pl_EquipSkill_004)
+    if Ed.EquipSkill[5] then
+        if not Pl.EquipSkill_004 and St.isDebuffState then
+            Pl.EquipSkill_004 = true
+            AddChatInfomation(5, Pl.EquipSkill_004)
+        elseif Pl.EquipSkill_004 and not St.isDebuffState then
+            Pl.EquipSkill_004 = false
+            AddChatInfomation(5, Pl.EquipSkill_004)
         end
     end
     -- 6 Pl_EquipSkill_005 見切り
     -- 7 Pl_EquipSkill_006 超会心
     -- 8 Pl_EquipSkill_007 弱点特効
     -- 9 Pl_EquipSkill_008 力の解放
-    if Pl_EquipSkill[9] then
-        if not Pl_EquipSkill_008 and _PowerFreedomTimer == 7200 then
-            Pl_EquipSkill_008 = true
-            AddChatInfomation(9, Pl_EquipSkill_008)
-        elseif Pl_EquipSkill_008 and _PowerFreedomTimer == 0 then
-            Pl_EquipSkill_008 = false
-            AddChatInfomation(9, Pl_EquipSkill_008)
+    if Ed.EquipSkill[9] then
+        if not Pl.EquipSkill_008 and St._PowerFreedomTimer == 7200 then
+            Pl.EquipSkill_008 = true
+            AddChatInfomation(9, Pl.EquipSkill_008)
+        elseif Pl.EquipSkill_008 and St._PowerFreedomTimer == 0 then
+            Pl.EquipSkill_008 = false
+            AddChatInfomation(9, Pl.EquipSkill_008)
         end
     end
     -- 10 Pl_EquipSkill_009 渾身
-    if Pl_EquipSkill[10] then
-        if not Pl_EquipSkill_009[2] and _WholeBodyTimer > 120 then
-            Pl_EquipSkill_009[2] = true
+    if Ed.EquipSkill[10] then
+        if not Pl.EquipSkill_009[2] and St._WholeBodyTimer > 120 then
+            Pl.EquipSkill_009[2] = true
         end
-        if not Pl_EquipSkill_009[1] and Pl_EquipSkill_009[2] and playerStamina == playerMaxStamina and _WholeBodyTimer == 0 then
-            Pl_EquipSkill_009[1] = true
-            AddChatInfomation(10, Pl_EquipSkill_009[1])
-        elseif Pl_EquipSkill_009[1] and Pl_EquipSkill_009[3] and playerStamina < playerMaxStamina and _WholeBodyTimer == 0 then
-            Pl_EquipSkill_009[1] = false
-            AddChatInfomation(10, Pl_EquipSkill_009[1])
-            Pl_EquipSkill_009[3] = false
-        elseif Pl_EquipSkill_009[1] and not Pl_EquipSkill_009[3] and playerStamina < playerMaxStamina and _WholeBodyTimer == 0 then
-            Pl_EquipSkill_009[3] = true
+        if not Pl.EquipSkill_009[1] and Pl.EquipSkill_009[2] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer == 0 then
+            Pl.EquipSkill_009[1] = true
+            AddChatInfomation(10, Pl.EquipSkill_009[1])
+        elseif Pl.EquipSkill_009[1] and Pl.EquipSkill_009[3] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+            Pl.EquipSkill_009[1] = false
+            AddChatInfomation(10, Pl.EquipSkill_009[1])
+            Pl.EquipSkill_009[3] = false
+        elseif Pl.EquipSkill_009[1] and not Pl.EquipSkill_009[3] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+            Pl.EquipSkill_009[3] = true
         end
     end
     -- 11 Pl_EquipSkill_010 会心撃【属性】
@@ -259,13 +286,13 @@ local function SkillMessage()
     -- 35 Pl_EquipSkill_034 ガード性能
     -- 36 Pl_EquipSkill_035 ガード強化
     -- 37 Pl_EquipSkill_036 攻めの守勢
-    if Pl_EquipSkill[37] then
-        if _EquipSkill_036_Timer == 720 then
+    if Ed.EquipSkill[37] then
+        if St._EquipSkill_036_Timer == 720 then
             Pl_EquipSkill_036 = true
-            AddChatInfomation(37, Pl_EquipSkill_036)
-        elseif Pl_EquipSkill_036 and _EquipSkill_036_Timer == 0 then
-            Pl_EquipSkill_036 = false
-            AddChatInfomation(37, Pl_EquipSkill_036)
+            AddChatInfomation(37, Pl.EquipSkill_036)
+        elseif Pl.EquipSkill_036 and St._EquipSkill_036_Timer == 0 then
+            Pl.EquipSkill_036 = false
+            AddChatInfomation(37, Pl.EquipSkill_036)
         end
     end
     -- 38 Pl_EquipSkill_037 抜刀術【技】
@@ -274,13 +301,13 @@ local function SkillMessage()
     -- 41 Pl_EquipSkill_040 ＫＯ術
     -- 42 Pl_EquipSkill_041 スタミナ奪取
     -- 43 Pl_EquipSkill_042 滑走強化
-    if Pl_EquipSkill[43] then
-        if not Pl_EquipSkill_042 and _SlidingPowerupTimer == _EquipSkill_042_CtlAddTime * 60 then
-            Pl_EquipSkill_042 = true
-            AddChatInfomation(43, Pl_EquipSkill_042)
-        elseif Pl_EquipSkill_042 and _SlidingPowerupTimer == 0 then
-            Pl_EquipSkill_042 = false
-            AddChatInfomation(43, Pl_EquipSkill_042)
+    if Ed.EquipSkill[43] then
+        if not Pl.EquipSkill_042[1] and St._SlidingPowerupTimer == Pl.EquipSkill_042[2] * 60 then
+            Pl.EquipSkill_042[1] = true
+            AddChatInfomation(43, Pl.EquipSkill_042[1])
+        elseif Pl.EquipSkill_042[1] and St._SlidingPowerupTimer == 0 then
+            Pl.EquipSkill_042[1] = false
+            AddChatInfomation(43, Pl.EquipSkill_042[1])
         end
     end
     -- 44 Pl_EquipSkill_043 笛吹き名人
@@ -297,7 +324,6 @@ local function SkillMessage()
     -- 55 Pl_EquipSkill_054 速射強化
     -- 56 Pl_EquipSkill_055 防御
     -- 57 Pl_EquipSkill_056 精霊の加護
-
     -- 58 Pl_EquipSkill_057 体力回復量ＵＰ
     -- 59 Pl_EquipSkill_058 回復速度
     -- 60 Pl_EquipSkill_059 早食い
@@ -332,26 +358,26 @@ local function SkillMessage()
     -- 89 Pl_EquipSkill_088 広域化
     -- 90 Pl_EquipSkill_089 満足感
     -- 91 Pl_EquipSkill_090 火事場力
-    if Pl_EquipSkill[91] then
-        if not Pl_EquipSkill_090 and playerHealth <= playerMaxHealth * 0.35 then
-            Pl_EquipSkill_090 = true
-            AddChatInfomation(91, Pl_EquipSkill_090)
-        elseif Pl_EquipSkill_090 and playerHealth > playerMaxHealth * 0.35 then
-            Pl_EquipSkill_090 = false
-            AddChatInfomation(91, Pl_EquipSkill_090)
+    if Ed.EquipSkill[91] then
+        if not Pl.EquipSkill_090 and St.playerHealth <= St.playerMaxHealth * 0.35 then
+            Pl.EquipSkill_090 = true
+            AddChatInfomation(91, Pl.EquipSkill_090)
+        elseif Pl.EquipSkill_090 and St.playerHealth > St.playerMaxHealth * 0.35 then
+            Pl.EquipSkill_090 = false
+            AddChatInfomation(91, Pl.EquipSkill_090)
         end
     end
     -- 92 Pl_EquipSkill_091 不屈
-    if isEquipSkill091 then
-        if Pl_EquipSkill[92] then
-            if _DieCount - Pl_EquipSkill_091[2] > 0 or (_DieCount > 0 and not Pl_EquipSkill_091[2]) then
-                Pl_EquipSkill_091[2] = _DieCount
-                Pl_EquipSkill_091[1] = true
-                AddChatInfomation(92, Pl_EquipSkill_091[1])
+    if St.isEquipSkill091 then
+        if Ed.EquipSkill[92] then
+            if St._DieCount - Pl.EquipSkill_091[2] > 0 or (St._DieCount > 0 and not Pl.EquipSkill_091[2]) then
+                Pl.EquipSkill_091[2] = St._DieCount
+                Pl.EquipSkill_091[1] = true
+                AddChatInfomation(92, Pl.EquipSkill_091[1])
             end
-        elseif not Pl_EquipSkill[92] and Pl_EquipSkill_091[1] then
-            Pl_EquipSkill_091[1] = false
-            AddChatInfomation(92, Pl_EquipSkill_091[1])
+        elseif not Ed.EquipSkill[92] and Pl.EquipSkill_091[1] then
+            Pl.EquipSkill_091[1] = false
+            AddChatInfomation(92, Pl.EquipSkill_091[1])
         end
     end
     -- 93 Pl_EquipSkill_092 ひるみ軽減
@@ -365,25 +391,25 @@ local function SkillMessage()
     -- 101 Pl_EquipSkill_100 鋼殻の恩恵
     -- 102 Pl_EquipSkill_101 炎鱗の恩恵
     -- 103 Pl_EquipSkill_102 龍気活性
-    if Pl_EquipSkill[103] then
-        if not Pl_EquipSkill_102[1] and playerHealth <= playerMaxHealth * Pl_EquipSkill_102[2][Pl_EquipSkill[103]:get_field("SkillLv")] then
-            Pl_EquipSkill_102[1] = true
-            AddChatInfomation(103, Pl_EquipSkill_102[1])
-        elseif Pl_EquipSkill_102[1] and playerHealth > playerMaxHealth * Pl_EquipSkill_102[2][Pl_EquipSkill[103]:get_field("SkillLv")] then
-            Pl_EquipSkill_102[1] = false
-            AddChatInfomation(103, Pl_EquipSkill_102[1])
+    if Ed.EquipSkill[103] then
+        if not Pl.EquipSkill_102[1] and St.playerHealth <= St.playerMaxHealth * Pl.EquipSkill_102[2][Ed.EquipSkill[103]:get_field("SkillLv")] then
+            Pl.EquipSkill_102[1] = true
+            AddChatInfomation(103, Pl.EquipSkill_102[1])
+        elseif Pl.EquipSkill_102[1] and St.playerHealth > St.playerMaxHealth * Pl.EquipSkill_102[2][Ed.EquipSkill[103]:get_field("SkillLv")] then
+            Pl.EquipSkill_102[1] = false
+            AddChatInfomation(103, Pl.EquipSkill_102[1])
         end
     end
     -- 104 Pl_EquipSkill_103 翔蟲使い
     -- 105 Pl_EquipSkill_104 壁面移動
     -- 106 Pl_EquipSkill_105 逆襲
-    if Pl_EquipSkill[106] then
-        if _CounterattackPowerupTimer == 1800 then
-            Pl_EquipSkill_105 = true
-            AddChatInfomation(106, Pl_EquipSkill_105)
-        elseif Pl_EquipSkill_105 and _CounterattackPowerupTimer == 0 then
-            Pl_EquipSkill_105 = false
-            AddChatInfomation(106, Pl_EquipSkill_105)
+    if Ed.EquipSkill[106] then
+        if St._CounterattackPowerupTimer == 1800 then
+            Pl.EquipSkill_105 = true
+            AddChatInfomation(106, Pl.EquipSkill_105)
+        elseif Pl.EquipSkill_105 and St._CounterattackPowerupTimer == 0 then
+            Pl.EquipSkill_105 = false
+            AddChatInfomation(106, Pl.EquipSkill_105)
         end
     end
     -- 107 Pl_EquipSkill_106 高速変形
@@ -396,34 +422,34 @@ local function SkillMessage()
     -- 114 Pl_EquipSkill_202 激昂
     -- 115 Pl_EquipSkill_203 業鎧【修羅】
     -- 116 Pl_EquipSkill_204 災禍転福
-    if Pl_EquipSkill[116] then
-        if not Pl_EquipSkill_204 and _DisasterTurnPowerUpTimer == 1800 then
-            Pl_EquipSkill_204 = true
-        elseif Pl_EquipSkill_204 and _DisasterTurnPowerUpTimer == 0 then
-            Pl_EquipSkill_204 = false
-            AddChatInfomation(116, Pl_EquipSkill_204)
+    if Ed.EquipSkill[116] then
+        if not Pl.EquipSkill_204 and St._DisasterTurnPowerUpTimer == 1800 then
+            Pl.EquipSkill_204 = true
+        elseif Pl.EquipSkill_204 and St._DisasterTurnPowerUpTimer == 0 then
+            Pl.EquipSkill_204 = false
+            AddChatInfomation(116, Pl.EquipSkill_204)
         end
     end
     -- 117 Pl_EquipSkill_205 狂竜症【蝕】
     -- 118 Pl_EquipSkill_206 顕如盤石
-    if Pl_EquipSkill[118] then
-        if not Pl_EquipSkill_206 and _FightingSpiritTimer == 180 then
-            Pl_EquipSkill_206 = true
-            AddChatInfomation(118, Pl_EquipSkill_206)
-        elseif Pl_EquipSkill_206 and _FightingSpiritTimer == 0 then
-            Pl_EquipSkill_206 = false
-            AddChatInfomation(118, Pl_EquipSkill_206)
+    if Ed.EquipSkill[118] then
+        if not Pl.EquipSkill_206 and St._FightingSpiritTimer == 180 then
+            Pl.EquipSkill_206 = true
+            AddChatInfomation(118, Pl.EquipSkill_206)
+        elseif Pl.EquipSkill_206 and St._FightingSpiritTimer == 0 then
+            Pl.EquipSkill_206 = false
+            AddChatInfomation(118, Pl.EquipSkill_206)
         end
     end
     -- 119 Pl_EquipSkill_207 闇討ち
 
     -- 120 Pl_EquipSkill_208 巧撃
-    if Pl_EquipSkill[120] then
-        if _EquipSkill208_AtkUpTimer == 1800 then
-            Pl_EquipSkill_208 = true
-        elseif Pl_EquipSkill_208 and _EquipSkill208_AtkUpTimer == 0 then
-            Pl_EquipSkill_208 = false
-            AddChatInfomation(120, Pl_EquipSkill_208)
+    if Ed.EquipSkill[120] then
+        if St._EquipSkill208_AtkUpTimer == 1800 then
+            Pl.EquipSkill_208 = true
+        elseif Pl.EquipSkill_208 and St._EquipSkill208_AtkUpTimer == 0 then
+            Pl.EquipSkill_208 = false
+            AddChatInfomation(120, Pl.EquipSkill_208)
         end
     end
     -- 122 Pl_EquipSkill_209 合気
@@ -433,12 +459,12 @@ local function SkillMessage()
     -- 126 Pl_EquipSkill_213 チューンアップ
     -- 127 Pl_EquipSkill_214 研磨術【鋭】
     -- 128 Pl_EquipSkill_215 刃鱗磨き
-    if Pl_EquipSkill[128] then
-        if _EquipSkill216_BottleUpTimer == 1800 then
-            Pl_EquipSkill_215 = true
-        elseif Pl_EquipSkill_215 and _EquipSkill216_BottleUpTimer == 0 then
-            Pl_EquipSkill_215 = false
-            AddChatInfomation(128, Pl_EquipSkill_215)
+    if Ed.EquipSkill[128] then
+        if St._EquipSkill216_BottleUpTimer == 1800 then
+            Pl.EquipSkill_215 = true
+        elseif Pl.EquipSkill_215 and St._EquipSkill216_BottleUpTimer == 0 then
+            Pl.EquipSkill_215 = false
+            AddChatInfomation(128, Pl.EquipSkill_215)
         end
     end
     -- 129 Pl_EquipSkill_216 壁面移動【翔】
@@ -448,23 +474,28 @@ local function SkillMessage()
     -- 132 Pl_EquipSkill_220 根性
 
     -- 134 Pl_EquipSkill_221 状態異常確定蓄積
-    if Pl_EquipSkill[134] then
-        if _EquipSkill222_Timer == Pl_EquipSkill_221[2][Pl_EquipSkill[134]:get_field("SkillLv")] then
-            Pl_EquipSkill_221[1] = true
-        elseif Pl_EquipSkill_221[1] and _EquipSkill222_Timer == 0 then
-            Pl_EquipSkill_221[1] = false
-            AddChatInfomation(134, Pl_EquipSkill_221[1])
+    if Ed.EquipSkill[134] then
+        if St._EquipSkill222_Timer == Pl.EquipSkill_221[2][Ed.EquipSkill[134]:get_field("SkillLv")] then
+            Pl.EquipSkill_221[1] = true
+        elseif Pl.EquipSkill_221[1] and St._EquipSkill222_Timer == 0 then
+            Pl.EquipSkill_221[1] = false
+            AddChatInfomation(134, Pl.EquipSkill_221[1])
         end
     end
     -- 135 Pl_EquipSkill_222 剛心
+    if Ed.EquipSkill[135] then
+        if St._EquipSkill223Accumulator == Pl.EquipSkill_222[3] then
+            Pl.EquipSkill_222[1] = true
+        end
+    end
     -- 136 Pl_EquipSkill_223 蓄積時攻撃強化
     -- 121 Pl_EquipSkill_224 煽衛
-    if Pl_EquipSkill[121] then
-        if not Pl_EquipSkill_224 and isHateTarget then
-            Pl_EquipSkill_224 = true
-        elseif Pl_EquipSkill_224 and not isHateTarget then
-            Pl_EquipSkill_224 = false
-            AddChatInfomation(121, Pl_EquipSkill_224)
+    if Ed.EquipSkill[121] then
+        if not Pl.EquipSkill_224 and St.isHateTarget then
+            Pl.EquipSkill_224 = true
+        elseif Pl.EquipSkill_224 and not St.isHateTarget then
+            Pl.EquipSkill_224 = false
+            AddChatInfomation(121, Pl.EquipSkill_224)
         end
     end
     -- 138 Pl_EquipSkill_225 風纏
@@ -474,24 +505,159 @@ local function SkillMessage()
     -- 140 Pl_EquipSkill_229 冰気錬成
     -- 141 Pl_EquipSkill_230 龍気変換
     -- 142 Pl_EquipSkill_231 天衣無崩
-    if Pl_EquipSkill[142] then
-        if not Pl_EquipSkill_231 and isActiveEquipSkill230 then
-            Pl_EquipSkill_231 = true
-        elseif Pl_EquipSkill_231 and not isActiveEquipSkill230 then
-            Pl_EquipSkill_231 = false
-            AddChatInfomation(142, Pl_EquipSkill_231)
+    if Ed.EquipSkill[142] then
+        if not Pl.EquipSkill_231 and St.isActiveEquipSkill230 then
+            Pl.EquipSkill_231 = true
+        elseif Pl.EquipSkill_231 and not St.isActiveEquipSkill230 then
+            Pl.EquipSkill_231 = false
+            AddChatInfomation(142, Pl.EquipSkill_231)
         end
     end
     -- 143 Pl_EquipSkill_232 狂竜症【翔】
-    if Pl_EquipSkill[143] then
-        if not Pl_EquipSkill_232[1] and _EquipSkill231_WireNumTimer == Pl_EquipSkill_232[2][Pl_EquipSkill[143]:get_field("SkillLv")] then
-            Pl_EquipSkill_232[1] = true
-        elseif Pl_EquipSkill_232[1] and _EquipSkill231_WpOffTimer == 0 then
-            Pl_EquipSkill_232[1] = false
-            AddChatInfomation(143, Pl_EquipSkill_232[1])
+    if Ed.EquipSkill[143] then
+        if not Pl.EquipSkill_232[1] and St._EquipSkill231_WireNumTimer == Pl.EquipSkill_232[2][Ed.EquipSkill[143]:get_field("SkillLv")] then
+            Pl.EquipSkill_232[1] = true
+        elseif Pl.EquipSkill_232[1] and St._EquipSkill231_WpOffTimer == 0 then
+            Pl.EquipSkill_232[1] = false
+            AddChatInfomation(143, Pl.EquipSkill_232[1])
         end
     end
     -- 146 Pl_EquipSkill_233 緩衝
+
+
+    -- 1 Pl_KitchenSkill_000 おだんご研磨術
+    -- 2 Pl_KitchenSkill_001 おだんご乗り上手
+    -- 3 Pl_KitchenSkill_002 おだんご火事場力
+    -- 4 Pl_KitchenSkill_003 おだんご解体術【小】
+    -- 5 Pl_KitchenSkill_004 おだんご解体術【大】
+    -- 6 Pl_KitchenSkill_005 おだんご医療術【小】
+    -- 7 Pl_KitchenSkill_006 おだんご医療術【大】
+    -- 8 Pl_KitchenSkill_007 おだんご体術
+    -- 9 Pl_KitchenSkill_008 おだんご火薬術
+    -- 10 Pl_KitchenSkill_009 おだんご特殊攻撃術
+    -- 11 Pl_KitchenSkill_010 おだんご防御術【小】
+    -- 12 Pl_KitchenSkill_011 おだんご防御術【大】
+    -- 13 Pl_KitchenSkill_012 おだんご収穫祭
+    -- 14 Pl_KitchenSkill_013 おだんご射撃術
+    -- 15 Pl_KitchenSkill_014 おだんご幸運術
+    -- 16 Pl_KitchenSkill_015 おだんご激運術
+    -- 17 Pl_KitchenSkill_016 おだんごはじかれ上手
+    -- 18 Pl_KitchenSkill_017 おだんご弱いの来い！
+    -- 19 Pl_KitchenSkill_018 おだんご換算術
+    -- 20 Pl_KitchenSkill_019 おだんご暴れ撃ち
+    -- 21 Pl_KitchenSkill_020 おだんご壁走り達人
+    -- 22 Pl_KitchenSkill_021 おだんごＫＯ術
+    -- 23 Pl_KitchenSkill_022 おだんご金運術
+    -- 24 Pl_KitchenSkill_023 おだんご砲撃術
+    -- 25 Pl_KitchenSkill_024 おだんごド根性
+    -- 26 Pl_KitchenSkill_025 おだんご免疫術
+    -- 27 Pl_KitchenSkill_026 おだんごオトモ指導術
+    -- 28 Pl_KitchenSkill_027 おだんご短期催眠術
+    -- 29 Pl_KitchenSkill_028 おだんごふんばり術
+    -- 30 Pl_KitchenSkill_029 おだんごビルドアップ
+    -- 31 Pl_KitchenSkill_030 おだんご報酬金保険
+    -- 32 Pl_KitchenSkill_031 おだんご復活術
+    -- 33 Pl_KitchenSkill_032 おだんご環境生物召喚
+    -- 34 Pl_KitchenSkill_033 おだんご投擲術
+    -- 35 Pl_KitchenSkill_034 おだんご火耐性【小】
+    -- 36 Pl_KitchenSkill_035 おだんご火耐性【大】
+    -- 37 Pl_KitchenSkill_036 おだんご水耐性【小】
+    -- 38 Pl_KitchenSkill_037 おだんご水耐性【大】
+    -- 39 Pl_KitchenSkill_038 おだんご雷耐性【小】
+    -- 40 Pl_KitchenSkill_039 おだんご雷耐性【大】
+    -- 41 Pl_KitchenSkill_040 おだんご氷耐性【小】
+    -- 42 Pl_KitchenSkill_041 おだんご氷耐性【大】
+    -- 43 Pl_KitchenSkill_042 おだんご龍耐性【小】
+    -- 44 Pl_KitchenSkill_043 おだんご龍耐性【大】
+    -- 45 Pl_KitchenSkill_044 おだんご採蜜術
+    -- 46 Pl_KitchenSkill_045 おだんご腹へらず
+    -- 47 Pl_KitchenSkill_046 おだんご鳥寄せの術
+    -- 48 Pl_KitchenSkill_047 おだんごぶら下がり術
+    -- 49 Pl_KitchenSkill_048 おだんご防護術
+    if Kd.KitchenSkill[49] then
+        if not Pl.KitchenSkill_048[1] and St._KitchenSkill048_Damage >= Pl.KitchenSkill_048[2][Kd.KitchenSkill[49]:get_field("_SkillLv")] then
+            Pl.KitchenSkill_048[1] = true
+        end
+    end
+    -- 50 Pl_KitchenSkill_049 おだんご強化延長術
+    -- 51 Pl_KitchenSkill_050 おだんご生命力
+    -- 52 Pl_KitchenSkill_051 おだんご逃走術
+    -- 53 Pl_KitchenSkill_052 おだんご具足術
+    -- 54 Pl_KitchenSkill_053 おだんご疾替え術
+    -- 55 Pl_KitchenSkill_054 おだんご絆術
+    -- 56 Pl_KitchenSkill_055 おだんご超回復力
+
+
+    -- 0 Concert_000 自分強化
+    -- 1 Concert_001 攻撃力UP
+    -- 2 Concert_002 防御力UP
+    -- 3 Concert_003 会心率UP
+    -- 4 Concert_004 属性攻撃力UP
+    -- 5 Concert_005 攻撃力＆防御力UP
+    -- 6 Concert_006 攻撃力＆会心率UP
+    -- 7 Concert_007 のけぞり無効
+    -- 8 Concert_008 聴覚保護【小】
+    -- 9 Concert_009 聴覚保護【大】
+    -- 10 Concert_010 振動無効
+    -- 11 Concert_011 風圧無効
+    -- 12 Concert_012 気絶無効
+    -- 13 Concert_013 全属性やられ無効
+    -- 14 Concert_014 精霊王の加護
+    -- 15 Concert_015 体力回復【小】
+    -- 16 Concert_016 体力回復【大】
+    -- 17 Concert_017 解毒＆体力回復【小】
+    -- 18 Concert_018 体力継続回復
+    -- 19 Concert_019 スタミナ消費軽減
+    -- 20 Concert_020 スタミナ回復速度UP
+    -- 21 Concert_021 斬れ味消費軽減
+    -- 22 Concert_022 地形ダメージ無効
+    -- 23 Concert_023 高周衝撃波
+    -- 24 Concert_024 音の防壁
+    -- 25 Concert_025 気炎の旋律
 end
 
-sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("update"), function(args) ; end, SkillMessage)
+sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("update"), update)
+
+
+local preVital = 0
+local preDamage = 0
+local isGuardDamage = nil
+local playerData = nil
+
+local function on_pre_checkDamage_calcDamage(args)
+    playerData = sdk.to_managed_object(args[2]):call("get_PlayerData")
+
+    if sdk.to_int64(args[7]) == 0 then isGuardDamage = true else isGuardDamage = false end
+
+    preDamage = sdk.to_float(args[3])
+    preVital = playerData:call("getFloatVital") - playerData:get_field("_bleedingDamageStockVital")
+end
+
+local function on_post_checkDamage_calcDamage(retval)
+    local postVital = playerData:call("getFloatVital")
+
+    local postDamage = preVital - postVital
+
+    if isGuardDamage or preDamage == postDamage or postVital > preVital or St.get_IsEnableEquipSkill225 then
+        return retval
+    end
+
+    if Pl.KitchenSkill_048[1] then
+        preDamage = preDamage * Pl.KitchenSkill_048[3][Kd.KitchenSkill[49]:get_field("_SkillLv")]
+        Pl.KitchenSkill_048[1] = false
+    end
+
+    if Pl.EquipSkill_222[1] then
+        preDamage = preDamage * Pl.EquipSkill_222[2][Ed.EquipSkill[135]:get_field("SkillLv")]
+        Pl.EquipSkill_222[1] = false
+    end
+
+    if math.floor(preDamage) ~= postDamage then
+        getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
+    end
+
+    return retval
+end
+
+sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
+    on_pre_checkDamage_calcDamage, on_post_checkDamage_calcDamage)
