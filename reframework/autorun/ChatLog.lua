@@ -66,8 +66,8 @@ local function init()
             _EquipSkillParameter:get_field("_EquipSkill_222_Lv2"),
             _EquipSkillParameter:get_field("_EquipSkill_222_Lv3") } },
         EquipSkill_222   = { false, {
-            _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv1"),
-            _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2") },
+            (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv1")) / 100,
+            (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2")) / 100 },
             _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax") },
         EquipSkill_224   = false,
         EquipSkill_231   = false,
@@ -524,7 +524,7 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         end
         -- 135 Pl_EquipSkill_222 剛心
         if Ed.EquipSkill[135] then
-            if St._EquipSkill223Accumulator == Pl.EquipSkill_222[3] then
+            if not Pl.EquipSkill_222[1] and St._EquipSkill223Accumulator == Pl.EquipSkill_222[3] then
                 Pl.EquipSkill_222[1] = true
             end
         end
@@ -683,39 +683,52 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
 local preDamage
 local postDamage
 local isMasterPlayer
+local isReduce
 
-local function roundDown(value, neg)
-    local digits = 1000000
-    local sign = 1
-    if neg then sign = -1 end
-    return math.floor(value * sign * digits) / digits
+local function xRoundOff(num, dgt)
+    local round = 10 ^ (-1 * dgt)
+    return math.floor((num + 5 * (10 ^ (dgt - 1))) * round) / round
 end
 
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
     function(args)
         isMasterPlayer = sdk.to_managed_object(args[2]):call("isMasterPlayer")
-        preDamage = roundDown(sdk.to_float(args[3]))
+
+        if not isMasterPlayer then return end
+
+        preDamage = xRoundOff(sdk.to_float(args[3]), -5)
+
+        if Pl.EquipSkill_222[1] and St._EquipSkill223Accumulator == 0 then
+            preDamage = xRoundOff(preDamage * Pl.EquipSkill_222[2][Ed.EquipSkill[135]:get_field("SkillLv")], -5)
+            Pl.EquipSkill_222[1] = false
+        end
     end)
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)"),
     function(args)
-        postDamage = roundDown(sdk.to_float(args[3]), true)
-    end)
+        postDamage = nil
+        isReduce = false
 
-sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigger(System.UInt32, via.GameObject)"),
-    function(args)
-        if isMasterPlayer and sdk.to_int64(args[2]) == 0x2acf664e then
+        if not preDamage then return end
+
+        postDamage = xRoundOff(sdk.to_float(args[3]) * -1, -5)
+
+        if sdk.to_float(args[10]) < 0 then
             if Pl.KitchenSkill_048[1] then
-                preDamage = preDamage * roundDown(Pl.KitchenSkill_048[3][Kd.KitchenSkill[49]:get_field("_SkillLv")])
+                preDamage = preDamage * Pl.KitchenSkill_048[3][Kd.KitchenSkill[49]:get_field("_SkillLv")]
                 Pl.KitchenSkill_048[1] = false
             end
+        end
+    end,
+    function(retval)
+        if not isMasterPlayer or not postDamage or not preDamage then return retval end
 
-            if Pl.EquipSkill_222[1] then
-                preDamage = preDamage * roundDown(Pl.EquipSkill_222[2][Ed.EquipSkill[135]:get_field("SkillLv")])
-                Pl.EquipSkill_222[1] = false
-            end
+        if preDamage ~= postDamage then isReduce = true end
 
-            if preDamage ~= postDamage or St.get_IsEnableEquipSkill225 then
-                getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
-            end
+        preDamage = nil
+    end)
+sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigger(System.UInt32, via.GameObject)"),
+    function(args)
+        if isReduce and sdk.to_int64(args[2]) == 0x2acf664e then
+            getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
         end
     end)
