@@ -1,7 +1,7 @@
 local ModUI = require("ModOptionsMenu.ModMenuApi")
 
 if ModUI then
-    local isFirstOpen
+    local isFirstOpen = true
     local Default_ScaleAndRateData = {}
 
     local function getEnemyManager()
@@ -76,7 +76,7 @@ if ModUI then
 
     local function init_ScaleAndRateData(set)
         local _RandomScaleTableDataList = get_RandomScaleTableDataList()
-        if isFirstOpen or not _RandomScaleTableDataList then return end
+        if not isFirstOpen and not set then return end
         for i = 1, #_RandomScaleTableDataList do
             if not Default_ScaleAndRateData[i] then Default_ScaleAndRateData[i] = {} end
             local _ScaleAndRateData = _RandomScaleTableDataList[i]:get_field("_ScaleAndRateData"):get_elements()
@@ -89,6 +89,7 @@ if ModUI then
                 end
             end
         end
+        isFirstOpen = false
     end
 
     local function set_ScaleAndRateData(PresetcurValue)
