@@ -70,6 +70,9 @@ local function init()
             (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2")) / 100 },
             _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax") },
         EquipSkill_224   = false,
+        EquipSkill_225   = false,
+        EquipSkill_226   = false,
+        EquipSkill_230   = false,
         EquipSkill_231   = false,
         EquipSkill_232   = { false, {
             _EquipSkillParameter:get_field("_EquipSkill_231_Lv1_WpOn_Timer") * 60,
@@ -129,7 +132,10 @@ local function getState()
         _EquipSkill222_Timer         = playerData:get_field("_EquipSkill222_Timer"),
         _EquipSkill223Accumulator    = playerData:get_field("_EquipSkill223Accumulator"),
         isHateTarget                 = player:call("isHateTarget()"),
+        _IsEquipSkill226Enable       = player:get_field("_IsEquipSkill226Enable"),
+        _EquipSkill227State          = playerData:get_field("_EquipSkill227State"),
         get_IsEnableEquipSkill225    = player:call("get_IsEnableEquipSkill225()"),
+        _EquipSkill229UseUpFlg       = player:get_field("_EquipSkill229UseUpFlg"),
         isActiveEquipSkill230        = player:call("isActiveEquipSkill230()"),
         _EquipSkill231_WireNumTimer  = playerData:get_field("_EquipSkill231_WireNumTimer"),
         _EquipSkill231_WpOffTimer    = playerData:get_field("_EquipSkill231_WpOffTimer"),
@@ -539,11 +545,38 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
             end
         end
         -- 138 Pl_EquipSkill_225 風纏
+        if Ed.EquipSkill[138] then
+            if not Pl.EquipSkill_225 and St._IsEquipSkill226Enable then
+                Pl.EquipSkill_225 = true
+                AddChatInfomation(1, 138, Pl.EquipSkill_225)
+            elseif Pl.EquipSkill_225 and not St._IsEquipSkill226Enable then
+                Pl.EquipSkill_225 = false
+                AddChatInfomation(1, 138, Pl.EquipSkill_225)
+            end
+        end
         -- 139 Pl_EquipSkill_226 粉塵纏
+        if Ed.EquipSkill[139] then
+            if not Pl.EquipSkill_226 and St._EquipSkill227State ~= 0 then
+                Pl.EquipSkill_226 = true
+                AddChatInfomation(1, 139, Pl.EquipSkill_226)
+            elseif Pl.EquipSkill_226 and St._EquipSkill227State == 0 then
+                Pl.EquipSkill_226 = false
+                AddChatInfomation(1, 139, Pl.EquipSkill_226)
+            end
+        end
         -- 137 Pl_EquipSkill_227 狂化
         -- 145 Pl_EquipSkill_228 奮闘
         -- 140 Pl_EquipSkill_229 冰気錬成
         -- 141 Pl_EquipSkill_230 龍気変換
+        if Ed.EquipSkill[141] then
+            if not Pl.EquipSkill_230 and St._EquipSkill229UseUpFlg then
+                Pl.EquipSkill_230 = true
+                AddChatInfomation(1, 141, Pl.EquipSkill_230)
+            elseif Pl.EquipSkill_230 and not St._EquipSkill229UseUpFlg then
+                Pl.EquipSkill_230 = false
+                AddChatInfomation(1, 141, Pl.EquipSkill_230)
+            end
+        end
         -- 142 Pl_EquipSkill_231 天衣無崩
         if Ed.EquipSkill[142] then
             if not Pl.EquipSkill_231 and St.isActiveEquipSkill230 then
