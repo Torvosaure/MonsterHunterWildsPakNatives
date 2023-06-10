@@ -922,9 +922,9 @@ sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigge
     end)
 
 
-local ModUI = require("ModOptionsMenu.ModMenuApi")
+local success, ModUI = pcall(require, "ModOptionsMenu.ModMenuApi")
 
-if ModUI then
+if success then
     local preLoad
     local filepath = "Improved Skill Notifications/config.json"
     local conf     = json.load_file(filepath) or {}
