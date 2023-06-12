@@ -1001,6 +1001,7 @@ if ModUI then
 
         for i, _, v in pairsByKeys(base) do
             local find
+            v[1][4] = nil
             if tbl then
                 for _, w in ipairs(tbl) do
                     if not find and w[1] == v[1][1] then
