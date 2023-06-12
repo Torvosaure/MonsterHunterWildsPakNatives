@@ -884,25 +884,24 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("che
 
         if not isMasterPlayer then return end
 
-        preDamage = xRoundOff(sdk.to_float(args[3]), -5)
+        preDamage = xRoundOff(sdk.to_float(args[3]), -4)
 
         if Pl.EquipSkill._223[2][1] and St._EquipSkill223Accumulator == 0 then
-            preDamage = xRoundOff(preDamage * Pl.EquipSkill._223[3][1][Sd.EquipSkill[135]:get_field("SkillLv")], -5)
+            preDamage = xRoundOff(preDamage * Pl.EquipSkill._223[3][1][Sd.EquipSkill[135]:get_field("SkillLv")], -4)
             Pl.EquipSkill._223[2][1] = false
         end
     end)
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)"),
     function(args)
         postDamage = nil
-        isReduce = false
 
         if not preDamage then return end
 
-        postDamage = xRoundOff(sdk.to_float(args[3]) * -1, -5)
+        postDamage = xRoundOff(sdk.to_float(args[3]) * -1, -4)
 
         if sdk.to_float(args[10]) < 0 then
             if Pl.KitchenSkill._048[2][1] then
-                preDamage = preDamage * Pl.KitchenSkill._048[4][Sd.KitchenSkill[49]:get_field("_SkillLv")]
+                preDamage = xRoundOff(preDamage * Pl.KitchenSkill._048[4][Sd.KitchenSkill[49]:get_field("_SkillLv")], -4)
                 Pl.KitchenSkill._048[2][1] = false
             end
         end
@@ -916,8 +915,12 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("dam
     end)
 sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigger(System.UInt32, via.GameObject)"),
     function(args)
-        if isReduce and sdk.to_int64(args[2]) == 0x2ACF664E then
-            getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
+        if isReduce then
+            if sdk.to_int64(args[2]) == 0x2ACF664E then
+                getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
+            end
+
+            isReduce = false
         end
     end)
 
