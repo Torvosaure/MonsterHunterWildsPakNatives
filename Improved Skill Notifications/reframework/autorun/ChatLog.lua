@@ -48,108 +48,327 @@ local function getPlKitchenSkillId(Enum)
     return PlKitchenSkillId:get_field(Enum):get_data()
 end
 
-local function getPlData()
+local function getSkillData()
     local playerQuestDefine     = getPlayerQuestDefine()
     local _EquipSkillParameter  = getPlayerManager():get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
     local _OdangoSkillParameter = getPlayerManager():get_field("_PlayerUserDataSkillParameter"):get_field("_OdangoSkillParameter")
     return {
         EquipSkill = {
-            _001 = { { "Pl_EquipSkill_001", true, true, getPlEquipSkillId("Pl_EquipSkill_001") }, { false }, {
-                playerQuestDefine:get_field("SkillChallengeTime"):get_data() } },
-            _002 = { { "Pl_EquipSkill_002", true, true, getPlEquipSkillId("Pl_EquipSkill_002") }, { false } },
-            _003 = { { "Pl_EquipSkill_003", true, true, getPlEquipSkillId("Pl_EquipSkill_003") }, { false } },
-            _004 = { { "Pl_EquipSkill_004", true, true, getPlEquipSkillId("Pl_EquipSkill_004") }, { false } },
-            _008 = { { "Pl_EquipSkill_008", true, true, getPlEquipSkillId("Pl_EquipSkill_008") }, { false } },
-            _009 = { { "Pl_EquipSkill_009", true, true, getPlEquipSkillId("Pl_EquipSkill_009") }, { false, false, false }, { 120 } },
-            _023 = { { "Pl_EquipSkill_023", true, false, getPlEquipSkillId("Pl_EquipSkill_023") } },
-            _036 = { { "Pl_EquipSkill_036", true, true, getPlEquipSkillId("Pl_EquipSkill_036") }, { false }, { 720 } },
-            _042 = { { "Pl_EquipSkill_042", true, true, getPlEquipSkillId("Pl_EquipSkill_042") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_042_CtlAddTime") * 60 } },
-            _089 = { { "Pl_EquipSkill_089", true, false, getPlEquipSkillId("Pl_EquipSkill_089") } },
-            _090 = { { "Pl_EquipSkill_090", true, true, getPlEquipSkillId("Pl_EquipSkill_090") }, { false }, { 0.35 } },
-            _091 = { { "Pl_EquipSkill_091", true, true, getPlEquipSkillId("Pl_EquipSkill_091") }, { false }, { 0 } },
-            _102 = { { "Pl_EquipSkill_102", true, true, getPlEquipSkillId("Pl_EquipSkill_102") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv4"),
-                _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv4"),
-                _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv5") } },
-            _105 = { { "Pl_EquipSkill_105", true, true, getPlEquipSkillId("Pl_EquipSkill_105") }, { false }, { 1800 } },
-            _204 = { { "Pl_EquipSkill_204", true, true, getPlEquipSkillId("Pl_EquipSkill_204") }, { false }, { 1800 } },
-            _206 = { { "Pl_EquipSkill_206", true, true, getPlEquipSkillId("Pl_EquipSkill_206") }, { false } },
-            _208 = { { "Pl_EquipSkill_208", true, true, getPlEquipSkillId("Pl_EquipSkill_208") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_208_Lv1_Duration") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_208_Lv2_Duration") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_208_Lv3_Duration") * 60, }, },
-            _209 = { { "Pl_EquipSkill_209", true, true, getPlEquipSkillId("Pl_EquipSkill_209") }, { false } },
-            _210 = { { "Pl_EquipSkill_210", true, false, getPlEquipSkillId("Pl_EquipSkill_210") } },
-            _215 = { { "Pl_EquipSkill_215", true, true, getPlEquipSkillId("Pl_EquipSkill_215") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_215_Lv1"):get_field("_Time") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_215_Lv2"):get_field("_Time") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_215_Lv3"):get_field("_Time") * 60 } },
-            _216 = { { "Pl_EquipSkill_216", true, true, getPlEquipSkillId("Pl_EquipSkill_216") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_216_Lv1"):get_field("_Bow_Duration") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_216_Lv2"):get_field("_Bow_Duration") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_216_Lv3"):get_field("_Bow_Duration") * 60, } },
-            _220 = { { "Pl_EquipSkill_220", true, false, getPlEquipSkillId("Pl_EquipSkill_220") }, { false } },
-            _222 = { { "Pl_EquipSkill_222", true, true, getPlEquipSkillId("Pl_EquipSkill_222") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_222_Lv1"),
-                _EquipSkillParameter:get_field("_EquipSkill_222_Lv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_222_Lv3") } },
-            _223 = { { "Pl_EquipSkill_223", true, false, getPlEquipSkillId("Pl_EquipSkill_223") }, { false }, { {
-                (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv1")) / 100,
-                (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2")) / 100 },
-                _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax") } },
-            _226 = { { "Pl_EquipSkill_226", true, true, getPlEquipSkillId("Pl_EquipSkill_226") }, { false } },
-            _227 = { { "Pl_EquipSkill_227", true, false, getPlEquipSkillId("Pl_EquipSkill_227") }, { false } },
-            _229 = { { "Pl_EquipSkill_229", true, true, getPlEquipSkillId("Pl_EquipSkill_229") }, { false } },
-            _230 = { { "Pl_EquipSkill_230", true, true, getPlEquipSkillId("Pl_EquipSkill_230") }, { false } },
-            _231 = { { "Pl_EquipSkill_231", true, true, getPlEquipSkillId("Pl_EquipSkill_231") }, { false }, {
-                _EquipSkillParameter:get_field("_EquipSkill_231_Lv1_WpOn_Timer") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_231_Lv2_WpOn_Timer") * 60,
-                _EquipSkillParameter:get_field("_EquipSkill_231_Lv3_WpOn_Timer") * 60, }, },
-            _232 = { { "Pl_EquipSkill_232", true, true, getPlEquipSkillId("Pl_EquipSkill_232") }, { false }, { {
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv1"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv1"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv1"), }, {
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv2"), }, {
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv1"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv1"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv1"), }, {
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv2"),
-                _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv2"), } } }
+            _001 = {
+                Enum      = "Pl_EquipSkill_001",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_001"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { playerQuestDefine:get_field("SkillChallengeTime"):get_data() }
+            },
+            _002 = {
+                Enum      = "Pl_EquipSkill_002",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_002"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _003 = {
+                Enum      = "Pl_EquipSkill_003",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_003"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _004 = {
+                Enum      = "Pl_EquipSkill_004",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_004"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _008 = {
+                Enum      = "Pl_EquipSkill_008",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_008"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _009 = {
+                Enum      = "Pl_EquipSkill_009",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_009"),
+                Notice    = { true, true },
+                Condition = { false, false, false },
+                Param     = { 120 }
+            },
+            _023 = {
+                Enum      = "Pl_EquipSkill_023",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_023"),
+                Notice    = { true, false },
+                Condition = {},
+                Param     = {}
+            },
+            _036 = {
+                Enum      = "Pl_EquipSkill_036",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_036"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { 720 }
+            },
+            _042 = {
+                Enum      = "Pl_EquipSkill_042",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_042"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { _EquipSkillParameter:get_field("_EquipSkill_042_CtlAddTime") * 60 }
+            },
+            _089 = {
+                Enum      = "Pl_EquipSkill_089",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_089"),
+                Notice    = { true, false },
+                Condition = {},
+                Param     = {}
+            },
+            _090 = {
+                Enum      = "Pl_EquipSkill_090",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_090"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { 0.35 }
+            },
+            _091 = {
+                Enum      = "Pl_EquipSkill_091",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_091"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { 0 }
+            },
+            _102 = {
+                Enum      = "Pl_EquipSkill_102",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_102"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv4"),
+                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv4"),
+                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv5")
+                }
+            },
+            _105 = {
+                Enum      = "Pl_EquipSkill_105",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_105"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { 1800 }
+            },
+            _204 = {
+                Enum      = "Pl_EquipSkill_204",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_204"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { 1800 }
+            },
+            _206 = {
+                Enum      = "Pl_EquipSkill_206",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_206"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _208 = {
+                Enum      = "Pl_EquipSkill_208",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_208"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_208_Lv1_Duration") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_208_Lv2_Duration") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_208_Lv3_Duration") * 60
+                }
+            },
+            _209 = {
+                Enum      = "Pl_EquipSkill_209",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_209"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _210 = {
+                Enum      = "Pl_EquipSkill_210",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_210"),
+                Notice    = { true, false },
+                Condition = { false },
+                Param     = {}
+            },
+            _215 = {
+                Enum      = "Pl_EquipSkill_215",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_215"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_215_Lv1"):get_field("_Time") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_215_Lv2"):get_field("_Time") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_215_Lv3"):get_field("_Time") * 60
+                }
+            },
+            _216 = {
+                Enum      = "Pl_EquipSkill_216",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_216"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_216_Lv1"):get_field("_Bow_Duration") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_216_Lv2"):get_field("_Bow_Duration") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_216_Lv3"):get_field("_Bow_Duration") * 60
+                }
+            },
+            _220 = {
+                Enum      = "Pl_EquipSkill_220",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_220"),
+                Notice    = { true, false },
+                Condition = { false },
+                Param     = {}
+            },
+            _222 = {
+                Enum      = "Pl_EquipSkill_222",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_222"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_222_Lv1"),
+                    _EquipSkillParameter:get_field("_EquipSkill_222_Lv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_222_Lv3")
+                }
+            },
+            _223 = {
+                Enum      = "Pl_EquipSkill_223",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_223"),
+                Notice    = { true, false },
+                Condition = { false },
+                Param     = { {
+                    (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv1")) / 100,
+                    (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2")) / 100
+                }, {
+                    _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax")
+                } }
+            },
+            _226 = {
+                Enum      = "Pl_EquipSkill_226",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_226"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _227 = {
+                Enum      = "Pl_EquipSkill_227",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_227"),
+                Notice    = { true, false },
+                Condition = { false },
+                Param     = {}
+            },
+            _229 = {
+                Enum      = "Pl_EquipSkill_229",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_229"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _230 = {
+                Enum      = "Pl_EquipSkill_230",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_230"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {}
+            },
+            _231 = {
+                Enum      = "Pl_EquipSkill_231",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_231"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_231_Lv1_WpOn_Timer") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_231_Lv2_WpOn_Timer") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_231_Lv3_WpOn_Timer") * 60
+                }
+            },
+            _232 = {
+                Enum      = "Pl_EquipSkill_232",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_232"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { {
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv1"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv1"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv1")
+                }, {
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv2")
+                }, {
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv1"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv1"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv1")
+                }, {
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv2"),
+                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv2")
+                } }
+            }
         },
         KitchenSkill = {
-            _002 = { { "Pl_KitchenSkill_002", true, true, getPlKitchenSkillId("Pl_KitchenSkill_002") }, { false }, {
-                _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv1"):get_field("_EnableHP"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv2"):get_field("_EnableHP"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv3"):get_field("_EnableHP"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv4"):get_field("_EnableHP"), }, },
-            _024 = { { "Pl_KitchenSkill_024", true, false, getPlKitchenSkillId("Pl_KitchenSkill_024") }, { false } },
-            _027 = { { "Pl_KitchenSkill_027", true, true, getPlKitchenSkillId("Pl_KitchenSkill_027") }, { false }, {
-                _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv1"):get_field("_Time") * 3600,
-                _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv2"):get_field("_Time") * 3600,
-                _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv3"):get_field("_Time") * 3600,
-                _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv4"):get_field("_Time") * 3600 } },
-            _048 = { { "Pl_KitchenSkill_048", true, false, getPlKitchenSkillId("Pl_KitchenSkill_048") }, { false }, { {
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Damage"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Damage"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Damage"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Damage") }, {
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Reduce"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Reduce"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Reduce"),
-                _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Reduce") } } }
+            _002 = {
+                Enum      = "Pl_KitchenSkill_002",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_002"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv1"):get_field("_EnableHP"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv2"):get_field("_EnableHP"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv3"):get_field("_EnableHP"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv4"):get_field("_EnableHP")
+                }
+            },
+            _024 = {
+                Enum      = "Pl_KitchenSkill_024",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_024"),
+                Notice    = { true, false },
+                Condition = { false },
+                Param     = {}
+            },
+            _027 = {
+                Enum      = "Pl_KitchenSkill_027",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_027"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv1"):get_field("_Time") * 3600,
+                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv2"):get_field("_Time") * 3600,
+                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv3"):get_field("_Time") * 3600,
+                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv4"):get_field("_Time") * 3600
+                }
+            },
+            _048 = {
+                Enum      = "Pl_KitchenSkill_048",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_048"),
+                Notice    = { true, false },
+                Condition = { false },
+                Param     = { {
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Damage"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Damage"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Damage"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Damage")
+                }, {
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Reduce"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Reduce"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Reduce"),
+                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Reduce")
+                } }
+            }
         }
     }
 end
 
 local function init()
     reset = true
-    return getPlData()
+    print("reset")
+    return getSkillData()
 end
 
 local function getState()
@@ -374,74 +593,74 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 0 Pl_EquipSkill_None
         -- 1 Pl_EquipSkill_000 攻撃
         -- 2 Pl_EquipSkill_001 挑戦者
-        if Sd.EquipSkill[Pl.EquipSkill._001[1][4]] then
-            if not Pl.EquipSkill._001[2][1] and St._ChallengeTimer == Pl.EquipSkill._001[3][1] then
-                Pl.EquipSkill._001[2][1] = true
-                AddChatInfomation(1, 2, Pl.EquipSkill._001[2][1])
-            elseif Pl.EquipSkill._001[2][1] and St._ChallengeTimer == 0 then
-                Pl.EquipSkill._001[2][1] = false
-                AddChatInfomation(1, 2, Pl.EquipSkill._001[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._001.Id] then
+            if not Pl.EquipSkill._001.Condition[1] and St._ChallengeTimer == Pl.EquipSkill._001.Param[1] then
+                Pl.EquipSkill._001.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._001.Id, Pl.EquipSkill._001.Condition[1])
+            elseif Pl.EquipSkill._001.Condition[1] and St._ChallengeTimer == 0 then
+                Pl.EquipSkill._001.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._001.Id, Pl.EquipSkill._001.Condition[1])
             end
         end
         -- 3 Pl_EquipSkill_002 フルチャージ
-        if Sd.EquipSkill[Pl.EquipSkill._002[1][4]] then
-            if not Pl.EquipSkill._002[2][1] and St.playerHealth == St.playerMaxHealth then
-                Pl.EquipSkill._002[2][1] = true
-                AddChatInfomation(1, 3, Pl.EquipSkill._002[2][1])
-            elseif Pl.EquipSkill._002[2][1] and St.playerHealth < St.playerMaxHealth then
-                Pl.EquipSkill._002[2][1] = false
-                AddChatInfomation(1, 3, Pl.EquipSkill._002[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._002.Id] then
+            if not Pl.EquipSkill._002.Condition[1] and St.playerHealth == St.playerMaxHealth then
+                Pl.EquipSkill._002.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._002.Id, Pl.EquipSkill._002.Condition[1])
+            elseif Pl.EquipSkill._002.Condition[1] and St.playerHealth < St.playerMaxHealth then
+                Pl.EquipSkill._002.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._002.Id, Pl.EquipSkill._002.Condition[1])
             end
         end
         -- 4 Pl_EquipSkill_003 逆恨み
-        if Sd.EquipSkill[Pl.EquipSkill._003[1][4]] then
-            if not Pl.EquipSkill._003[2][1] then
+        if Sd.EquipSkill[Pl.EquipSkill._003.Id] then
+            if not Pl.EquipSkill._003.Condition[1] then
                 if St.get_IsEnableEquipSkill225 or St.playerRedHealth > 0 then
-                    Pl.EquipSkill._003[2][1] = true
-                    AddChatInfomation(1, 4, Pl.EquipSkill._003[2][1])
+                    Pl.EquipSkill._003.Condition[1] = true
+                    AddChatInfomation(1, Pl.EquipSkill._003.Id, Pl.EquipSkill._003.Condition[1])
                 end
-            elseif Pl.EquipSkill._003[2][1] and not St.get_IsEnableEquipSkill225 and St.playerHealth == St.playerRawRedHealth and St.playerRedHealth == 0 then
-                Pl.EquipSkill._003[2][1] = false
-                AddChatInfomation(1, 4, Pl.EquipSkill._003[2][1])
+            elseif Pl.EquipSkill._003.Condition[1] and not St.get_IsEnableEquipSkill225 and St.playerHealth == St.playerRawRedHealth and St.playerRedHealth == 0 then
+                Pl.EquipSkill._003.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._003.Id, Pl.EquipSkill._003.Condition[1])
             end
         end
         -- 5 Pl_EquipSkill_004 死中に活
-        if Sd.EquipSkill[Pl.EquipSkill._004[1][4]] then
+        if Sd.EquipSkill[Pl.EquipSkill._004.Id] then
             if not Pl.EquipSkill._004 and St.isDebuffState then
                 Pl.EquipSkill._004 = true
-                AddChatInfomation(1, 5, Pl.EquipSkill._004)
+                AddChatInfomation(1, Pl.EquipSkill._004.Id, Pl.EquipSkill._004)
             elseif Pl.EquipSkill._004 and not St.isDebuffState then
                 Pl.EquipSkill._004 = false
-                AddChatInfomation(1, 5, Pl.EquipSkill._004)
+                AddChatInfomation(1, Pl.EquipSkill._004.Id, Pl.EquipSkill._004)
             end
         end
         -- 6 Pl_EquipSkill_005 見切り
         -- 7 Pl_EquipSkill_006 超会心
         -- 8 Pl_EquipSkill_007 弱点特効
         -- 9 Pl_EquipSkill_008 力の解放
-        if Sd.EquipSkill[Pl.EquipSkill._008[1][4]] then
-            if not Pl.EquipSkill._008[2][1] and St._PowerFreedomTimer == Pl.EquipSkill._001[3][1] then
-                Pl.EquipSkill._008[2][1] = true
-                AddChatInfomation(1, 9, Pl.EquipSkill._008[2][1])
-            elseif Pl.EquipSkill._008[2][1] and St._PowerFreedomTimer == 0 then
-                Pl.EquipSkill._008[2][1] = false
-                AddChatInfomation(1, 9, Pl.EquipSkill._008[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._008.Id] then
+            if not Pl.EquipSkill._008.Condition[1] and St._PowerFreedomTimer == Pl.EquipSkill._001.Param[1] then
+                Pl.EquipSkill._008.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._008.Id, Pl.EquipSkill._008.Condition[1])
+            elseif Pl.EquipSkill._008.Condition[1] and St._PowerFreedomTimer == 0 then
+                Pl.EquipSkill._008.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._008.Id, Pl.EquipSkill._008.Condition[1])
             end
         end
         -- 10 Pl_EquipSkill_009 渾身
-        if Sd.EquipSkill[Pl.EquipSkill._009[1][4]] then
-            if not Pl.EquipSkill._009[2][3] and St._WholeBodyTimer > Pl.EquipSkill._009[3][1] then
-                Pl.EquipSkill._009[2][3] = true
+        if Sd.EquipSkill[Pl.EquipSkill._009.Id] then
+            if not Pl.EquipSkill._009.Condition[3] and St._WholeBodyTimer > Pl.EquipSkill._009.Param[1] then
+                Pl.EquipSkill._009.Condition[3] = true
             end
-            if not Pl.EquipSkill._009[2][1] and Pl.EquipSkill._009[2][3] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer == 0 then
-                Pl.EquipSkill._009[2][1] = true
-                AddChatInfomation(1, 10, Pl.EquipSkill._009[2][1])
-            elseif Pl.EquipSkill._009[2][1] and Pl.EquipSkill._009[2][2] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
-                Pl.EquipSkill._009[2][1] = false
-                AddChatInfomation(1, 10, Pl.EquipSkill._009[2][1])
-                Pl.EquipSkill._009[2][2] = false
-            elseif Pl.EquipSkill._009[2][1] and not Pl.EquipSkill._009[2][2] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
-                Pl.EquipSkill._009[2][2] = true
+            if not Pl.EquipSkill._009.Condition[1] and Pl.EquipSkill._009.Condition[3] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer == 0 then
+                Pl.EquipSkill._009.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._009.Id, Pl.EquipSkill._009.Condition[1])
+            elseif Pl.EquipSkill._009.Condition[1] and Pl.EquipSkill._009.Condition[2] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+                Pl.EquipSkill._009.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._009.Id, Pl.EquipSkill._009.Condition[1])
+                Pl.EquipSkill._009.Condition[2] = false
+            elseif Pl.EquipSkill._009.Condition[1] and not Pl.EquipSkill._009.Condition[2] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+                Pl.EquipSkill._009.Condition[2] = true
             end
         end
         -- 11 Pl_EquipSkill_010 会心撃【属性】
@@ -472,13 +691,13 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 35 Pl_EquipSkill_034 ガード性能
         -- 36 Pl_EquipSkill_035 ガード強化
         -- 37 Pl_EquipSkill_036 攻めの守勢
-        if Sd.EquipSkill[Pl.EquipSkill._036[1][4]] then
-            if St._EquipSkill_036_Timer == Pl.EquipSkill._036[3][1] then
-                Pl.EquipSkill._036[2][1] = true
-                AddChatInfomation(1, 37, Pl.EquipSkill._036[2][1])
-            elseif Pl.EquipSkill._036[2][1] and St._EquipSkill_036_Timer == 0 then
-                Pl.EquipSkill._036[2][1] = false
-                AddChatInfomation(1, 37, Pl.EquipSkill._036[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._036.Id] then
+            if St._EquipSkill_036_Timer == Pl.EquipSkill._036.Param[1] then
+                Pl.EquipSkill._036.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._036.Id, Pl.EquipSkill._036.Condition[1])
+            elseif Pl.EquipSkill._036.Condition[1] and St._EquipSkill_036_Timer == 0 then
+                Pl.EquipSkill._036.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._036.Id, Pl.EquipSkill._036.Condition[1])
             end
         end
         -- 38 Pl_EquipSkill_037 抜刀術【技】
@@ -487,13 +706,13 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 41 Pl_EquipSkill_040 ＫＯ術
         -- 42 Pl_EquipSkill_041 スタミナ奪取
         -- 43 Pl_EquipSkill_042 滑走強化
-        if Sd.EquipSkill[Pl.EquipSkill._042[1][4]] then
-            if not Pl.EquipSkill._042[2][1] and St._SlidingPowerupTimer == Pl.EquipSkill._042[3][1] then
-                Pl.EquipSkill._042[2][1] = true
-                AddChatInfomation(1, 43, Pl.EquipSkill._042[2][1])
-            elseif Pl.EquipSkill._042[2][1] and St._SlidingPowerupTimer == 0 then
-                Pl.EquipSkill._042[2][1] = false
-                AddChatInfomation(1, 43, Pl.EquipSkill._042[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._042.Id] then
+            if not Pl.EquipSkill._042.Condition[1] and St._SlidingPowerupTimer == Pl.EquipSkill._042.Param[1] then
+                Pl.EquipSkill._042.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._042.Id, Pl.EquipSkill._042.Condition[1])
+            elseif Pl.EquipSkill._042.Condition[1] and St._SlidingPowerupTimer == 0 then
+                Pl.EquipSkill._042.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._042.Id, Pl.EquipSkill._042.Condition[1])
             end
         end
         -- 44 Pl_EquipSkill_043 笛吹き名人
@@ -545,29 +764,29 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 90 Pl_EquipSkill_089 満足感
 
         -- 91 Pl_EquipSkill_090 火事場力
-        if Sd.EquipSkill[Pl.EquipSkill._090[1][4]] then
-            if not Pl.EquipSkill._090[2][1] and not Pl.KitchenSkill._002[2][1] and St.playerHealth <= St.playerMaxHealth * Pl.EquipSkill._090[3][1] then
-                Pl.EquipSkill._090[2][1] = true
-                AddChatInfomation(1, 91, Pl.EquipSkill._090[2][1])
-            elseif Pl.EquipSkill._090[2][1] and St.playerHealth > St.playerMaxHealth * Pl.EquipSkill._090[2] then
-                Pl.EquipSkill._090[2][1] = false
-                AddChatInfomation(1, 91, Pl.EquipSkill._090[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._090.Id] then
+            if not Pl.EquipSkill._090.Condition[1] and not Pl.KitchenSkill._002.Condition[1] and St.playerHealth <= St.playerMaxHealth * Pl.EquipSkill._090.Param[1] then
+                Pl.EquipSkill._090.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._090.Id, Pl.EquipSkill._090.Condition[1])
+            elseif Pl.EquipSkill._090.Condition[1] and St.playerHealth > St.playerMaxHealth * Pl.EquipSkill._090.Param[1] then
+                Pl.EquipSkill._090.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._090.Id, Pl.EquipSkill._090.Condition[1])
             end
         end
         -- 92 Pl_EquipSkill_091 不屈
         if St.isEquipSkill091 then
-            if Sd.EquipSkill[Pl.EquipSkill._091[1][4]] then
-                if St._DieCount - Pl.EquipSkill._091[3][1] > 0 or (St._DieCount > 0 and not Pl.EquipSkill._091[2][1]) then
-                    Pl.EquipSkill._091[3][1] = St._DieCount
-                    Pl.EquipSkill._091[2][1] = true
-                    AddChatInfomation(1, 92, Pl.EquipSkill._091[2][1])
-                elseif Pl.EquipSkill._091[2][1] and St._DieCount - Pl.EquipSkill._091[3][1] < 0 then
-                    Pl.EquipSkill._091[2][1] = false
-                    AddChatInfomation(1, 92, Pl.EquipSkill._091[2][1])
+            if Sd.EquipSkill[Pl.EquipSkill._091.Id] then
+                if St._DieCount - Pl.EquipSkill._091.Param[1] > 0 or (St._DieCount > 0 and not Pl.EquipSkill._091.Condition[1]) then
+                    Pl.EquipSkill._091.Param[1] = St._DieCount
+                    Pl.EquipSkill._091.Condition[1] = true
+                    AddChatInfomation(1, Pl.EquipSkill._091.Id, Pl.EquipSkill._091.Condition[1])
+                elseif Pl.EquipSkill._091.Condition[1] and St._DieCount - Pl.EquipSkill._091.Param[1] < 0 then
+                    Pl.EquipSkill._091.Condition[1] = false
+                    AddChatInfomation(1, Pl.EquipSkill._091.Id, Pl.EquipSkill._091.Condition[1])
                 end
-            elseif not Sd.EquipSkill[Pl.EquipSkill._091[1][4]] and Pl.EquipSkill._091[2][1] then
-                Pl.EquipSkill._091[2][1] = false
-                AddChatInfomation(1, 92, Pl.EquipSkill._091[2][1])
+            elseif not Sd.EquipSkill[Pl.EquipSkill._091.Id] and Pl.EquipSkill._091.Condition[1] then
+                Pl.EquipSkill._091.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._091.Id, Pl.EquipSkill._091.Condition[1])
             end
         end
         -- 93 Pl_EquipSkill_092 ひるみ軽減
@@ -581,25 +800,25 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 101 Pl_EquipSkill_100 鋼殻の恩恵
         -- 102 Pl_EquipSkill_101 炎鱗の恩恵
         -- 103 Pl_EquipSkill_102 龍気活性
-        if Sd.EquipSkill[Pl.EquipSkill._102[1][4]] then
-            if not Pl.EquipSkill._102[2][1] and St.playerHealth <= St.playerMaxHealth * Pl.EquipSkill._102[3][Sd.EquipSkill[Pl.EquipSkill._102[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._102[2][1] = true
-                AddChatInfomation(1, 103, Pl.EquipSkill._102[2][1])
-            elseif Pl.EquipSkill._102[2][1] and St.playerHealth > St.playerMaxHealth * Pl.EquipSkill._102[3][Sd.EquipSkill[Pl.EquipSkill._102[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._102[2][1] = false
-                AddChatInfomation(1, 103, Pl.EquipSkill._102[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._102.Id] then
+            if not Pl.EquipSkill._102.Condition[1] and St.playerHealth <= St.playerMaxHealth * Pl.EquipSkill._102.Param[Sd.EquipSkill[Pl.EquipSkill._102.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._102.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._102.Id, Pl.EquipSkill._102.Condition[1])
+            elseif Pl.EquipSkill._102.Condition[1] and St.playerHealth > St.playerMaxHealth * Pl.EquipSkill._102.Param[Sd.EquipSkill[Pl.EquipSkill._102.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._102.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._102.Id, Pl.EquipSkill._102.Condition[1])
             end
         end
         -- 104 Pl_EquipSkill_103 翔蟲使い
         -- 105 Pl_EquipSkill_104 壁面移動
         -- 106 Pl_EquipSkill_105 逆襲
-        if Sd.EquipSkill[Pl.EquipSkill._105[1][4]] then
-            if St._CounterattackPowerupTimer == Pl.EquipSkill._105[3][1] then
-                Pl.EquipSkill._105[2][1] = true
-                AddChatInfomation(1, 106, Pl.EquipSkill._105[2][1])
-            elseif Pl.EquipSkill._105[2][1] and St._CounterattackPowerupTimer == 0 then
-                Pl.EquipSkill._105[2][1] = false
-                AddChatInfomation(1, 106, Pl.EquipSkill._105[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._105.Id] then
+            if St._CounterattackPowerupTimer == Pl.EquipSkill._105.Param[1] then
+                Pl.EquipSkill._105.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._105.Id, Pl.EquipSkill._105.Condition[1])
+            elseif Pl.EquipSkill._105.Condition[1] and St._CounterattackPowerupTimer == 0 then
+                Pl.EquipSkill._105.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._105.Id, Pl.EquipSkill._105.Condition[1])
             end
         end
         -- 107 Pl_EquipSkill_106 高速変形
@@ -612,42 +831,42 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 114 Pl_EquipSkill_202 激昂
         -- 115 Pl_EquipSkill_203 業鎧【修羅】
         -- 116 Pl_EquipSkill_204 災禍転福
-        if Sd.EquipSkill[Pl.EquipSkill._204[1][4]] then
-            if not Pl.EquipSkill._204[2][1] and St._DisasterTurnPowerUpTimer == Pl.EquipSkill._204[3][1] then
-                Pl.EquipSkill._204[2][1] = true
-            elseif Pl.EquipSkill._204[2][1] and St._DisasterTurnPowerUpTimer == 0 then
-                Pl.EquipSkill._204[2][1] = false
-                AddChatInfomation(1, 116, Pl.EquipSkill._204[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._204.Id] then
+            if not Pl.EquipSkill._204.Condition[1] and St._DisasterTurnPowerUpTimer == Pl.EquipSkill._204.Param[1] then
+                Pl.EquipSkill._204.Condition[1] = true
+            elseif Pl.EquipSkill._204.Condition[1] and St._DisasterTurnPowerUpTimer == 0 then
+                Pl.EquipSkill._204.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._204.Id, Pl.EquipSkill._204.Condition[1])
             end
         end
         -- 117 Pl_EquipSkill_205 狂竜症【蝕】
         -- 118 Pl_EquipSkill_206 顕如盤石
-        if Sd.EquipSkill[Pl.EquipSkill._206[1][4]] then
-            if not Pl.EquipSkill._206[2][1] and St._FightingSpiritTimer == Pl.EquipSkill._001[3][1] then
-                Pl.EquipSkill._206[2][1] = true
-                AddChatInfomation(1, 118, Pl.EquipSkill._206[2][1])
-            elseif Pl.EquipSkill._206[2][1] and St._FightingSpiritTimer == 0 then
-                Pl.EquipSkill._206[2][1] = false
-                AddChatInfomation(1, 118, Pl.EquipSkill._206[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._206.Id] then
+            if not Pl.EquipSkill._206.Condition[1] and St._FightingSpiritTimer == Pl.EquipSkill._001.Param[1] then
+                Pl.EquipSkill._206.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._206.Id, Pl.EquipSkill._206.Condition[1])
+            elseif Pl.EquipSkill._206.Condition[1] and St._FightingSpiritTimer == 0 then
+                Pl.EquipSkill._206.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._206.Id, Pl.EquipSkill._206.Condition[1])
             end
         end
         -- 119 Pl_EquipSkill_207 闇討ち
         -- 120 Pl_EquipSkill_208 巧撃
-        if Sd.EquipSkill[Pl.EquipSkill._208[1][4]] then
-            if St._EquipSkill208_AtkUpTimer == Pl.EquipSkill._208[3][Sd.EquipSkill[Pl.EquipSkill._208[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._208[2][1] = true
-            elseif Pl.EquipSkill._208[2][1] and St._EquipSkill208_AtkUpTimer == 0 then
-                Pl.EquipSkill._208[2][1] = false
-                AddChatInfomation(1, 120, Pl.EquipSkill._208[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._208.Id] then
+            if St._EquipSkill208_AtkUpTimer == Pl.EquipSkill._208.Param[Sd.EquipSkill[Pl.EquipSkill._208.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._208.Condition[1] = true
+            elseif Pl.EquipSkill._208.Condition[1] and St._EquipSkill208_AtkUpTimer == 0 then
+                Pl.EquipSkill._208.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._208.Id, Pl.EquipSkill._208.Condition[1])
             end
         end
         -- 121 Pl_EquipSkill_209 煽衛
-        if Sd.EquipSkill[Pl.EquipSkill._209[1][4]] then
-            if not Pl.EquipSkill._209[2][1] and St.isHateTarget then
-                Pl.EquipSkill._209[2][1] = true
-            elseif Pl.EquipSkill._209[2][1] and not St.isHateTarget then
-                Pl.EquipSkill._209[2][1] = false
-                AddChatInfomation(1, 121, Pl.EquipSkill._209[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._209.Id] then
+            if not Pl.EquipSkill._209.Condition[1] and St.isHateTarget then
+                Pl.EquipSkill._209.Condition[1] = true
+            elseif Pl.EquipSkill._209.Condition[1] and not St.isHateTarget then
+                Pl.EquipSkill._209.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._209.Id, Pl.EquipSkill._209.Condition[1])
             end
         end
         -- 122 Pl_EquipSkill_210 合気
@@ -656,110 +875,110 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 125 Pl_EquipSkill_213 攻勢
         -- 126 Pl_EquipSkill_214 チューンアップ
         -- 127 Pl_EquipSkill_215 研磨術【鋭】
-        if Sd.EquipSkill[Pl.EquipSkill._215[1][4]] then
-            if St._BrandNewSharpnessAdjustUpTimer == Pl.EquipSkill._215[3][Sd.EquipSkill[Pl.EquipSkill._215[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._215[2][1] = true
-            elseif Pl.EquipSkill._215[2][1] and St._BrandNewSharpnessAdjustUpTimer == 0 then
-                Pl.EquipSkill._215[2][1] = false
-                AddChatInfomation(1, 127, Pl.EquipSkill._215[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._215.Id] then
+            if St._BrandNewSharpnessAdjustUpTimer == Pl.EquipSkill._215.Param[Sd.EquipSkill[Pl.EquipSkill._215.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._215.Condition[1] = true
+            elseif Pl.EquipSkill._215.Condition[1] and St._BrandNewSharpnessAdjustUpTimer == 0 then
+                Pl.EquipSkill._215.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._215.Id, Pl.EquipSkill._215.Condition[1])
             end
         end
         -- 128 Pl_EquipSkill_216 刃鱗磨き
-        if Sd.EquipSkill[Pl.EquipSkill._216[1][4]] then
-            if St._EquipSkill216_BottleUpTimer == Pl.EquipSkill._216[3][Sd.EquipSkill[Pl.EquipSkill._216[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._216[2][1] = true
-            elseif Pl.EquipSkill._216[2][1] and St._EquipSkill216_BottleUpTimer == 0 then
-                Pl.EquipSkill._216[2][1] = false
-                AddChatInfomation(1, 128, Pl.EquipSkill._216[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._216.Id] then
+            if St._EquipSkill216_BottleUpTimer == Pl.EquipSkill._216.Param[Sd.EquipSkill[Pl.EquipSkill._216.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._216.Condition[1] = true
+            elseif Pl.EquipSkill._216.Condition[1] and St._EquipSkill216_BottleUpTimer == 0 then
+                Pl.EquipSkill._216.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._216.Id, Pl.EquipSkill._216.Condition[1])
             end
         end
         -- 129 Pl_EquipSkill_217 壁面移動【翔】
         -- 130 Pl_EquipSkill_218 弱点特効【属性】
         -- 131 Pl_EquipSkill_219 連撃
         -- 132 Pl_EquipSkill_220 根性
-        if Sd.EquipSkill[Pl.EquipSkill._220[1][4]] and not Pl.EquipSkill._220[2][1] and St.isHaveSkillGuts then
-            Pl.EquipSkill._220[2][1] = true
-        elseif not Sd.EquipSkill[Pl.EquipSkill._220[1][4]] and Pl.EquipSkill._220[2][1] and not St.isHaveSkillGuts then
-            AddChatInfomation(1, 132, Pl.EquipSkill._220[2][1])
-            Pl.EquipSkill._220[2][1] = false
+        if Sd.EquipSkill[Pl.EquipSkill._220.Id] and not Pl.EquipSkill._220.Condition[1] and St.isHaveSkillGuts then
+            Pl.EquipSkill._220.Condition[1] = true
+        elseif not Sd.EquipSkill[Pl.EquipSkill._220.Id] and Pl.EquipSkill._220.Condition[1] and not St.isHaveSkillGuts then
+            AddChatInfomation(1, Pl.EquipSkill._220.Id, Pl.EquipSkill._220.Condition[1])
+            Pl.EquipSkill._220.Condition[1] = false
         end
         -- 133 Pl_EquipSkill_221 疾之息吹
         -- 134 Pl_EquipSkill_222 状態異常確定蓄積
-        if Sd.EquipSkill[Pl.EquipSkill._222[1][4]] then
-            if St._EquipSkill222_Timer == Pl.EquipSkill._222[3][Sd.EquipSkill[Pl.EquipSkill._222[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._222[2][1] = true
-            elseif Pl.EquipSkill._222[2][1] and St._EquipSkill222_Timer == 0 then
-                Pl.EquipSkill._222[2][1] = false
-                AddChatInfomation(1, 134, Pl.EquipSkill._222[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._222.Id] then
+            if St._EquipSkill222_Timer == Pl.EquipSkill._222.Param[Sd.EquipSkill[Pl.EquipSkill._222.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._222.Condition[1] = true
+            elseif Pl.EquipSkill._222.Condition[1] and St._EquipSkill222_Timer == 0 then
+                Pl.EquipSkill._222.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._222.Id, Pl.EquipSkill._222.Condition[1])
             end
         end
         -- 135 Pl_EquipSkill_223 剛心
-        if Sd.EquipSkill[Pl.EquipSkill._223[1][4]] then
-            if not Pl.EquipSkill._223[2][1] and St._EquipSkill223Accumulator == Pl.EquipSkill._223[3][2] then
-                Pl.EquipSkill._223[2][1] = true
+        if Sd.EquipSkill[Pl.EquipSkill._223.Id] then
+            if not Pl.EquipSkill._223.Condition[1] and St._EquipSkill223Accumulator == Pl.EquipSkill._223.Param[2][1] then
+                Pl.EquipSkill._223.Condition[1] = true
             end
         end
         -- 136 Pl_EquipSkill_224 蓄積時攻撃強化
         -- 137 Pl_EquipSkill_225 狂化
         -- 138 Pl_EquipSkill_226 風纏
-        if Sd.EquipSkill[Pl.EquipSkill._226[1][4]] then
-            if not Pl.EquipSkill._226[2][1] and St._IsEquipSkill226Enable then
-                Pl.EquipSkill._226[2][1] = true
-                AddChatInfomation(1, 138, Pl.EquipSkill._226[2][1])
-            elseif Pl.EquipSkill._226[2][1] and not St._IsEquipSkill226Enable then
-                Pl.EquipSkill._226[2][1] = false
-                AddChatInfomation(1, 138, Pl.EquipSkill._226[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._226.Id] then
+            if not Pl.EquipSkill._226.Condition[1] and St._IsEquipSkill226Enable then
+                Pl.EquipSkill._226.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._226.Id, Pl.EquipSkill._226.Condition[1])
+            elseif Pl.EquipSkill._226.Condition[1] and not St._IsEquipSkill226Enable then
+                Pl.EquipSkill._226.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._226.Id, Pl.EquipSkill._226.Condition[1])
             end
         end
         -- 139 Pl_EquipSkill_227 粉塵纏
-        if Sd.EquipSkill[Pl.EquipSkill._227[1][4]] then
-            if not Pl.EquipSkill._227[2][1] and St._EquipSkill227State ~= 0 then
-                Pl.EquipSkill._227[2][1] = true
-            elseif Pl.EquipSkill._227[2][1] and St._EquipSkill227State == 0 then
-                AddChatInfomation(1, 139, Pl.EquipSkill._227[2][1])
-                Pl.EquipSkill._227[2][1] = false
+        if Sd.EquipSkill[Pl.EquipSkill._227.Id] then
+            if not Pl.EquipSkill._227.Condition[1] and St._EquipSkill227State ~= 0 then
+                Pl.EquipSkill._227.Condition[1] = true
+            elseif Pl.EquipSkill._227.Condition[1] and St._EquipSkill227State == 0 then
+                AddChatInfomation(1, Pl.EquipSkill._227.Id, Pl.EquipSkill._227.Condition[1])
+                Pl.EquipSkill._227.Condition[1] = false
             end
         end
         -- 140 Pl_EquipSkill_228 冰気錬成
         -- 141 Pl_EquipSkill_229 龍気変換
-        if Sd.EquipSkill[Pl.EquipSkill._229[1][4]] then
-            if not Pl.EquipSkill._229[2][1] and St._EquipSkill229UseUpFlg then
-                Pl.EquipSkill._229[2][1] = true
-                AddChatInfomation(1, 141, Pl.EquipSkill._229[2][1])
-            elseif Pl.EquipSkill._229[2][1] and not St._EquipSkill229UseUpFlg then
-                Pl.EquipSkill._229[2][1] = false
-                AddChatInfomation(1, 141, Pl.EquipSkill._229[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._229.Id] then
+            if not Pl.EquipSkill._229.Condition[1] and St._EquipSkill229UseUpFlg then
+                Pl.EquipSkill._229.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._229.Id, Pl.EquipSkill._229.Condition[1])
+            elseif Pl.EquipSkill._229.Condition[1] and not St._EquipSkill229UseUpFlg then
+                Pl.EquipSkill._229.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._229.Id, Pl.EquipSkill._229.Condition[1])
             end
         end
         -- 142 Pl_EquipSkill_230 天衣無崩
-        if Sd.EquipSkill[Pl.EquipSkill._230[1][4]] then
-            if not Pl.EquipSkill._230[2][1] and St.isActiveEquipSkill230 then
-                Pl.EquipSkill._230[2][1] = true
-            elseif Pl.EquipSkill._230[2][1] and not St.isActiveEquipSkill230 then
-                Pl.EquipSkill._230[2][1] = false
-                AddChatInfomation(1, 142, Pl.EquipSkill._230[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._230.Id] then
+            if not Pl.EquipSkill._230.Condition[1] and St.isActiveEquipSkill230 then
+                Pl.EquipSkill._230.Condition[1] = true
+            elseif Pl.EquipSkill._230.Condition[1] and not St.isActiveEquipSkill230 then
+                Pl.EquipSkill._230.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._230.Id, Pl.EquipSkill._230.Condition[1])
             end
         end
         -- 143 Pl_EquipSkill_231 狂竜症【翔】
-        if Sd.EquipSkill[Pl.EquipSkill._231[1][4]] then
-            if not Pl.EquipSkill._231[2][1] and St._EquipSkill231_WireNumTimer == Pl.EquipSkill._231[3][Sd.EquipSkill[Pl.EquipSkill._231[1][4]]:get_field("SkillLv")] then
-                Pl.EquipSkill._231[2][1] = true
-            elseif Pl.EquipSkill._231[2][1] and St._EquipSkill231_WpOffTimer == 0 then
-                Pl.EquipSkill._231[2][1] = false
-                AddChatInfomation(1, 143, Pl.EquipSkill._231[2][1])
+        if Sd.EquipSkill[Pl.EquipSkill._231.Id] then
+            if not Pl.EquipSkill._231.Condition[1] and St._EquipSkill231_WireNumTimer == Pl.EquipSkill._231.Param[Sd.EquipSkill[Pl.EquipSkill._231.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._231.Condition[1] = true
+            elseif Pl.EquipSkill._231.Condition[1] and St._EquipSkill231_WpOffTimer == 0 then
+                Pl.EquipSkill._231.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._231.Id, Pl.EquipSkill._231.Condition[1])
             end
         end
         -- 144 Pl_EquipSkill_232 血氣覚醒
-        if Sd.EquipSkill[Pl.EquipSkill._232[1][4]] then
-            if not Pl.EquipSkill._232[2][1] then
-                if St._EquipSkill232Absorption >= Pl.EquipSkill._232[3][1][Sd.EquipSkill[Pl.EquipSkill._232[1][4]]:get_field("SkillLv")] and St._EquipSkill232Timer == Pl.EquipSkill._232[3][3][Sd.EquipSkill[Pl.EquipSkill._232[1][4]]:get_field("SkillLv")] then
-                    Pl.EquipSkill._232[2][1] = true
-                elseif St._EquipSkill232Absorption >= Pl.EquipSkill._232[3][2][Sd.EquipSkill[Pl.EquipSkill._232[1][4]]:get_field("SkillLv")] and St._EquipSkill232Timer == Pl.EquipSkill._232[3][4][Sd.EquipSkill[Pl.EquipSkill._232[1][4]]:get_field("SkillLv")] then
-                    Pl.EquipSkill._232[2][1] = true
+        if Sd.EquipSkill[Pl.EquipSkill._232.Id] then
+            if not Pl.EquipSkill._232.Condition[1] then
+                if St._EquipSkill232Absorption >= Pl.EquipSkill._232.Param[1][Sd.EquipSkill[Pl.EquipSkill._232.Id]:get_field("SkillLv")] and St._EquipSkill232Timer == Pl.EquipSkill._232.Param[3][Sd.EquipSkill[Pl.EquipSkill._232.Id]:get_field("SkillLv")] then
+                    Pl.EquipSkill._232.Condition[1] = true
+                elseif St._EquipSkill232Absorption >= Pl.EquipSkill._232.Param[2][Sd.EquipSkill[Pl.EquipSkill._232.Id]:get_field("SkillLv")] and St._EquipSkill232Timer == Pl.EquipSkill._232.Param[4][Sd.EquipSkill[Pl.EquipSkill._232.Id]:get_field("SkillLv")] then
+                    Pl.EquipSkill._232.Condition[1] = true
                 end
-            elseif Pl.EquipSkill._232[2][1] and St._EquipSkill232Timer == 0 then
-                Pl.EquipSkill._232[2][1] = false
-                AddChatInfomation(1, 144, Pl.EquipSkill._232[2][1])
+            elseif Pl.EquipSkill._232.Condition[1] and St._EquipSkill232Timer == 0 then
+                Pl.EquipSkill._232.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._232.Id, Pl.EquipSkill._232.Condition[1])
             end
         end
         -- 145 Pl_EquipSkill_233 奮闘
@@ -790,16 +1009,17 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 149 Error
 
 
+        -- 0 Pl_KitchenSkill_None
         -- 1 Pl_KitchenSkill_000 おだんご研磨術
         -- 2 Pl_KitchenSkill_001 おだんご乗り上手
         -- 3 Pl_KitchenSkill_002 おだんご火事場力
-        if Sd.KitchenSkill[Pl.KitchenSkill._002[1][4]] then
-            if not Pl.KitchenSkill._002[2][1] and St.playerHealth <= Pl.KitchenSkill._002[3][Sd.KitchenSkill[Pl.KitchenSkill._002[1][4]]:get_field("_SkillLv")] then
-                Pl.KitchenSkill._002[2][1] = true
-                AddChatInfomation(2, 3, Pl.KitchenSkill._002[2][1])
-            elseif Pl.KitchenSkill._002[2][1] and St.playerHealth > Pl.KitchenSkill._002[3][Sd.KitchenSkill[Pl.KitchenSkill._002[1][4]]:get_field("_SkillLv")] then
-                Pl.KitchenSkill._002[2][1] = false
-                AddChatInfomation(2, 3, Pl.KitchenSkill._002[2][1])
+        if Sd.KitchenSkill[Pl.KitchenSkill._002.Id] then
+            if not Pl.KitchenSkill._002.Condition[1] and St.playerHealth <= Pl.KitchenSkill._002.Param[Sd.KitchenSkill[Pl.KitchenSkill._002.Id]:get_field("_SkillLv")] then
+                Pl.KitchenSkill._002.Condition[1] = true
+                AddChatInfomation(2, Pl.KitchenSkill._002.Id, Pl.KitchenSkill._002.Condition[1])
+            elseif Pl.KitchenSkill._002.Condition[1] and St.playerHealth > Pl.KitchenSkill._002.Param[Sd.KitchenSkill[Pl.KitchenSkill._002.Id]:get_field("_SkillLv")] then
+                Pl.KitchenSkill._002.Condition[1] = false
+                AddChatInfomation(2, Pl.KitchenSkill._002.Id, Pl.KitchenSkill._002.Condition[1])
             end
         end
         -- 4 Pl_KitchenSkill_003 おだんご解体術【小】
@@ -824,21 +1044,21 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 23 Pl_KitchenSkill_022 おだんご金運術
         -- 24 Pl_KitchenSkill_023 おだんご砲撃術
         -- 25 Pl_KitchenSkill_024 おだんごド根性
-        if Sd.KitchenSkill[Pl.KitchenSkill._024[1][4]] and not Pl.KitchenSkill._024[2][1] and St.isHaveKitchenGuts then
-            Pl.KitchenSkill._024[2][1] = true
-        elseif not Sd.KitchenSkill[Pl.KitchenSkill._024[1][4]] and Pl.KitchenSkill._024[2][1] and not St.isHaveKitchenGuts then
-            AddChatInfomation(2, 25, Pl.KitchenSkill._024[2][1])
-            Pl.KitchenSkill._024[2][1] = false
+        if Sd.KitchenSkill[Pl.KitchenSkill._024.Id] and not Pl.KitchenSkill._024.Condition[1] and St.isHaveKitchenGuts then
+            Pl.KitchenSkill._024.Condition[1] = true
+        elseif not Sd.KitchenSkill[Pl.KitchenSkill._024.Id] and Pl.KitchenSkill._024.Condition[1] and not St.isHaveKitchenGuts then
+            AddChatInfomation(2, Pl.KitchenSkill._024.Id, Pl.KitchenSkill._024.Condition[1])
+            Pl.KitchenSkill._024.Condition[1] = false
         end
         -- 26 Pl_KitchenSkill_025 おだんご免疫術
         -- 27 Pl_KitchenSkill_026 おだんごオトモ指導術
         -- 28 Pl_KitchenSkill_027 おだんご短期催眠術
-        if Sd.KitchenSkill[Pl.KitchenSkill._027[1][4]] then
-            if not Pl.KitchenSkill._027[2][1] and St._KitchenSkill027Timer == Pl.KitchenSkill._027[3][Sd.KitchenSkill[Pl.KitchenSkill._027[1][4]]:get_field("_SkillLv")] then
-                Pl.KitchenSkill._027[2][1] = true
-            elseif Pl.KitchenSkill._027[2][1] and St._KitchenSkill027Timer == 0 then
-                Pl.KitchenSkill._027[2][1] = false
-                AddChatInfomation(2, 28, Pl.KitchenSkill._027[2][1])
+        if Sd.KitchenSkill[Pl.KitchenSkill._027.Id] then
+            if not Pl.KitchenSkill._027.Condition[1] and St._KitchenSkill027Timer == Pl.KitchenSkill._027.Param[Sd.KitchenSkill[Pl.KitchenSkill._027.Id]:get_field("_SkillLv")] then
+                Pl.KitchenSkill._027.Condition[1] = true
+            elseif Pl.KitchenSkill._027.Condition[1] and St._KitchenSkill027Timer == 0 then
+                Pl.KitchenSkill._027.Condition[1] = false
+                AddChatInfomation(2, Pl.KitchenSkill._027.Id, Pl.KitchenSkill._027.Condition[1])
             end
         end
         -- 29 Pl_KitchenSkill_028 おだんごふんばり術
@@ -862,9 +1082,9 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 47 Pl_KitchenSkill_046 おだんご鳥寄せの術
         -- 48 Pl_KitchenSkill_047 おだんごぶら下がり術
         -- 49 Pl_KitchenSkill_048 おだんご防護術
-        if Sd.KitchenSkill[Pl.KitchenSkill._048[1][4]] then
-            if not Pl.KitchenSkill._048[2][1] and St._KitchenSkill048_Damage >= Pl.KitchenSkill._048[3][1][Sd.KitchenSkill[Pl.KitchenSkill._048[1][4]]:get_field("_SkillLv")] then
-                Pl.KitchenSkill._048[2][1] = true
+        if Sd.KitchenSkill[Pl.KitchenSkill._048.Id] then
+            if not Pl.KitchenSkill._048.Condition[1] and St._KitchenSkill048_Damage >= Pl.KitchenSkill._048.Param[1][Sd.KitchenSkill[Pl.KitchenSkill._048.Id]:get_field("_SkillLv")] then
+                Pl.KitchenSkill._048.Condition[1] = true
             end
         end
         -- 50 Pl_KitchenSkill_049 おだんご強化延長術
@@ -874,6 +1094,15 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 54 Pl_KitchenSkill_053 おだんご疾替え術
         -- 55 Pl_KitchenSkill_054 おだんご絆術
         -- 56 Pl_KitchenSkill_055 おだんご超回復力
+        -- 57 Pl_KitchenSkill_056
+        -- 58 Pl_KitchenSkill_057
+        -- 59 Pl_KitchenSkill_058
+        -- 60 Pl_KitchenSkill_059
+        -- 61 Pl_KitchenSkill_060
+        -- 62 Pl_KitchenSkill_061
+        -- 63 Pl_KitchenSkill_062
+        -- 64 Pl_KitchenSkill_063
+        -- 57 Max
 
 
         -- 0 Concert_000 自分強化
@@ -902,18 +1131,25 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 23 Concert_023 高周衝撃波
         -- 24 Concert_024 音の防壁
         -- 25 Concert_025 気炎の旋律
+        -- 26 Concert_026 斬れ味継続回復
+        -- 27 Concert_027 斬れ味延長効果
+        -- 28 Concert_Max
+        -- 28 Concert_Invalid
+    end,
+    function(retval)
+        return retval
     end)
 
 
-local preDamage
-local postDamage
-local isMasterPlayer
-local isReduce
+local preDamage      = nil
+local postDamage     = nil
+local isMasterPlayer = false
+local isReduce       = false
 
-local function xRoundOff(num, dgt)
-    local round = 10 ^ (-1 * dgt)
-    return math.floor((num + 5 * (10 ^ (dgt - 1))) * round) / round
-end
+-- local function xRoundOff(num, dgt)
+--     local round = 10 ^ (-1 * dgt)
+--     return math.floor((num + 5 * (10 ^ (dgt - 1))) * round) / round
+-- end
 
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
     function(args)
@@ -921,32 +1157,40 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("che
 
         if not isMasterPlayer then return end
 
-        preDamage = xRoundOff(sdk.to_float(args[3]), -4)
+        preDamage = sdk.to_float(args[3])
 
-        if Pl.EquipSkill._223[2][1] and St._EquipSkill223Accumulator == 0 then
-            preDamage = xRoundOff(preDamage * Pl.EquipSkill._223[3][1][Sd.EquipSkill[135]:get_field("SkillLv")], -4)
-            Pl.EquipSkill._223[2][1] = false
+        if Pl.EquipSkill._223.Condition[1] and St._EquipSkill223Accumulator == 0 then
+            preDamage = preDamage * Pl.EquipSkill._223.Param[1][Sd.EquipSkill[Pl.EquipSkill._223.Id]:get_field("SkillLv")]
+            Pl.EquipSkill._223.Condition[1] = false
         end
+    end,
+    function(retval)
+        return retval
     end)
+
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)"),
     function(args)
         postDamage = nil
 
         if not preDamage then return end
 
-        postDamage = xRoundOff(sdk.to_float(args[3]) * -1, -4)
+        postDamage = sdk.to_float(args[3])
 
         if sdk.to_float(args[10]) < 0 then
-            if Pl.KitchenSkill._048[2][1] then
-                preDamage = xRoundOff(preDamage * Pl.KitchenSkill._048[3][2][Sd.KitchenSkill[Pl.KitchenSkill._048[1][4]]:get_field("_SkillLv")], -4)
-                Pl.KitchenSkill._048[2][1] = false
+            if Pl.KitchenSkill._048.Condition[1] then
+                preDamage = preDamage * Pl.KitchenSkill._048.Param[2][Sd.KitchenSkill[Pl.KitchenSkill._048.Id]:get_field("_SkillLv")]
+                Pl.KitchenSkill._048.Condition[1] = false
             end
         end
     end,
     function(retval)
-        if not isMasterPlayer or not postDamage or not preDamage then return retval end
+        if not isMasterPlayer or not postDamage or not preDamage then
+            return retval
+        end
 
-        if preDamage ~= postDamage then isReduce = true end
+        if preDamage + postDamage > 0.0001 then
+            isReduce = true
+        end
 
         print("\npreDamage : " .. preDamage)
         print("postDamage: " .. postDamage)
@@ -954,15 +1198,19 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("dam
 
         preDamage = nil
     end)
+
 sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigger(System.UInt32, via.GameObject)"),
     function(args)
         if isReduce then
+            isReduce = false
+
             if sdk.to_int64(args[2]) == 0x2ACF664E then
                 getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
             end
-
-            isReduce = false
         end
+    end,
+    function(retval)
+        return retval
     end)
 
 
@@ -1001,12 +1249,13 @@ if ModUI then
 
         for i, _, v in pairsByKeys(base) do
             local find
-            v[1][4] = nil
+            local defaultTable = { v.Enum, v.Notice[1], v.Notice[2], 1 }
+
             if tbl then
                 for _, w in ipairs(tbl) do
-                    if not find and w[1] == v[1][1] then
-                        if #w < 4 then
-                            w = v[1]
+                    if not find and w[1] == v.Enum then
+                        if #w ~= 4 then
+                            w = defaultTable
                         end
                         table.insert(result, w)
                         find = true
@@ -1014,8 +1263,7 @@ if ModUI then
                 end
             end
             if not find then
-                table.insert(v[1], 1)
-                table.insert(result, i, v[1])
+                table.insert(result, i, defaultTable)
             end
         end
 
@@ -1023,7 +1271,7 @@ if ModUI then
     end
 
     local function saveConfig()
-        json.dump_file(filepath, conf, -1)
+        fs.write(filepath, json.dump_string(conf))
     end
 
     local function set()
@@ -1065,10 +1313,10 @@ if ModUI then
         UI.Options.SkillSettings.optionNames[index] = {}
         for i, _, v in pairsByKeys(PlSkill) do
             UI.Options.SkillSettings.optionNames[index][i] = {}
-            if v[1][2] then
+            if v.Notice[1] then
                 table.insert(UI.Options.SkillSettings.optionNames[index][i], UI.Options.SkillSettings.msg[2])
             end
-            if v[1][3] then
+            if v.Notice[2] then
                 table.insert(UI.Options.SkillSettings.optionNames[index][i], UI.Options.SkillSettings.msg[3])
             end
             if UI.Options.SkillSettings.optionNames[index][i] then
@@ -1250,5 +1498,8 @@ if ModUI then
                     return sdk.PreHookResult.SKIP_ORIGINAL
                 end
             end
+        end,
+        function(retval)
+            return retval
         end)
 end
