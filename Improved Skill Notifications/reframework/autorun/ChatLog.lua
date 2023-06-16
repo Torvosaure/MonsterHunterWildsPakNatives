@@ -367,7 +367,6 @@ end
 
 local function init()
     reset = true
-    print("reset")
     return getSkillData()
 end
 
@@ -1146,11 +1145,6 @@ local postDamage     = nil
 local isMasterPlayer = false
 local isReduce       = false
 
--- local function xRoundOff(num, dgt)
---     local round = 10 ^ (-1 * dgt)
---     return math.floor((num + 5 * (10 ^ (dgt - 1))) * round) / round
--- end
-
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
     function(args)
         isMasterPlayer = sdk.to_managed_object(args[2]):call("isMasterPlayer")
@@ -1188,23 +1182,18 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("dam
             return retval
         end
 
-        if preDamage + postDamage > 0.0001 then
+        if math.abs(preDamage + postDamage) > 0.0001 then
             isReduce = true
         end
-
-        print("\npreDamage : " .. preDamage)
-        print("postDamage: " .. postDamage)
-        print("isReduce  : " .. tostring(isReduce))
 
         preDamage = nil
     end)
 
 sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigger(System.UInt32, via.GameObject)"),
     function(args)
-        if isReduce then
-            isReduce = false
-
-            if sdk.to_int64(args[2]) == 0x2ACF664E then
+        if sdk.to_int64(args[2]) == 0x2ACF664E then
+            if isReduce then
+                isReduce = false
                 getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
             end
         end
@@ -1214,9 +1203,9 @@ sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigge
     end)
 
 
-local ModUI = require("ModOptionsMenu.ModMenuApi")
+local success, ModUI = pcall(require, "ModOptionsMenu.ModMenuApi")
 
-if ModUI then
+if success then
     local preLoad
     local filepath = "Improved Skill Notifications/config.json"
     local conf     = json.load_file(filepath) or {}
@@ -1241,7 +1230,7 @@ if ModUI then
     end
 
     local function rgb2Hex(r, g, b, str)
-        return string.format("<COLOR %02X%02X%02X>%s</COLOR>", r, g, b, str)
+        return ("<COLOR %02X%02X%02X>%s</COLOR>"):format(r, g, b, str)
     end
 
     local function normTbl(tbl, base)
@@ -1353,7 +1342,7 @@ if ModUI then
             UI.Options.SkillSettings.curValue[i] = v[4]
             UI.Options.SkillSettings.label = getSkillName(nil, id)
             if UI.Options.SkillSettings.curValue[i] ~= 1 then
-                UI.Options.SkillSettings.label = "<COLOR FFE29D>" .. getSkillName(nil, id) .. "</COLOR>"
+                UI.Options.SkillSettings.label = ("<COLOR FFE29D>%s</COLOR>"):format(UI.Options.SkillSettings.label)
             end
 
             if not UI.Options.EquipSkills.isFilter or SdSkill[id] then
