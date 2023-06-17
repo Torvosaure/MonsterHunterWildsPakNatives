@@ -336,13 +336,8 @@ local function getSkillData()
                 Enum      = "Pl_KitchenSkill_027",
                 Id        = getPlKitchenSkillId("Pl_KitchenSkill_027"),
                 Notice    = { true, true },
-                Condition = { false },
-                Param     = {
-                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv1"):get_field("_Time") * 3600,
-                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv2"):get_field("_Time") * 3600,
-                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv3"):get_field("_Time") * 3600,
-                    _OdangoSkillParameter:get_field("_KitchenSkill_027_Lv4"):get_field("_Time") * 3600
-                }
+                Condition = {},
+                Param     = {}
             },
             _048 = {
                 Enum      = "Pl_KitchenSkill_048",
@@ -412,8 +407,8 @@ local function getState()
         _EquipSkill232Timer             = playerData:get_field("_EquipSkill232Timer"),
 
         isHaveKitchenGuts               = PlayerInfo:get_field("isHaveKitchenGuts"),
-        _KitchenSkill027Timer           = playerData:get_field("_KitchenSkill027Timer"),
-        _HornMusicDamageReduce          = playerData:get_field("_HornMusicDamageReduce"),
+        -- _KitchenSkill027Timer           = playerData:get_field("_KitchenSkill027Timer"),
+        -- _HornMusicDamageReduce          = playerData:get_field("_HornMusicDamageReduce"),
         _KitchenSkill048_Damage         = playerData:get_field("_KitchenSkill048_Damage")
     }
 end
@@ -1052,18 +1047,13 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 26 Pl_KitchenSkill_025 おだんご免疫術
         -- 27 Pl_KitchenSkill_026 おだんごオトモ指導術
         -- 28 Pl_KitchenSkill_027 おだんご短期催眠術
-        if Sd.KitchenSkill[Pl.KitchenSkill._027.Id] then
-            if not Pl.KitchenSkill._027.Condition[1] and St._KitchenSkill027Timer == Pl.KitchenSkill._027.Param[Sd.KitchenSkill[Pl.KitchenSkill._027.Id]:get_field("_SkillLv")] then
-                Pl.KitchenSkill._027.Condition[1] = true
-            elseif Pl.KitchenSkill._027.Condition[1] and St._KitchenSkill027Timer == 0 then
-                Pl.KitchenSkill._027.Condition[1] = false
-                AddChatInfomation(2, Pl.KitchenSkill._027.Id, Pl.KitchenSkill._027.Condition[1])
-            end
-        end
+
         -- 29 Pl_KitchenSkill_028 おだんごふんばり術
         -- 30 Pl_KitchenSkill_029 おだんごビルドアップ
         -- 31 Pl_KitchenSkill_030 おだんご報酬金保険
+
         -- 32 Pl_KitchenSkill_031 おだんご復活術
+
         -- 33 Pl_KitchenSkill_032 おだんご環境生物召喚
         -- 34 Pl_KitchenSkill_033 おだんご投擲術
         -- 35 Pl_KitchenSkill_034 おだんご火耐性【小】
