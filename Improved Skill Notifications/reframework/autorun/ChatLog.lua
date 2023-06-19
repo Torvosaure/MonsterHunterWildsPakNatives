@@ -339,6 +339,20 @@ local function getSkillData()
                 Condition = {},
                 Param     = {}
             },
+            _030 = {
+                Enum      = "Pl_KitchenSkill_030",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_030"),
+                Notice    = { true, false },
+                Condition = {},
+                Param     = {}
+            },
+            _031 = {
+                Enum      = "Pl_KitchenSkill_031",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_031"),
+                Notice    = { true, false },
+                Condition = {},
+                Param     = {}
+            },
             _048 = {
                 Enum      = "Pl_KitchenSkill_048",
                 Id        = getPlKitchenSkillId("Pl_KitchenSkill_048"),
@@ -355,6 +369,20 @@ local function getSkillData()
                     _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Reduce"),
                     _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Reduce")
                 } }
+            },
+            _051 = {
+                Enum      = "Pl_KitchenSkill_051",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_051"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { _OdangoSkillParameter:get_field("_KitchenSkill_051_Lv4_AtkDuration") * 60 }
+            },
+            _054 = {
+                Enum      = "Pl_KitchenSkill_054",
+                Id        = getPlKitchenSkillId("Pl_KitchenSkill_054"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = { _OdangoSkillParameter:get_field("_KitchenSkill_054_Time") * 60 }
             }
         }
     }
@@ -409,7 +437,9 @@ local function getState()
         isHaveKitchenGuts               = PlayerInfo:get_field("isHaveKitchenGuts"),
         -- _KitchenSkill027Timer           = playerData:get_field("_KitchenSkill027Timer"),
         -- _HornMusicDamageReduce          = playerData:get_field("_HornMusicDamageReduce"),
-        _KitchenSkill048_Damage         = playerData:get_field("_KitchenSkill048_Damage")
+        _KitchenSkill048_Damage         = playerData:get_field("_KitchenSkill048_Damage"),
+        _KitchenSkill051_AtkUpTimer     = playerData:get_field("_KitchenSkill051_AtkUpTimer"),
+        _KitchenSkill054_Timer          = playerData:get_field("_KitchenSkill054_Timer")
     }
 end
 
@@ -518,8 +548,18 @@ local function getUI()
             toolTip = getMessageByName("StartMenu_System_Common_GrayOut")
         },
         MSG = {
-            getMessageByName("ChatLog_Pl_Skill_01"),
-            getMessageByName("ChatLog_Pl_Skill_02")
+            Pl = {
+                getMessageByName("ChatLog_Pl_Skill_01"),
+                getMessageByName("ChatLog_Pl_Skill_02")
+            },
+            Ot = {
+                getMessageByName("ChatLog_Ot_Skill_01"),
+                getMessageByName("ChatLog_Ot_Skill_02"),
+                getMessageByName("ChatLog_Ot_Skill_03")
+            },
+            Co = {
+                getMessageByName("ChatLog_Co_Skill_01")
+            }
         }
     }
 end
@@ -537,9 +577,9 @@ local function AddChatInfomation(type, skillID, isSkillActive)
         getName = getKitchenSkillName
     end
     if isSkillActive then
-        ChatLog = UI.MSG[1]
+        ChatLog = UI.MSG.Pl[1]
     elseif not isSkillActive then
-        ChatLog = UI.MSG[2]
+        ChatLog = UI.MSG.Pl[2]
     end
     getChatManager():call("reqAddChatInfomation", string.gsub(ChatLog, "{0}", getName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
 end
@@ -1079,9 +1119,26 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 50 Pl_KitchenSkill_049 おだんご強化延長術
         -- 51 Pl_KitchenSkill_050 おだんご生命力
         -- 52 Pl_KitchenSkill_051 おだんご逃走術
+        if Sd.KitchenSkill[Pl.KitchenSkill._051.Id] then
+            if St._KitchenSkill051_AtkUpTimer == Pl.KitchenSkill._051.Param[1] then
+                Pl.KitchenSkill._051.Condition[1] = true
+                AddChatInfomation(2, Pl.KitchenSkill._051.Id, Pl.KitchenSkill._051.Condition[1])
+            elseif Pl.KitchenSkill._051.Condition[1] and St._KitchenSkill051_AtkUpTimer == 0 then
+                Pl.KitchenSkill._051.Condition[1] = false
+                AddChatInfomation(2, Pl.KitchenSkill._051.Id, Pl.KitchenSkill._051.Condition[1])
+            end
+        end
         -- 53 Pl_KitchenSkill_052 おだんご具足術
         -- 54 Pl_KitchenSkill_053 おだんご疾替え術
         -- 55 Pl_KitchenSkill_054 おだんご絆術
+        if Sd.KitchenSkill[Pl.KitchenSkill._054.Id] then
+            if St._KitchenSkill054_Timer == Pl.KitchenSkill._054.Param[1] then
+                Pl.KitchenSkill._054.Condition[1] = true
+            elseif Pl.KitchenSkill._054.Condition[1] and St._KitchenSkill054_Timer == 0 then
+                Pl.KitchenSkill._054.Condition[1] = false
+                AddChatInfomation(2, Pl.KitchenSkill._054.Id, Pl.KitchenSkill._054.Condition[1])
+            end
+        end
         -- 56 Pl_KitchenSkill_055 おだんご超回復力
         -- 57 Pl_KitchenSkill_056
         -- 58 Pl_KitchenSkill_057
@@ -1184,7 +1241,7 @@ sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigge
         if sdk.to_int64(args[2]) == 0x2ACF664E then
             if isReduce then
                 isReduce = false
-                getChatManager():call("reqAddChatInfomation", getMessageByName("ChatLog_Co_Skill_01"), GUI_COMMON_MEAL_SKILL_NOTICE)
+                getChatManager():call("reqAddChatInfomation", UI.MSG.Co[1], GUI_COMMON_MEAL_SKILL_NOTICE)
             end
         end
     end,
@@ -1373,7 +1430,7 @@ if success then
             end
 
             if UI.Options.COLOR.curValue[i] == 2 then
-                UI.Options.COLOR.label[i] = removeCRLF(UI.MSG[i]):gsub("{0}", rgb2Hex(v[1], v[2], v[3], getMessageByName("EnemyIndex112_MR")))
+                UI.Options.COLOR.label[i] = removeCRLF(UI.MSG.Pl[i]):gsub("{0}", rgb2Hex(v[1], v[2], v[3], getMessageByName("EnemyIndex112_MR")))
                 ModUI.SetIndent(18)
 
                 for j = 1, #UI.Slider.label do
@@ -1389,7 +1446,7 @@ if success then
 
                 ModUI.SetIndent(0)
             elseif UI.Options.COLOR.curValue[i] == 1 then
-                UI.Options.COLOR.label[i] = removeCRLF(UI.MSG[i]):gsub("{0}", getMessageByName("EnemyIndex112_MR"))
+                UI.Options.COLOR.label[i] = removeCRLF(UI.MSG.Pl[i]):gsub("{0}", getMessageByName("EnemyIndex112_MR"))
             end
         end
     end
@@ -1455,8 +1512,17 @@ if success then
 
         for _, v in ipairs(confSkill) do
             for i, w in ipairs(conf.COL) do
-                local skillName = getSkillName(nil, getPlSkillId(v[1]))
-                local postMessage = UI.MSG[i]:gsub("{0}", skillName)
+                local id = getPlSkillId(v[1])
+                local skillName = getSkillName(nil, id)
+                local postMessage
+
+                if index == 2 and (id == 31 or id == 32) then
+                    postMessage = UI.MSG.Ot[1]
+                else
+                    postMessage = UI.MSG.Pl[i]
+                end
+                postMessage = postMessage:gsub("{0}", skillName)
+
                 if preMessage == postMessage then
                     if not v[i + 1] then
                         return true
