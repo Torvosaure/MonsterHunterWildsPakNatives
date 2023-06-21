@@ -9,13 +9,13 @@ end
 local function getMasterPlayerID(PlayerManager)
     return PlayerManager:call("getMasterPlayerID()")
 end
-local function getPlayerListPrivate(PlayerManager, MasterPlayerID)
+local function getPlayerBase(PlayerManager, MasterPlayerID)
     return PlayerManager:get_field("PlayerListPrivate")[MasterPlayerID]
 end
 local function getPlayerData(PlayerManager, MasterPlayerID)
     return PlayerManager:get_field("<PlayerData>k__BackingField")[MasterPlayerID]
 end
-local function getPlayerSkill(PlayerManager, MasterPlayerID)
+local function getPlayerSkillList(PlayerManager, MasterPlayerID)
     return PlayerManager:get_field("<PlayerSkill>k__BackingField")[MasterPlayerID]
 end
 local function getPlayerQuestDefine()
@@ -46,7 +46,7 @@ local function getPlKitchenSkillId(Enum)
 end
 
 local function getSkillData(PlayerManager)
-    local playerQuestDefine     = getPlayerQuestDefine()
+    local PlayerQuestDefine     = getPlayerQuestDefine()
     local _EquipSkillParameter  = PlayerManager:get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
     local _OdangoSkillParameter = PlayerManager:get_field("_PlayerUserDataSkillParameter"):get_field("_OdangoSkillParameter")
     return {
@@ -56,7 +56,7 @@ local function getSkillData(PlayerManager)
                 Id        = getPlEquipSkillId("Pl_EquipSkill_001"),
                 Notice    = { true, true },
                 Condition = { false },
-                Param     = { playerQuestDefine:get_field("SkillChallengeTime"):get_data() }
+                Param     = { PlayerQuestDefine:get_field("SkillChallengeTime"):get_data() }
             },
             _002 = {
                 Enum      = "Pl_EquipSkill_002",
@@ -404,62 +404,73 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerBase"):get_method("isEquipS
         return retval
     end)
 
-local function getState(playerData, playerBase)
-    local PlayerInfo = sdk.get_managed_singleton("snow.gui.GuiManager"):get_field("<refGuiHud>k__BackingField"):get_field("PlayerInfo")
+local function getState(PlayerData, PlayerBase)
+    local PlayerInfo   = sdk.get_managed_singleton("snow.gui.GuiManager"):get_field("<refGuiHud>k__BackingField"):get_field("PlayerInfo")
+    local QuestManager = sdk.get_managed_singleton("snow.QuestManager")
+    local EndFlow      = sdk.find_type_definition("snow.QuestManager.EndFlow")
     return {
-        playerHealth                    = playerData:call("get_vital()"),
-        playerMaxHealth                 = playerBase:call("getVitalMax()"),
-        playerRawRedHealth              = playerData:get_field("_r_Vital"),
-        playerRedHealth                 = playerBase:call("getRedVital()"),
-        playerStamina                   = playerData:get_field("_stamina"),
-        playerMaxStamina                = playerData:get_field("_staminaMax"),
+        playerHealth                    = PlayerData:call("get_vital()"),
+        playerMaxHealth                 = PlayerBase:call("getVitalMax()"),
+        playerRawRedHealth              = PlayerData:get_field("_r_Vital"),
+        playerRedHealth                 = PlayerBase:call("getRedVital()"),
+        playerStamina                   = PlayerData:get_field("_stamina"),
+        playerMaxStamina                = PlayerData:get_field("_staminaMax"),
 
-        _ChallengeTimer                 = playerData:get_field("_ChallengeTimer"),
-        isDebuffState                   = playerBase:call("isDebuffState"),
-        _PowerFreedomTimer              = playerBase:get_field("_PowerFreedomTimer"),
-        _WholeBodyTimer                 = playerData:get_field("_WholeBodyTimer"),
-        _EquipSkill_036_Timer           = playerData:get_field("_EquipSkill_036_Timer"),
-        _SlidingPowerupTimer            = playerData:get_field("_SlidingPowerupTimer"),
+        _ChallengeTimer                 = PlayerData:get_field("_ChallengeTimer"),
+        isDebuffState                   = PlayerBase:call("isDebuffState()"),
+        _PowerFreedomTimer              = PlayerBase:get_field("_PowerFreedomTimer"),
+        _WholeBodyTimer                 = PlayerData:get_field("_WholeBodyTimer"),
+        _EquipSkill_036_Timer           = PlayerData:get_field("_EquipSkill_036_Timer"),
+        _SlidingPowerupTimer            = PlayerData:get_field("_SlidingPowerupTimer"),
         isEquipSkill091                 = isEquipSkill091,
-        _DieCount                       = playerData:get_field("_DieCount"),
-        _CounterattackPowerupTimer      = playerData:get_field("_CounterattackPowerupTimer"),
-        _DisasterTurnPowerUpTimer       = playerData:get_field("_DisasterTurnPowerUpTimer"),
-        _FightingSpiritTimer            = playerData:get_field("_FightingSpiritTimer"),
-        _EquipSkill208_AtkUpTimer       = playerData:get_field("_EquipSkill208_AtkUpTimer"),
-        _BrandNewSharpnessAdjustUpTimer = playerData:get_field("_BrandNewSharpnessAdjustUpTimer"),
-        _EquipSkill216_BottleUpTimer    = playerBase:get_field("_EquipSkill216_BottleUpTimer"),
+        _DieCount                       = PlayerData:get_field("_DieCount"),
+        _CounterattackPowerupTimer      = PlayerData:get_field("_CounterattackPowerupTimer"),
+        _DisasterTurnPowerUpTimer       = PlayerData:get_field("_DisasterTurnPowerUpTimer"),
+        _FightingSpiritTimer            = PlayerData:get_field("_FightingSpiritTimer"),
+        _EquipSkill208_AtkUpTimer       = PlayerData:get_field("_EquipSkill208_AtkUpTimer"),
+        _BrandNewSharpnessAdjustUpTimer = PlayerData:get_field("_BrandNewSharpnessAdjustUpTimer"),
+        _EquipSkill216_BottleUpTimer    = PlayerBase:get_field("_EquipSkill216_BottleUpTimer"),
         isHaveSkillGuts                 = PlayerInfo:get_field("isHaveSkillGuts"),
-        _EquipSkill222_Timer            = playerData:get_field("_EquipSkill222_Timer"),
-        _EquipSkill223Accumulator       = playerData:get_field("_EquipSkill223Accumulator"),
-        isHateTarget                    = playerBase:call("isHateTarget()"),
-        _IsEquipSkill226Enable          = playerBase:get_field("_IsEquipSkill226Enable"),
-        _EquipSkill227State             = playerData:get_field("_EquipSkill227State"),
-        get_IsEnableEquipSkill225       = playerBase:call("get_IsEnableEquipSkill225()"),
-        _EquipSkill229UseUpFlg          = playerBase:get_field("_EquipSkill229UseUpFlg"),
-        isActiveEquipSkill230           = playerBase:call("isActiveEquipSkill230()"),
-        _EquipSkill231_WireNumTimer     = playerData:get_field("_EquipSkill231_WireNumTimer"),
-        _EquipSkill231_WpOffTimer       = playerData:get_field("_EquipSkill231_WpOffTimer"),
-        _EquipSkill232Absorption        = playerData:get_field("_EquipSkill232Absorption"),
-        _EquipSkill232Timer             = playerData:get_field("_EquipSkill232Timer"),
+        _EquipSkill222_Timer            = PlayerData:get_field("_EquipSkill222_Timer"),
+        _EquipSkill223Accumulator       = PlayerData:get_field("_EquipSkill223Accumulator"),
+        isHateTarget                    = PlayerBase:call("isHateTarget()"),
+        _IsEquipSkill226Enable          = PlayerBase:get_field("_IsEquipSkill226Enable"),
+        _EquipSkill227State             = PlayerData:get_field("_EquipSkill227State"),
+        get_IsEnableEquipSkill225       = PlayerBase:call("get_IsEnableEquipSkill225()"),
+        _EquipSkill229UseUpFlg          = PlayerBase:get_field("_EquipSkill229UseUpFlg"),
+        isActiveEquipSkill230           = PlayerBase:call("isActiveEquipSkill230()"),
+        _EquipSkill231_WireNumTimer     = PlayerData:get_field("_EquipSkill231_WireNumTimer"),
+        _EquipSkill231_WpOffTimer       = PlayerData:get_field("_EquipSkill231_WpOffTimer"),
+        _EquipSkill232Absorption        = PlayerData:get_field("_EquipSkill232Absorption"),
+        _EquipSkill232Timer             = PlayerData:get_field("_EquipSkill232Timer"),
 
         isHaveKitchenGuts               = PlayerInfo:get_field("isHaveKitchenGuts"),
-        _KitchenSkill048_Damage         = playerData:get_field("_KitchenSkill048_Damage"),
-        _KitchenSkill051_AtkUpTimer     = playerData:get_field("_KitchenSkill051_AtkUpTimer"),
-        _KitchenSkill054_Timer          = playerData:get_field("_KitchenSkill054_Timer")
+        _KitchenSkill048_Damage         = PlayerData:get_field("_KitchenSkill048_Damage"),
+        _KitchenSkill051_AtkUpTimer     = PlayerData:get_field("_KitchenSkill051_AtkUpTimer"),
+        _KitchenSkill054_Timer          = PlayerData:get_field("_KitchenSkill054_Timer"),
+
+        _EndFlow                        = QuestManager:get_field("_EndFlow"),
+        WaitFadeCameraDemo              = EndFlow:get_field("WaitFadeCameraDemo"),
+        LoadCameraDemo                  = EndFlow:get_field("LoadCameraDemo"),
+        LoadWaitCameraDemo              = EndFlow:get_field("LoadWaitCameraDemo"),
+        StartCameraDemo                 = EndFlow:get_field("StartCameraDemo"),
+        CameraDemo                      = EndFlow:get_field("CameraDemo"),
+        Stamp                           = EndFlow:get_field("Stamp"),
+        WaitFadeOut                     = EndFlow:get_field("WaitFadeOut")
     }
 end
 
-local function getEquipSkillData(PlayerSkill)
+local function getEquipSkillData(PlayerSkillList)
     local t = {}
     for i = 1, #PlEquipSkillId:get_fields() do
-        t[i] = PlayerSkill:call("getSkillData", i)
+        t[i] = PlayerSkillList:call("getSkillData(snow.data.DataDef.PlEquipSkillId)", i)
     end
     return t
 end
-local function getKitchenSkillData(PlayerSkill)
+local function getKitchenSkillData(PlayerSkillList)
     local t = {}
     for i = 1, #PlKitchenSkillId:get_fields() do
-        t[i] = PlayerSkill:call("getKitchenSkillData", i)
+        t[i] = PlayerSkillList:call("getKitchenSkillData(snow.data.DataDef.PlKitchenSkillId)", i)
     end
     return t
 end
@@ -468,7 +479,7 @@ local function getChatManager()
     return sdk.get_managed_singleton("snow.gui.ChatManager")
 end
 
-local getGuidByName = sdk.find_type_definition("via.gui.message"):get_method("getGuidByName")
+local getGuidByName = sdk.find_type_definition("via.gui.message"):get_method("getGuidByName(System.String)")
 local message       = sdk.find_type_definition("via.gui.message"):get_method("get(System.Guid)")
 local function getMessageByName(Name)
     local Guid = getGuidByName:call(nil, Name)
@@ -587,13 +598,13 @@ local function AddChatInfomation(type, skillID, isSkillActive)
     elseif not isSkillActive then
         ChatLog = UI.MSG.Pl[2]
     end
-    getChatManager():call("reqAddChatInfomation", string.gsub(ChatLog, "{0}", getName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
+    getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", string.gsub(ChatLog, "{0}", getName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
 end
 
-sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("update"),
+sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("update()"),
     function(args)
         local PlayerManager = getPlayerManager()
-        if not PlayerManager or not PlayerManager:call("get_RefItemParameter()") then
+        if not PlayerManager or not PlayerManager:get_field("_PlayerUserDataItemParameter") then
             return
         end
 
@@ -603,26 +614,31 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
             return
         end
 
-        local playerData  = getPlayerData(PlayerManager, MasterPlayerID)
-        local PlayerSkill = getPlayerSkill(PlayerManager, MasterPlayerID)
-        if not playerData or not PlayerSkill then
+        local PlayerData      = getPlayerData(PlayerManager, MasterPlayerID)
+        local PlayerSkillList = getPlayerSkillList(PlayerManager, MasterPlayerID)
+        if not PlayerData or not PlayerSkillList then
             if not reset then Pl = init(PlayerManager) end
             return
         end
 
         Sd = {
-            EquipSkill   = getEquipSkillData(PlayerSkill),
-            KitchenSkill = getKitchenSkillData(PlayerSkill)
+            EquipSkill   = getEquipSkillData(PlayerSkillList),
+            KitchenSkill = getKitchenSkillData(PlayerSkillList)
         }
 
-        local playerBase = getPlayerListPrivate(PlayerManager, MasterPlayerID)
-        if not playerBase or not playerBase:get_type_definition():is_a("snow.player.PlayerQuestBase") then
+        local PlayerBase = getPlayerBase(PlayerManager, MasterPlayerID)
+        if not PlayerBase or not PlayerBase:get_type_definition():is_a("snow.player.PlayerQuestBase") then
             if not reset then Pl = init(PlayerManager) end
             return
         end
 
+
         if not Pl then Pl = init(PlayerManager) end
-        St = getState(playerData, playerBase)
+        St = getState(PlayerData, PlayerBase)
+
+        if St._EndFlow == St.WaitFadeCameraDemo or St._EndFlow == St.LoadCameraDemo or St._EndFlow == St.LoadWaitCameraDemo or St._EndFlow == St.StartCameraDemo or St._EndFlow == St.CameraDemo or St._EndFlow == St.Stamp or St._EndFlow == St.WaitFadeOut then
+            return
+        end
 
         if ChangedLanguage() then UI = getUI() end
 
@@ -1200,7 +1216,7 @@ local isReduce       = false
 
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
     function(args)
-        isMasterPlayer = sdk.to_managed_object(args[2]):call("isMasterPlayer")
+        isMasterPlayer = sdk.to_managed_object(args[2]):call("isMasterPlayer()")
 
         if not isMasterPlayer then return end
 
@@ -1247,7 +1263,7 @@ sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigge
         if sdk.to_int64(args[2]) == 0x2ACF664E then
             if isReduce then
                 isReduce = false
-                getChatManager():call("reqAddChatInfomation", UI.MSG.Co[1], GUI_COMMON_MEAL_SKILL_NOTICE)
+                getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", UI.MSG.Co[1], GUI_COMMON_MEAL_SKILL_NOTICE)
             end
         end
     end,
@@ -1463,7 +1479,7 @@ if success then
             getSkillSettingsOptionNames(2)
         end
 
-        if not getPlayerListPrivate(getPlayerManager(), getMasterPlayerID(getPlayerManager())) then
+        if not getPlayerBase(getPlayerManager(), getMasterPlayerID(getPlayerManager())) then
             ModUI.Label(UI.Label.label, UI.Label.displayValue, UI.Label.toolTip)
             return
         end
@@ -1514,7 +1530,7 @@ if success then
             getPlSkillId = getPlKitchenSkillId
         end
 
-        local preMessage = sdk.to_managed_object(args[3]):call("ToString")
+        local preMessage = sdk.to_managed_object(args[3]):call("ToString()")
 
         for _, v in ipairs(confSkill) do
             for i, w in ipairs(conf.COL) do
@@ -1542,7 +1558,7 @@ if success then
         end
     end
 
-    sdk.hook(sdk.find_type_definition("snow.gui.ChatManager"):get_method("reqAddChatInfomation"),
+    sdk.hook(sdk.find_type_definition("snow.gui.ChatManager"):get_method("reqAddChatInfomation(System.String, System.UInt32)"),
         function(args)
             if conf.COL and conf.EquipSkill and conf.KitchenSkill then
                 if skip(1, args) or skip(2, args) then
