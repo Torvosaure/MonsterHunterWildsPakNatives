@@ -687,18 +687,18 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         end
         -- 10 Pl_EquipSkill_009 渾身
         if Sd.EquipSkill[Pl.EquipSkill._009.Id] then
-            if not Pl.EquipSkill._009.Condition[3] and St._WholeBodyTimer > Pl.EquipSkill._009.Param[1] then
-                Pl.EquipSkill._009.Condition[3] = true
-            end
-            if not Pl.EquipSkill._009.Condition[1] and Pl.EquipSkill._009.Condition[3] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer == 0 then
-                Pl.EquipSkill._009.Condition[1] = true
-                AddChatInfomation(1, Pl.EquipSkill._009.Id, Pl.EquipSkill._009.Condition[1])
-            elseif Pl.EquipSkill._009.Condition[1] and Pl.EquipSkill._009.Condition[2] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
-                Pl.EquipSkill._009.Condition[1] = false
-                AddChatInfomation(1, Pl.EquipSkill._009.Id, Pl.EquipSkill._009.Condition[1])
-                Pl.EquipSkill._009.Condition[2] = false
-            elseif Pl.EquipSkill._009.Condition[1] and not Pl.EquipSkill._009.Condition[2] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+            if not Pl.EquipSkill._009.Condition[1] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer > Pl.EquipSkill._009.Param[1] then
                 Pl.EquipSkill._009.Condition[2] = true
+            elseif Pl.EquipSkill._009.Condition[2] and St._WholeBodyTimer == 0 then
+                Pl.EquipSkill._009.Condition[1] = true
+                Pl.EquipSkill._009.Condition[2] = false
+                AddChatInfomation(1, Pl.EquipSkill._009.Id, Pl.EquipSkill._009.Condition[1])
+            elseif Pl.EquipSkill._009.Condition[1] and not Pl.EquipSkill._009.Condition[3] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+                Pl.EquipSkill._009.Condition[3] = true
+            elseif Pl.EquipSkill._009.Condition[1] and Pl.EquipSkill._009.Condition[3] and St.playerStamina < St.playerMaxStamina and St._WholeBodyTimer == 0 then
+                Pl.EquipSkill._009.Condition[1] = false
+                Pl.EquipSkill._009.Condition[3] = false
+                AddChatInfomation(1, Pl.EquipSkill._009.Id, Pl.EquipSkill._009.Condition[1])
             end
         end
         -- 11 Pl_EquipSkill_010 会心撃【属性】
