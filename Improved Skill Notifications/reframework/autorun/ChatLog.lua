@@ -687,8 +687,10 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         end
         -- 10 Pl_EquipSkill_009 渾身
         if Sd.EquipSkill[Pl.EquipSkill._009.Id] then
-            if not Pl.EquipSkill._009.Condition[1] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer > Pl.EquipSkill._009.Param[1] then
+            if not Pl.EquipSkill._009.Condition[1] and not Pl.EquipSkill._009.Condition[2] and St.playerStamina == St.playerMaxStamina and St._WholeBodyTimer > Pl.EquipSkill._009.Param[1] then
                 Pl.EquipSkill._009.Condition[2] = true
+            elseif Pl.EquipSkill._009.Condition[2] and St.playerStamina < St.playerMaxStamina then
+                Pl.EquipSkill._009.Condition[2] = false
             elseif Pl.EquipSkill._009.Condition[2] and St._WholeBodyTimer == 0 then
                 Pl.EquipSkill._009.Condition[1] = true
                 Pl.EquipSkill._009.Condition[2] = false
