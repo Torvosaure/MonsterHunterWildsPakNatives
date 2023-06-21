@@ -1461,7 +1461,7 @@ if success then
             getSkillSettingsOptionNames(2)
         end
 
-        if not getPlayerSkill(getPlayerManager(), getMasterPlayerID(getPlayerManager())) then
+        if not getPlayerListPrivate(getPlayerManager(), getMasterPlayerID(getPlayerManager())) then
             ModUI.Label(UI.Label.label, UI.Label.displayValue, UI.Label.toolTip)
             return
         end
