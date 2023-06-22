@@ -450,13 +450,13 @@ local function getState(PlayerData, PlayerBase)
         _KitchenSkill054_Timer          = PlayerData:get_field("_KitchenSkill054_Timer"),
 
         _EndFlow                        = QuestManager:get_field("_EndFlow"),
-        WaitFadeCameraDemo              = EndFlow:get_field("WaitFadeCameraDemo"),
-        LoadCameraDemo                  = EndFlow:get_field("LoadCameraDemo"),
-        LoadWaitCameraDemo              = EndFlow:get_field("LoadWaitCameraDemo"),
-        StartCameraDemo                 = EndFlow:get_field("StartCameraDemo"),
-        CameraDemo                      = EndFlow:get_field("CameraDemo"),
-        Stamp                           = EndFlow:get_field("Stamp"),
-        WaitFadeOut                     = EndFlow:get_field("WaitFadeOut")
+        WaitFadeCameraDemo              = EndFlow:get_field("WaitFadeCameraDemo"):get_data(),
+        LoadCameraDemo                  = EndFlow:get_field("LoadCameraDemo"):get_data(),
+        LoadWaitCameraDemo              = EndFlow:get_field("LoadWaitCameraDemo"):get_data(),
+        StartCameraDemo                 = EndFlow:get_field("StartCameraDemo"):get_data(),
+        CameraDemo                      = EndFlow:get_field("CameraDemo"):get_data(),
+        Stamp                           = EndFlow:get_field("Stamp"):get_data(),
+        WaitFadeOut                     = EndFlow:get_field("WaitFadeOut"):get_data()
     }
 end
 
@@ -1361,80 +1361,83 @@ if success then
         return preLoad
     end
 
-    local function getSkillSettingsOptionNames(index)
-        local PlSkill
-        if index == 1 then
-            PlSkill = Pl.EquipSkill
-        elseif index == 2 then
-            PlSkill = Pl.KitchenSkill
-        end
-        UI.Options.SkillSettings.optionNames[index] = {}
-        for i, _, v in pairsByKeys(PlSkill) do
-            UI.Options.SkillSettings.optionNames[index][i] = {}
-            if v.Notice[1] then
-                table.insert(UI.Options.SkillSettings.optionNames[index][i], UI.Options.SkillSettings.msg[2])
-            end
-            if v.Notice[2] then
-                table.insert(UI.Options.SkillSettings.optionNames[index][i], UI.Options.SkillSettings.msg[3])
-            end
-            if UI.Options.SkillSettings.optionNames[index][i] then
-                table.insert(UI.Options.SkillSettings.optionNames[index][i], UI.Options.SkillSettings.msg[4])
-                if #UI.Options.SkillSettings.optionNames[index][i] == 3 then
-                    table.insert(UI.Options.SkillSettings.optionNames[index][i], 1, UI.Options.SkillSettings.msg[1])
+    local function getSkillSettingsOptionNames()
+        local t = {
+            Pl.EquipSkill,
+            Pl.KitchenSkill
+        }
+
+        for i, v in ipairs(t) do
+            UI.Options.SkillSettings.optionNames[i] = {}
+            for j, _, w in pairsByKeys(v) do
+                UI.Options.SkillSettings.optionNames[i][j] = {}
+                if w.Notice[1] then
+                    table.insert(UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.msg[2])
+                end
+                if w.Notice[2] then
+                    table.insert(UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.msg[3])
+                end
+                if UI.Options.SkillSettings.optionNames[i][j] then
+                    table.insert(UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.msg[4])
+                    if #UI.Options.SkillSettings.optionNames[i][j] == 3 then
+                        table.insert(UI.Options.SkillSettings.optionNames[i][j], 1, UI.Options.SkillSettings.msg[1])
+                    end
                 end
             end
         end
     end
 
-    local function getSkillSettings(index)
-        local Header, getSkillId, getSkillName, confSkill, SdSkill
-        if index == 1 then
-            Header       = UI.Header.EquipSkill
-            getSkillId   = getPlEquipSkillId
-            getSkillName = getEquipSkillName
-            confSkill    = conf.EquipSkill
-            SdSkill      = Sd.EquipSkill
-        elseif index == 2 then
-            Header       = UI.Header.KitchenSkill
-            getSkillId   = getPlKitchenSkillId
-            getSkillName = getKitchenSkillName
-            confSkill    = conf.KitchenSkill
+    local function getSkillSettings()
+        local t = { {
+            Header       = UI.Header.EquipSkill,
+            getSkillId   = getPlEquipSkillId,
+            getSkillName = getEquipSkillName,
+            confSkill    = conf.EquipSkill,
+            SdSkill      = Sd.EquipSkill,
+        }, {
+            Header       = UI.Header.KitchenSkill,
+            getSkillId   = getPlKitchenSkillId,
+            getSkillName = getKitchenSkillName,
+            confSkill    = conf.KitchenSkill,
             SdSkill      = Sd.KitchenSkill
-        end
-        ModUI.Header(Header.text)
-        for i, v in ipairs(confSkill) do
-            local id = getSkillId(v[1])
-            if v[4] > #UI.Options.SkillSettings.optionNames[index][i] then
-                v[4] = 1
-                saveConfig()
-            end
-            UI.Options.SkillSettings.curValue[i] = v[4]
-            UI.Options.SkillSettings.label = getSkillName(nil, id)
-            if UI.Options.SkillSettings.curValue[i] ~= 1 then
-                UI.Options.SkillSettings.label = ("<COLOR FFE29D>%s</COLOR>"):format(UI.Options.SkillSettings.label)
-            end
+        }, }
 
-            if not UI.Options.EquipSkills.isFilter or SdSkill[id] then
-                UI.Options.SkillSettings.wasChanged, UI.Options.SkillSettings.newIndex = ModUI.Options(UI.Options.SkillSettings.label, UI.Options.SkillSettings.curValue[i], UI.Options.SkillSettings.optionNames[index][i], UI.Options.SkillSettings.optionMessages, UI.Options.SkillSettings.toolTip, UI.Options.SkillSettings.isImmediateUpdate)
-                if UI.Options.SkillSettings.wasChanged then
-                    UI.Options.SkillSettings.curValue[i] = UI.Options.SkillSettings.newIndex
-
-                    if UI.Options.SkillSettings.optionNames[index][i][UI.Options.SkillSettings.curValue[i]] == UI.Options.SkillSettings.msg[2] then
-                        v[2] = true
-                        v[3] = false
-                    elseif UI.Options.SkillSettings.optionNames[index][i][UI.Options.SkillSettings.curValue[i]] == UI.Options.SkillSettings.msg[3] then
-                        v[2] = false
-                        v[3] = true
-                    elseif UI.Options.SkillSettings.optionNames[index][i][UI.Options.SkillSettings.curValue[i]] == UI.Options.SkillSettings.msg[4] then
-                        v[2] = false
-                        v[3] = false
-                    elseif UI.Options.SkillSettings.optionNames[index][i][UI.Options.SkillSettings.curValue[i]] == UI.Options.SkillSettings.msg[1] then
-                        v[2] = true
-                        v[3] = true
-                    end
-                    v[4] = UI.Options.SkillSettings.curValue[i]
-
+        for i, v in ipairs(t) do
+            ModUI.Header(v.Header.text)
+            for j, w in ipairs(v.confSkill) do
+                local id = v.getSkillId(w[1])
+                if w[4] > #UI.Options.SkillSettings.optionNames[i][j] then
+                    w[4] = 1
                     saveConfig()
+                end
+                UI.Options.SkillSettings.curValue[j] = w[4]
+                UI.Options.SkillSettings.label = v.getSkillName(nil, id)
+                if UI.Options.SkillSettings.curValue[j] ~= 1 then
+                    UI.Options.SkillSettings.label = ("<COLOR FFE29D>%s</COLOR>"):format(UI.Options.SkillSettings.label)
+                end
+
+                if not UI.Options.EquipSkills.isFilter or v.SdSkill[id] then
+                    UI.Options.SkillSettings.wasChanged, UI.Options.SkillSettings.newIndex = ModUI.Options(UI.Options.SkillSettings.label, UI.Options.SkillSettings.curValue[j], UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.optionMessages, UI.Options.SkillSettings.toolTip, UI.Options.SkillSettings.isImmediateUpdate)
+                    if UI.Options.SkillSettings.wasChanged then
+                        UI.Options.SkillSettings.curValue[j] = UI.Options.SkillSettings.newIndex
+
+                        if UI.Options.SkillSettings.optionNames[i][j][UI.Options.SkillSettings.curValue[j]] == UI.Options.SkillSettings.msg[2] then
+                            w[2] = true
+                            w[3] = false
+                        elseif UI.Options.SkillSettings.optionNames[i][j][UI.Options.SkillSettings.curValue[j]] == UI.Options.SkillSettings.msg[3] then
+                            w[2] = false
+                            w[3] = true
+                        elseif UI.Options.SkillSettings.optionNames[i][j][UI.Options.SkillSettings.curValue[j]] == UI.Options.SkillSettings.msg[4] then
+                            w[2] = false
+                            w[3] = false
+                        elseif UI.Options.SkillSettings.optionNames[i][j][UI.Options.SkillSettings.curValue[j]] == UI.Options.SkillSettings.msg[1] then
+                            w[2] = true
+                            w[3] = true
+                        end
+                        w[4] = UI.Options.SkillSettings.curValue[j]
+
+                        saveConfig()
+                    end
                 end
             end
         end
@@ -1475,8 +1478,7 @@ if success then
 
     ModUI.OnMenu(UI.OnMenu.name, UI.OnMenu.description, function()
         if ChangedLanguage() then
-            getSkillSettingsOptionNames(1)
-            getSkillSettingsOptionNames(2)
+            getSkillSettingsOptionNames()
         end
 
         if not getPlayerBase(getPlayerManager(), getMasterPlayerID(getPlayerManager())) then
@@ -1488,8 +1490,7 @@ if success then
             if not set() then
                 return
             end
-            getSkillSettingsOptionNames(1)
-            getSkillSettingsOptionNames(2)
+            getSkillSettingsOptionNames()
         end
 
         UI.Options.Selector.wasChanged, UI.Options.Selector.newIndex = ModUI.Options(UI.Options.Selector.label, UI.Options.Selector.curValue, UI.Options.Selector.optionNames, UI.Options.Selector.optionMessages, UI.Options.Selector.toolTip, UI.Options.Selector.isImmediateUpdate)
@@ -1511,48 +1512,48 @@ if success then
                 end
             end
 
-            getSkillSettings(1)
-            getSkillSettings(2)
+            getSkillSettings()
         elseif UI.Options.Selector.curValue == 2 then
             getColorSettings()
         end
     end)
 
-    local function skip(index, args)
-        local confSkill, getSkillName, getPlSkillId
-        if index == 1 then
-            confSkill    = conf.EquipSkill
-            getSkillName = getEquipSkillName
+    local function skip(args)
+        local t = { {
+            confSkill    = conf.EquipSkill,
+            getSkillName = getEquipSkillName,
             getPlSkillId = getPlEquipSkillId
-        elseif index == 2 then
-            confSkill    = conf.KitchenSkill
-            getSkillName = getKitchenSkillName
+        }, {
+            confSkill    = conf.KitchenSkill,
+            getSkillName = getKitchenSkillName,
             getPlSkillId = getPlKitchenSkillId
-        end
+        } }
 
-        local preMessage = sdk.to_managed_object(args[3]):call("ToString()")
+        for i, v in ipairs(t) do
+            local preMessage = sdk.to_managed_object(args[3]):call("ToString()")
 
-        for _, v in ipairs(confSkill) do
-            for i, w in ipairs(conf.COL) do
-                local id = getPlSkillId(v[1])
-                local skillName = getSkillName(nil, id)
-                local postMessage
+            for _, w in ipairs(v.confSkill) do
+                for j, x in ipairs(conf.COL) do
+                    local id = v.getPlSkillId(w[1])
+                    local skillName = v.getSkillName(nil, id)
+                    local postMessage
 
-                if index == 2 and (id == 31 or id == 32) then
-                    postMessage = UI.MSG.Ot[1]
-                else
-                    postMessage = UI.MSG.Pl[i]
-                end
-                postMessage = postMessage:gsub("{0}", skillName)
-
-                if preMessage == postMessage then
-                    if not v[i + 1] then
-                        return true
+                    if i == 2 and (id == 31 or id == 32) then
+                        postMessage = UI.MSG.Ot[1]
+                    else
+                        postMessage = UI.MSG.Pl[j]
                     end
-                    if w[4] == 2 then
-                        args[3] = sdk.to_ptr(sdk.create_managed_string(postMessage:gsub("<COL[^>]*>{0}</COL[^>]*>", skillName):gsub(skillName, rgb2Hex(w[1], w[2], w[3], skillName))))
+                    postMessage = postMessage:gsub("{0}", skillName)
+
+                    if preMessage == postMessage then
+                        if not w[j + 1] then
+                            return true
+                        end
+                        if x[4] == 2 then
+                            args[3] = sdk.to_ptr(sdk.create_managed_string(postMessage:gsub("<COL[^>]*>{0}</COL[^>]*>", skillName):gsub(skillName, rgb2Hex(x[1], x[2], x[3], skillName))))
+                        end
+                        break
                     end
-                    break
                 end
             end
         end
@@ -1561,7 +1562,7 @@ if success then
     sdk.hook(sdk.find_type_definition("snow.gui.ChatManager"):get_method("reqAddChatInfomation(System.String, System.UInt32)"),
         function(args)
             if conf.COL and conf.EquipSkill and conf.KitchenSkill then
-                if skip(1, args) or skip(2, args) then
+                if skip(args) then
                     return sdk.PreHookResult.SKIP_ORIGINAL
                 end
             end
