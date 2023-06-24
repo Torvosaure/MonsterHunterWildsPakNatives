@@ -246,6 +246,17 @@ local function getSkillData(PlayerManager)
                     _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax")
                 } }
             },
+            _024 = {
+                Enum      = "Pl_EquipSkill_024",
+                Id        = getPlEquipSkillId("Pl_EquipSkill_024"),
+                Notice    = { true, true },
+                Condition = { false },
+                Param     = {
+                    _EquipSkillParameter:get_field("_EquipSkill_024_Lv1") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_024_Lv2") * 60,
+                    _EquipSkillParameter:get_field("_EquipSkill_024_Lv3") * 60
+                }
+            },
             _226 = {
                 Enum      = "Pl_EquipSkill_226",
                 Id        = getPlEquipSkillId("Pl_EquipSkill_226"),
@@ -420,6 +431,7 @@ local function getState(PlayerData, PlayerBase)
         isDebuffState                   = PlayerBase:call("isDebuffState()"),
         _PowerFreedomTimer              = PlayerBase:get_field("_PowerFreedomTimer"),
         _WholeBodyTimer                 = PlayerData:get_field("_WholeBodyTimer"),
+        _SharpnessGaugeBoostTimer       = PlayerBase:get_field("_SharpnessGaugeBoostTimer"),
         _EquipSkill_036_Timer           = PlayerData:get_field("_EquipSkill_036_Timer"),
         _SlidingPowerupTimer            = PlayerData:get_field("_SlidingPowerupTimer"),
         isEquipSkill091                 = isEquipSkill091,
@@ -586,19 +598,15 @@ local getEquipSkillName            = sdk.find_type_definition("snow.data.DataSho
 local getKitchenSkillName          = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlKitchenSkillId)")
 local GUI_COMMON_MEAL_SKILL_NOTICE = sdk.find_type_definition("snow.gui.COMMON"):get_field("GUI_COMMON_MEAL_SKILL_NOTICE"):get_data(nil)
 local function AddChatInfomation(type, skillID, isSkillActive)
-    local getName
-    local ChatLog
-    if type == 1 then
-        getName = getEquipSkillName
-    elseif type == 2 then
-        getName = getKitchenSkillName
-    end
-    if isSkillActive then
-        ChatLog = UI.MSG.Pl[1]
-    elseif not isSkillActive then
-        ChatLog = UI.MSG.Pl[2]
-    end
-    getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", string.gsub(ChatLog, "{0}", getName(nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
+    local getName = {
+        getEquipSkillName,
+        getKitchenSkillName
+    }
+    local ChatLog = {
+        UI.MSG.Pl[1],
+        UI.MSG.Pl[2]
+    }
+    getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", string.gsub(ChatLog[isSkillActive and 1 or 2], "{0}", getName[type](nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
 end
 
 sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("update()"),
@@ -735,6 +743,15 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 24 Pl_EquipSkill_023 弾丸節約
 
         -- 25 Pl_EquipSkill_024 剛刃研磨
+        if Sd.EquipSkill[Pl.EquipSkill._024.Id] then
+            if St._SharpnessGaugeBoostTimer == Pl.EquipSkill._024.Param[Sd.EquipSkill[Pl.EquipSkill._024.Id]:get_field("SkillLv")] then
+                Pl.EquipSkill._024.Condition[1] = true
+                AddChatInfomation(1, Pl.EquipSkill._024.Id, Pl.EquipSkill._024.Condition[1])
+            elseif Pl.EquipSkill._024.Condition[1] and St._SharpnessGaugeBoostTimer == 0 then
+                Pl.EquipSkill._024.Condition[1] = false
+                AddChatInfomation(1, Pl.EquipSkill._024.Id, Pl.EquipSkill._024.Condition[1])
+            end
+        end
         -- 26 Pl_EquipSkill_025 心眼
         -- 27 Pl_EquipSkill_026 弾導強化
         -- 28 Pl_EquipSkill_027 鈍器使い
@@ -1251,7 +1268,7 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("dam
             return retval
         end
 
-        if math.abs(preDamage + postDamage) > 0.0001 then
+        if preDamage + postDamage > 0.0001 then
             isReduce = true
         end
 
@@ -1262,10 +1279,10 @@ sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigge
     function(args)
         if sdk.to_int64(args[2]) == 0x2ACF664E then
             if isReduce then
-                isReduce = false
                 getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", UI.MSG.Co[1], GUI_COMMON_MEAL_SKILL_NOTICE)
             end
         end
+        isReduce = false
     end,
     function(retval)
         return retval
