@@ -1,511 +1,448 @@
-local Pl
-local Sd
-local St
-local reset
+local function set_rgb_color_to_string(str, r, g, b)
+    return ("<COLOR %02X%02X%02X>%s</COLOR>"):format(r, g, b, str)
+end
 
-local function getPlayerManager()
+local function set_color_name_to_string(str, color_name)
+    return ("<COL %s>%s</COL>"):format(color_name, str)
+end
+
+local function get_player_manager()
     return sdk.get_managed_singleton("snow.player.PlayerManager")
 end
-local function getMasterPlayerID(PlayerManager)
-    return PlayerManager:call("getMasterPlayerID()")
+local function get_master_player_id(player_manager)
+    return player_manager:call("getMasterPlayerID()")
 end
-local function getPlayerBase(PlayerManager, MasterPlayerID)
-    return PlayerManager:get_field("PlayerListPrivate")[MasterPlayerID]
+local function get_player_base(player_manager)
+    return player_manager:call("findMasterPlayer()")
 end
-local function getPlayerData(PlayerManager, MasterPlayerID)
-    return PlayerManager:get_field("<PlayerData>k__BackingField")[MasterPlayerID]
+local function get_player_data(player_manager, master_player_id)
+    return player_manager:get_field("<PlayerData>k__BackingField")[master_player_id]
 end
-local function getPlayerSkillList(PlayerManager, MasterPlayerID)
-    return PlayerManager:get_field("<PlayerSkill>k__BackingField")[MasterPlayerID]
-end
-local function getPlayerQuestDefine()
-    return sdk.find_type_definition("snow.player.PlayerQuestDefine")
-end
-local function get_MessageLanguage()
-    return sdk.find_type_definition("via.gui.GUISystem"):get_method("get_MessageLanguage()"):call(nil)
+local function get_player_skill_list(player_manager, master_player_id)
+    return player_manager:get_field("<PlayerSkill>k__BackingField")[master_player_id]
 end
 
-local langIndex = get_MessageLanguage()
-local function ChangedLanguage()
-    if langIndex ~= get_MessageLanguage() then
-        langIndex = get_MessageLanguage()
+local function get_gui_manager()
+    return sdk.get_managed_singleton("snow.gui.GuiManager")
+end
+local function get_gui_hud(gui_manager)
+    return gui_manager:get_field("<refGuiHud>k__BackingField")
+end
+local function get_player_info(gui_hud)
+    return gui_hud:get_field("PlayerInfo")
+end
+
+local function get_quest_manager()
+    return sdk.get_managed_singleton("snow.QuestManager")
+end
+
+local function get_chat_manager()
+    return sdk.get_managed_singleton("snow.gui.ChatManager")
+end
+
+local get_message_language = sdk.find_type_definition("via.gui.GUISystem"):get_method("get_MessageLanguage()")
+local message_language_index = get_message_language:call(nil)
+local function is_changed_language()
+    local pre_index = get_message_language:call(nil)
+    if message_language_index ~= pre_index then
+        message_language_index = pre_index
         return true
     end
 end
 
-local PlEquipSkillId = sdk.find_type_definition("snow.data.DataDef.PlEquipSkillId")
-
-local function getPlEquipSkillId(Enum)
-    return PlEquipSkillId:get_field(Enum):get_data()
+local player_equip_skill_id = sdk.find_type_definition("snow.data.DataDef.PlEquipSkillId")
+local function get_player_equip_skill_id(enum)
+    return player_equip_skill_id:get_field(enum):get_data(nil)
+end
+local function get_equip_skill_data(player_skill_list)
+    local t = {}
+    if player_skill_list then
+        for i = 1, #player_equip_skill_id:get_fields() do
+            t[i] = player_skill_list:call("getSkillData(snow.data.DataDef.PlEquipSkillId)", i)
+        end
+    end
+    return t
 end
 
-local PlKitchenSkillId = sdk.find_type_definition("snow.data.DataDef.PlKitchenSkillId")
-
-local function getPlKitchenSkillId(Enum)
-    return PlKitchenSkillId:get_field(Enum):get_data()
+local player_kitchen_skill_id = sdk.find_type_definition("snow.data.DataDef.PlKitchenSkillId")
+local function get_player_kitchen_skill_id(enum)
+    return player_kitchen_skill_id:get_field(enum):get_data(nil)
+end
+local function get_kitchen_skill_data(player_skill_list)
+    local t = {}
+    if player_skill_list then
+        for i = 1, #player_kitchen_skill_id:get_fields() do
+            t[i] = player_skill_list:call("getKitchenSkillData(snow.data.DataDef.PlKitchenSkillId)", i)
+        end
+    end
+    return t
 end
 
-local function getSkillData(PlayerManager)
-    local PlayerQuestDefine     = getPlayerQuestDefine()
-    local _EquipSkillParameter  = PlayerManager:get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
-    local _OdangoSkillParameter = PlayerManager:get_field("_PlayerUserDataSkillParameter"):get_field("_OdangoSkillParameter")
+local get_guid_by_name = sdk.find_type_definition("via.gui.message"):get_method("getGuidByName(System.String)")
+local get_message      = sdk.find_type_definition("via.gui.message"):get_method("get(System.Guid)")
+local function get_message_by_name(name)
+    return get_message:call(nil, get_guid_by_name:call(nil, name))
+end
+
+local player_quest_define = sdk.find_type_definition("snow.player.PlayerQuestDefine")
+local function get_skill_data(player_manager)
+    local equip_skill_parameter  = player_manager:get_field("_PlayerUserDataSkillParameter"):get_field("_EquipSkillParameter")
+    local odango_skill_parameter = player_manager:get_field("_PlayerUserDataSkillParameter"):get_field("_OdangoSkillParameter")
     return {
         EquipSkill = {
             _001 = {
                 Enum      = "Pl_EquipSkill_001",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_001"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_001"),
                 Notice    = { true, true },
                 Condition = { false },
-                Param     = { PlayerQuestDefine:get_field("SkillChallengeTime"):get_data() }
+                Param     = { player_quest_define:get_field("SkillChallengeTime"):get_data(nil) }
             },
             _002 = {
                 Enum      = "Pl_EquipSkill_002",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_002"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_002"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _003 = {
                 Enum      = "Pl_EquipSkill_003",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_003"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_003"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _004 = {
                 Enum      = "Pl_EquipSkill_004",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_004"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_004"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _008 = {
                 Enum      = "Pl_EquipSkill_008",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_008"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_008"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _009 = {
                 Enum      = "Pl_EquipSkill_009",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_009"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_009"),
                 Notice    = { true, true },
                 Condition = { false, false, false },
                 Param     = { 120 }
             },
             _023 = {
                 Enum      = "Pl_EquipSkill_023",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_023"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_023"),
                 Notice    = { true, false },
                 Condition = {},
                 Param     = {}
             },
             _036 = {
                 Enum      = "Pl_EquipSkill_036",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_036"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_036"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = { 720 }
             },
             _042 = {
                 Enum      = "Pl_EquipSkill_042",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_042"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_042"),
                 Notice    = { true, true },
                 Condition = { false },
-                Param     = { _EquipSkillParameter:get_field("_EquipSkill_042_CtlAddTime") * 60 }
+                Param     = { equip_skill_parameter:get_field("_EquipSkill_042_CtlAddTime") * 60 }
             },
             _089 = {
                 Enum      = "Pl_EquipSkill_089",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_089"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_089"),
                 Notice    = { true, false },
                 Condition = {},
                 Param     = {}
             },
             _090 = {
                 Enum      = "Pl_EquipSkill_090",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_090"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_090"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = { 0.35 }
             },
             _091 = {
                 Enum      = "Pl_EquipSkill_091",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_091"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_091"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = { 0 }
             },
             _102 = {
                 Enum      = "Pl_EquipSkill_102",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_102"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_102"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv4"),
-                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv4"),
-                    _EquipSkillParameter:get_field("_EquipSkill_102_ActivationLv5")
+                    equip_skill_parameter:get_field("_EquipSkill_102_ActivationLv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_102_ActivationLv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_102_ActivationLv4"),
+                    equip_skill_parameter:get_field("_EquipSkill_102_ActivationLv4"),
+                    equip_skill_parameter:get_field("_EquipSkill_102_ActivationLv5")
                 }
             },
             _105 = {
                 Enum      = "Pl_EquipSkill_105",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_105"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_105"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = { 1800 }
             },
             _204 = {
                 Enum      = "Pl_EquipSkill_204",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_204"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_204"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = { 1800 }
             },
             _206 = {
                 Enum      = "Pl_EquipSkill_206",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_206"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_206"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _208 = {
                 Enum      = "Pl_EquipSkill_208",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_208"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_208"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_208_Lv1_Duration") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_208_Lv2_Duration") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_208_Lv3_Duration") * 60
+                    equip_skill_parameter:get_field("_EquipSkill_208_Lv1_Duration") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_208_Lv2_Duration") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_208_Lv3_Duration") * 60
                 }
             },
             _209 = {
                 Enum      = "Pl_EquipSkill_209",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_209"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_209"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _210 = {
                 Enum      = "Pl_EquipSkill_210",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_210"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_210"),
                 Notice    = { true, false },
                 Condition = { false },
                 Param     = {}
             },
             _215 = {
                 Enum      = "Pl_EquipSkill_215",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_215"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_215"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_215_Lv1"):get_field("_Time") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_215_Lv2"):get_field("_Time") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_215_Lv3"):get_field("_Time") * 60
+                    equip_skill_parameter:get_field("_EquipSkill_215_Lv1"):get_field("_Time") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_215_Lv2"):get_field("_Time") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_215_Lv3"):get_field("_Time") * 60
                 }
             },
             _216 = {
                 Enum      = "Pl_EquipSkill_216",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_216"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_216"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_216_Lv1"):get_field("_Bow_Duration") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_216_Lv2"):get_field("_Bow_Duration") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_216_Lv3"):get_field("_Bow_Duration") * 60
+                    equip_skill_parameter:get_field("_EquipSkill_216_Lv1"):get_field("_Bow_Duration") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_216_Lv2"):get_field("_Bow_Duration") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_216_Lv3"):get_field("_Bow_Duration") * 60
                 }
             },
             _220 = {
                 Enum      = "Pl_EquipSkill_220",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_220"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_220"),
                 Notice    = { true, false },
                 Condition = { false },
                 Param     = {}
             },
             _222 = {
                 Enum      = "Pl_EquipSkill_222",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_222"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_222"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_222_Lv1"),
-                    _EquipSkillParameter:get_field("_EquipSkill_222_Lv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_222_Lv3")
+                    equip_skill_parameter:get_field("_EquipSkill_222_Lv1"),
+                    equip_skill_parameter:get_field("_EquipSkill_222_Lv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_222_Lv3")
                 }
             },
             _223 = {
                 Enum      = "Pl_EquipSkill_223",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_223"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_223"),
                 Notice    = { true, false },
                 Condition = { false },
                 Param     = { {
-                    (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv1")) / 100,
-                    (100 - _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2")) / 100
+                    (100 - equip_skill_parameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv1")) / 100,
+                    (100 - equip_skill_parameter:get_field("_EquipSkill_223"):get_field("_DamageReduceLv2")) / 100
                 }, {
-                    _EquipSkillParameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax")
+                    equip_skill_parameter:get_field("_EquipSkill_223"):get_field("_AccumulatorMax")
                 } }
             },
             _024 = {
                 Enum      = "Pl_EquipSkill_024",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_024"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_024"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_024_Lv1") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_024_Lv2") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_024_Lv3") * 60
+                    equip_skill_parameter:get_field("_EquipSkill_024_Lv1") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_024_Lv2") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_024_Lv3") * 60
                 }
             },
             _226 = {
                 Enum      = "Pl_EquipSkill_226",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_226"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_226"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _227 = {
                 Enum      = "Pl_EquipSkill_227",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_227"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_227"),
                 Notice    = { true, false },
                 Condition = { false },
                 Param     = {}
             },
             _229 = {
                 Enum      = "Pl_EquipSkill_229",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_229"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_229"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _230 = {
                 Enum      = "Pl_EquipSkill_230",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_230"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_230"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {}
             },
             _231 = {
                 Enum      = "Pl_EquipSkill_231",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_231"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_231"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _EquipSkillParameter:get_field("_EquipSkill_231_Lv1_WpOn_Timer") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_231_Lv2_WpOn_Timer") * 60,
-                    _EquipSkillParameter:get_field("_EquipSkill_231_Lv3_WpOn_Timer") * 60
+                    equip_skill_parameter:get_field("_EquipSkill_231_Lv1_WpOn_Timer") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_231_Lv2_WpOn_Timer") * 60,
+                    equip_skill_parameter:get_field("_EquipSkill_231_Lv3_WpOn_Timer") * 60
                 }
             },
             _232 = {
                 Enum      = "Pl_EquipSkill_232",
-                Id        = getPlEquipSkillId("Pl_EquipSkill_232"),
+                Id        = get_player_equip_skill_id("Pl_EquipSkill_232"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = { {
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv1"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv1"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv1")
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv1"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv1"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv1")
                 }, {
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv2")
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_Absorption_Lv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_Absorption_Lv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_Absorption_Lv2")
                 }, {
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv1"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv1"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv1")
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv1"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv1"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv1")
                 }, {
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv2"),
-                    _EquipSkillParameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv2")
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv1"):get_field("_ActivationTime_Lv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv2"):get_field("_ActivationTime_Lv2"),
+                    equip_skill_parameter:get_field("_EquipSkill_232"):get_field("_SkillLv3"):get_field("_ActivationTime_Lv2")
                 } }
             }
         },
         KitchenSkill = {
             _002 = {
                 Enum      = "Pl_KitchenSkill_002",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_002"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_002"),
                 Notice    = { true, true },
                 Condition = { false },
                 Param     = {
-                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv1"):get_field("_EnableHP"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv2"):get_field("_EnableHP"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv3"):get_field("_EnableHP"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_002_Lv4"):get_field("_EnableHP")
+                    odango_skill_parameter:get_field("_KitchenSkill_002_Lv1"):get_field("_EnableHP"),
+                    odango_skill_parameter:get_field("_KitchenSkill_002_Lv2"):get_field("_EnableHP"),
+                    odango_skill_parameter:get_field("_KitchenSkill_002_Lv3"):get_field("_EnableHP"),
+                    odango_skill_parameter:get_field("_KitchenSkill_002_Lv4"):get_field("_EnableHP")
                 }
             },
             _024 = {
                 Enum      = "Pl_KitchenSkill_024",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_024"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_024"),
                 Notice    = { true, false },
                 Condition = { false },
                 Param     = {}
             },
             _027 = {
                 Enum      = "Pl_KitchenSkill_027",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_027"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_027"),
                 Notice    = { true, true },
                 Condition = {},
                 Param     = {}
             },
             _030 = {
                 Enum      = "Pl_KitchenSkill_030",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_030"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_030"),
                 Notice    = { true, false },
                 Condition = {},
                 Param     = {}
             },
             _031 = {
                 Enum      = "Pl_KitchenSkill_031",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_031"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_031"),
                 Notice    = { true, false },
                 Condition = {},
                 Param     = {}
             },
             _048 = {
                 Enum      = "Pl_KitchenSkill_048",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_048"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_048"),
                 Notice    = { true, false },
                 Condition = { false },
                 Param     = { {
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Damage"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Damage"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Damage"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Damage")
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv1_Damage"),
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv2_Damage"),
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv3_Damage"),
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv4_Damage")
                 }, {
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv1_Reduce"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv2_Reduce"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv3_Reduce"),
-                    _OdangoSkillParameter:get_field("_KitchenSkill_048_Lv4_Reduce")
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv1_Reduce"),
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv2_Reduce"),
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv3_Reduce"),
+                    odango_skill_parameter:get_field("_KitchenSkill_048_Lv4_Reduce")
                 } }
             },
             _051 = {
                 Enum      = "Pl_KitchenSkill_051",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_051"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_051"),
                 Notice    = { true, true },
                 Condition = { false },
-                Param     = { _OdangoSkillParameter:get_field("_KitchenSkill_051_Lv4_AtkDuration") * 60 }
+                Param     = { odango_skill_parameter:get_field("_KitchenSkill_051_Lv4_AtkDuration") * 60 }
             },
             _054 = {
                 Enum      = "Pl_KitchenSkill_054",
-                Id        = getPlKitchenSkillId("Pl_KitchenSkill_054"),
+                Id        = get_player_kitchen_skill_id("Pl_KitchenSkill_054"),
                 Notice    = { true, true },
                 Condition = { false },
-                Param     = { _OdangoSkillParameter:get_field("_KitchenSkill_054_Time") * 60 }
+                Param     = { odango_skill_parameter:get_field("_KitchenSkill_054_Time") * 60 }
             }
         }
     }
 end
 
-local function init(PlayerManager)
-    reset = true
-    return getSkillData(PlayerManager)
-end
-
-local isEquipSkill091
-sdk.hook(sdk.find_type_definition("snow.player.PlayerBase"):get_method("isEquipSkill091()"),
-    function(args)
-    end,
-    function(retval)
-        if sdk.to_int64(retval) == 1 then
-            isEquipSkill091 = true
-        else
-            isEquipSkill091 = false
-        end
-
-        return retval
-    end)
-
-local function getState(PlayerData, PlayerBase)
-    local PlayerInfo   = sdk.get_managed_singleton("snow.gui.GuiManager"):get_field("<refGuiHud>k__BackingField"):get_field("PlayerInfo")
-    local QuestManager = sdk.get_managed_singleton("snow.QuestManager")
-    local EndFlow      = sdk.find_type_definition("snow.QuestManager.EndFlow")
-    return {
-        playerHealth                    = PlayerData:call("get_vital()"),
-        playerMaxHealth                 = PlayerBase:call("getVitalMax()"),
-        playerRawRedHealth              = PlayerData:get_field("_r_Vital"),
-        playerRedHealth                 = PlayerBase:call("getRedVital()"),
-        playerStamina                   = PlayerData:get_field("_stamina"),
-        playerMaxStamina                = PlayerData:get_field("_staminaMax"),
-
-        _ChallengeTimer                 = PlayerData:get_field("_ChallengeTimer"),
-        isDebuffState                   = PlayerBase:call("isDebuffState()"),
-        _PowerFreedomTimer              = PlayerBase:get_field("_PowerFreedomTimer"),
-        _WholeBodyTimer                 = PlayerData:get_field("_WholeBodyTimer"),
-        _SharpnessGaugeBoostTimer       = PlayerBase:get_field("_SharpnessGaugeBoostTimer"),
-        _EquipSkill_036_Timer           = PlayerData:get_field("_EquipSkill_036_Timer"),
-        _SlidingPowerupTimer            = PlayerData:get_field("_SlidingPowerupTimer"),
-        isEquipSkill091                 = isEquipSkill091,
-        _DieCount                       = PlayerData:get_field("_DieCount"),
-        _CounterattackPowerupTimer      = PlayerData:get_field("_CounterattackPowerupTimer"),
-        _DisasterTurnPowerUpTimer       = PlayerData:get_field("_DisasterTurnPowerUpTimer"),
-        _FightingSpiritTimer            = PlayerData:get_field("_FightingSpiritTimer"),
-        _EquipSkill208_AtkUpTimer       = PlayerData:get_field("_EquipSkill208_AtkUpTimer"),
-        _BrandNewSharpnessAdjustUpTimer = PlayerData:get_field("_BrandNewSharpnessAdjustUpTimer"),
-        _EquipSkill216_BottleUpTimer    = PlayerBase:get_field("_EquipSkill216_BottleUpTimer"),
-        isHaveSkillGuts                 = PlayerInfo:get_field("isHaveSkillGuts"),
-        _EquipSkill222_Timer            = PlayerData:get_field("_EquipSkill222_Timer"),
-        _EquipSkill223Accumulator       = PlayerData:get_field("_EquipSkill223Accumulator"),
-        isHateTarget                    = PlayerBase:call("isHateTarget()"),
-        _IsEquipSkill226Enable          = PlayerBase:get_field("_IsEquipSkill226Enable"),
-        _EquipSkill227State             = PlayerData:get_field("_EquipSkill227State"),
-        get_IsEnableEquipSkill225       = PlayerBase:call("get_IsEnableEquipSkill225()"),
-        _EquipSkill229UseUpFlg          = PlayerBase:get_field("_EquipSkill229UseUpFlg"),
-        isActiveEquipSkill230           = PlayerBase:call("isActiveEquipSkill230()"),
-        _EquipSkill231_WireNumTimer     = PlayerData:get_field("_EquipSkill231_WireNumTimer"),
-        _EquipSkill231_WpOffTimer       = PlayerData:get_field("_EquipSkill231_WpOffTimer"),
-        _EquipSkill232Absorption        = PlayerData:get_field("_EquipSkill232Absorption"),
-        _EquipSkill232Timer             = PlayerData:get_field("_EquipSkill232Timer"),
-
-        isHaveKitchenGuts               = PlayerInfo:get_field("isHaveKitchenGuts"),
-        _KitchenSkill048_Damage         = PlayerData:get_field("_KitchenSkill048_Damage"),
-        _KitchenSkill051_AtkUpTimer     = PlayerData:get_field("_KitchenSkill051_AtkUpTimer"),
-        _KitchenSkill054_Timer          = PlayerData:get_field("_KitchenSkill054_Timer"),
-
-        _EndFlow                        = QuestManager:get_field("_EndFlow"),
-        WaitFadeCameraDemo              = EndFlow:get_field("WaitFadeCameraDemo"):get_data(),
-        LoadCameraDemo                  = EndFlow:get_field("LoadCameraDemo"):get_data(),
-        LoadWaitCameraDemo              = EndFlow:get_field("LoadWaitCameraDemo"):get_data(),
-        StartCameraDemo                 = EndFlow:get_field("StartCameraDemo"):get_data(),
-        CameraDemo                      = EndFlow:get_field("CameraDemo"):get_data(),
-        Stamp                           = EndFlow:get_field("Stamp"):get_data(),
-        WaitFadeOut                     = EndFlow:get_field("WaitFadeOut"):get_data()
-    }
-end
-
-local function getEquipSkillData(PlayerSkillList)
-    local t = {}
-    for i = 1, #PlEquipSkillId:get_fields() do
-        t[i] = PlayerSkillList:call("getSkillData(snow.data.DataDef.PlEquipSkillId)", i)
-    end
-    return t
-end
-local function getKitchenSkillData(PlayerSkillList)
-    local t = {}
-    for i = 1, #PlKitchenSkillId:get_fields() do
-        t[i] = PlayerSkillList:call("getKitchenSkillData(snow.data.DataDef.PlKitchenSkillId)", i)
-    end
-    return t
-end
-
-local function getChatManager()
-    return sdk.get_managed_singleton("snow.gui.ChatManager")
-end
-
-local getGuidByName = sdk.find_type_definition("via.gui.message"):get_method("getGuidByName(System.String)")
-local message       = sdk.find_type_definition("via.gui.message"):get_method("get(System.Guid)")
-local function getMessageByName(Name)
-    local Guid = getGuidByName:call(nil, Name)
-    return message:call(nil, Guid)
-end
-
-local function getUI()
+local function get_ui()
     return {
         OnMenu = {
-            name        = "<COLOR 00FFFF>Improved Skill Notifications</COLOR>",
+            name        = set_rgb_color_to_string("Improved Skill Notifications", 0x00, 0xFF, 0xFF),
             description = ""
         },
         Slider = {
-            label             = { "<COLOR FF0000>R</COLOR>", "<COLOR 00FF00>G</COLOR>", "<COLOR 0000FF>B</COLOR>" },
+            label             = { set_rgb_color_to_string("R", 0xFF, 0x00, 0x00), set_rgb_color_to_string("G", 0x00, 0xFF, 0x00), set_rgb_color_to_string("B", 0x00, 0x00, 0xFF) },
             curValue          = {},
             min               = 0x0,
             max               = 0xFF,
@@ -516,9 +453,9 @@ local function getUI()
         },
         Options = {
             Selector = {
-                label             = getMessageByName("Comn_TargetSelect_00"),
+                label             = get_message_by_name("Comn_TargetSelect_00"),
                 curValue          = 1,
-                optionNames       = { getMessageByName("FacilityCommonMenu_14"), getMessageByName("CharMakeMsg_Me_193") },
+                optionNames       = { get_message_by_name("FacilityCommonMenu_14"), get_message_by_name("CharMakeMsg_Me_193") },
                 optionMessages    = "",
                 toolTip           = "",
                 isImmediateUpdate = false,
@@ -526,9 +463,9 @@ local function getUI()
                 newIndex          = nil
             },
             EquipSkills = {
-                label             = getMessageByName("CharMakeMsg_Me_166"),
+                label             = get_message_by_name("CharMakeMsg_Me_166"),
                 curValue          = 1,
-                optionNames       = { getMessageByName("COMN_ITEMFILTER_01"), getMessageByName("COMN_SkillDetail_03") },
+                optionNames       = { get_message_by_name("COMN_ITEMFILTER_01"), get_message_by_name("COMN_SkillDetail_03") },
                 optionMessages    = "",
                 toolTip           = "",
                 isImmediateUpdate = false,
@@ -546,16 +483,16 @@ local function getUI()
                 wasChanged        = nil,
                 newIndex          = nil,
                 msg               = {
-                    getMessageByName("STM_ASE_Menu_005"),
-                    "<COL YEL>" .. getMessageByName("Option_Me_Item_107_01_MR") .. "</COL>",
-                    "<COL RED>" .. getMessageByName("Option_Me_Item_107_02_MR") .. "</COL>",
-                    "<COL GRAY>" .. getMessageByName("ChatMenu_LogMenu_16") .. "</COL>"
+                    get_message_by_name("STM_ASE_Menu_005"),
+                    set_color_name_to_string(get_message_by_name("Option_Me_Item_107_01_MR"), "YEL"),
+                    set_color_name_to_string(get_message_by_name("Option_Me_Item_107_02_MR"), "RED"),
+                    set_color_name_to_string(get_message_by_name("ChatMenu_LogMenu_16"), "GRAY")
                 }
             },
             COLOR = {
                 label             = {},
                 curValue          = {},
-                optionNames       = { getMessageByName("CharMakeMsg_Me_100"), getMessageByName("CharMakeMsg_Me_101") },
+                optionNames       = { get_message_by_name("CharMakeMsg_Me_100"), get_message_by_name("CharMakeMsg_Me_101") },
                 optionMessages    = "",
                 toolTip           = "",
                 isImmediateUpdate = false,
@@ -565,92 +502,171 @@ local function getUI()
         },
         Header = {
             EquipSkill = {
-                text = getMessageByName("FacilityCommonMenu_14")
+                text = get_message_by_name("FacilityCommonMenu_14")
             },
             KitchenSkill = {
-                text = getMessageByName("COMN_SkillDetailTab_04")
+                text = get_message_by_name("COMN_SkillDetailTab_04")
             }
         },
         Label = {
-            label = getMessageByName("DialogMsg_System_NSW_DataLoad_NG"),
+            label = get_message_by_name("DialogMsg_System_NSW_DataLoad_NG"),
             displayValue = "",
-            toolTip = getMessageByName("StartMenu_System_Common_GrayOut")
+            toolTip = get_message_by_name("StartMenu_System_Common_GrayOut")
         },
         MSG = {
             Pl = {
-                getMessageByName("ChatLog_Pl_Skill_01"),
-                getMessageByName("ChatLog_Pl_Skill_02")
+                get_message_by_name("ChatLog_Pl_Skill_01"),
+                get_message_by_name("ChatLog_Pl_Skill_02")
             },
             Ot = {
-                getMessageByName("ChatLog_Ot_Skill_01"),
-                getMessageByName("ChatLog_Ot_Skill_02"),
-                getMessageByName("ChatLog_Ot_Skill_03")
+                get_message_by_name("ChatLog_Ot_Skill_01"),
+                get_message_by_name("ChatLog_Ot_Skill_02"),
+                get_message_by_name("ChatLog_Ot_Skill_03")
             },
             Co = {
-                getMessageByName("ChatLog_Co_Skill_01")
+                get_message_by_name("ChatLog_Co_Skill_01")
             }
         }
     }
 end
-local UI                           = getUI()
+local UI                           = get_ui()
 
-local getEquipSkillName            = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlEquipSkillId)")
-local getKitchenSkillName          = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlKitchenSkillId)")
+local get_equip_skill_name         = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlEquipSkillId)")
+local get_kitchen_skill_name       = sdk.find_type_definition("snow.data.DataShortcut"):get_method("getName(snow.data.DataDef.PlKitchenSkillId)")
 local GUI_COMMON_MEAL_SKILL_NOTICE = sdk.find_type_definition("snow.gui.COMMON"):get_field("GUI_COMMON_MEAL_SKILL_NOTICE"):get_data(nil)
-local function AddChatInfomation(type, skillID, isSkillActive)
-    local getName = {
-        getEquipSkillName,
-        getKitchenSkillName
+local function AddChatInfomation(type, skill_id, is_skill_active)
+    local chat_manager, post_message
+    if not chat_manager then chat_manager = get_chat_manager() end
+
+    local get_skill_name = {
+        get_equip_skill_name,
+        get_kitchen_skill_name
     }
-    local ChatLog = {
+    local pre_message = {
         UI.MSG.Pl[1],
-        UI.MSG.Pl[2]
+        UI.MSG.Pl[2],
+        UI.MSG.Co[1]
     }
-    getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", string.gsub(ChatLog[isSkillActive and 1 or 2], "{0}", getName[type](nil, skillID)), GUI_COMMON_MEAL_SKILL_NOTICE)
+
+    if type == 1 or type == 2 then
+        post_message = pre_message[is_skill_active and 1 or 2]:gsub("{0}", get_skill_name[type](nil, skill_id))
+    elseif type == 3 then
+        post_message = pre_message[type]
+    end
+
+    chat_manager:call("reqAddChatInfomation(System.String, System.UInt32)", post_message, GUI_COMMON_MEAL_SKILL_NOTICE)
 end
 
-sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("update()"),
+-- local isEquipSkill091
+-- sdk.hook(sdk.find_type_definition("snow.player.PlayerBase"):get_method("isEquipSkill091()"),
+--     function(args)
+--     end,
+--     function(retval)
+--         if sdk.to_int64(retval) == 1 then
+--             isEquipSkill091 = true
+--         else
+--             isEquipSkill091 = false
+--         end
+
+--         return retval
+--     end)
+
+local end_flow_type = sdk.find_type_definition("snow.QuestManager.EndFlow")
+local Pl, Sd, St
+local player_manager, master_player_id, player_base, player_data, player_skill_list, gui_manager, gui_hud, player_info, quest_manager
+sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("update()"),
     function(args)
-        local PlayerManager = getPlayerManager()
-        if not PlayerManager or not PlayerManager:get_field("_PlayerUserDataItemParameter") then
-            return
-        end
+        if not player_manager then player_manager = get_player_manager() end
+        if not player_manager then return end
 
-        local MasterPlayerID = getMasterPlayerID(PlayerManager)
-        if not MasterPlayerID or MasterPlayerID > 4 then
-            if not reset then Pl = init(PlayerManager) end
-            return
-        end
+        if not master_player_id then master_player_id = get_master_player_id(player_manager) end
+        if not master_player_id then return end
 
-        local PlayerData      = getPlayerData(PlayerManager, MasterPlayerID)
-        local PlayerSkillList = getPlayerSkillList(PlayerManager, MasterPlayerID)
-        if not PlayerData or not PlayerSkillList then
-            if not reset then Pl = init(PlayerManager) end
-            return
-        end
+        if not player_base then player_base = get_player_base(player_manager) end
+        if not player_base then return end
+
+        if not player_data then player_data = get_player_data(player_manager, master_player_id) end
+        if not player_data then return end
+
+        if not player_skill_list then player_skill_list = get_player_skill_list(player_manager, master_player_id) end
+        if not player_skill_list then return end
+
+        if not gui_manager then gui_manager = get_gui_manager() end
+        if not gui_manager then return end
+
+        if not gui_hud then gui_hud = get_gui_hud(gui_manager) end
+        if not gui_hud then return end
+
+        if not player_info then player_info = get_player_info(gui_hud) end
+        if not player_info then return end
+
+        if not quest_manager then quest_manager = get_quest_manager() end
+        if not quest_manager then return end
+
+        if not Pl then Pl = get_skill_data(player_manager) end
 
         Sd = {
-            EquipSkill   = getEquipSkillData(PlayerSkillList),
-            KitchenSkill = getKitchenSkillData(PlayerSkillList)
+            EquipSkill   = get_equip_skill_data(player_skill_list),
+            KitchenSkill = get_kitchen_skill_data(player_skill_list)
         }
 
-        local PlayerBase = getPlayerBase(PlayerManager, MasterPlayerID)
-        if not PlayerBase or not PlayerBase:get_type_definition():is_a("snow.player.PlayerQuestBase") then
-            if not reset then Pl = init(PlayerManager) end
-            return
-        end
+        St = {
+            playerHealth                    = player_data:call("get_vital()"),
+            playerMaxHealth                 = player_base:call("getVitalMax()"),
+            playerRawRedHealth              = player_data:get_field("_r_Vital"),
+            playerRedHealth                 = player_base:call("getRedVital()"),
+            playerStamina                   = player_data:get_field("_stamina"),
+            playerMaxStamina                = player_data:get_field("_staminaMax"),
 
+            _ChallengeTimer                 = player_data:get_field("_ChallengeTimer"),
+            isDebuffState                   = player_base:call("isDebuffState()"),
+            _PowerFreedomTimer              = player_base:get_field("_PowerFreedomTimer"),
+            _WholeBodyTimer                 = player_data:get_field("_WholeBodyTimer"),
+            _SharpnessGaugeBoostTimer       = player_base:get_field("_SharpnessGaugeBoostTimer"),
+            _EquipSkill_036_Timer           = player_data:get_field("_EquipSkill_036_Timer"),
+            _SlidingPowerupTimer            = player_data:get_field("_SlidingPowerupTimer"),
+            isEquipSkill091                 = player_base:call("isEquipSkill091()"),
+            _DieCount                       = player_data:get_field("_DieCount"),
+            _CounterattackPowerupTimer      = player_data:get_field("_CounterattackPowerupTimer"),
+            _DisasterTurnPowerUpTimer       = player_data:get_field("_DisasterTurnPowerUpTimer"),
+            _FightingSpiritTimer            = player_data:get_field("_FightingSpiritTimer"),
+            _EquipSkill208_AtkUpTimer       = player_data:get_field("_EquipSkill208_AtkUpTimer"),
+            _BrandNewSharpnessAdjustUpTimer = player_data:get_field("_BrandNewSharpnessAdjustUpTimer"),
+            _EquipSkill216_BottleUpTimer    = player_base:get_field("_EquipSkill216_BottleUpTimer"),
+            isHaveSkillGuts                 = player_info:get_field("isHaveSkillGuts"),
+            _EquipSkill222_Timer            = player_data:get_field("_EquipSkill222_Timer"),
+            _EquipSkill223Accumulator       = player_data:get_field("_EquipSkill223Accumulator"),
+            isHateTarget                    = player_base:call("isHateTarget()"),
+            _IsEquipSkill226Enable          = player_base:get_field("_IsEquipSkill226Enable"),
+            _EquipSkill227State             = player_data:get_field("_EquipSkill227State"),
+            get_IsEnableEquipSkill225       = player_base:call("get_IsEnableEquipSkill225()"),
+            _EquipSkill229UseUpFlg          = player_base:get_field("_EquipSkill229UseUpFlg"),
+            isActiveEquipSkill230           = player_base:call("isActiveEquipSkill230()"),
+            _EquipSkill231_WireNumTimer     = player_data:get_field("_EquipSkill231_WireNumTimer"),
+            _EquipSkill231_WpOffTimer       = player_data:get_field("_EquipSkill231_WpOffTimer"),
+            _EquipSkill232Absorption        = player_data:get_field("_EquipSkill232Absorption"),
+            _EquipSkill232Timer             = player_data:get_field("_EquipSkill232Timer"),
 
-        if not Pl then Pl = init(PlayerManager) end
-        St = getState(PlayerData, PlayerBase)
+            isHaveKitchenGuts               = player_info:get_field("isHaveKitchenGuts"),
+            _KitchenSkill048_Damage         = player_data:get_field("_KitchenSkill048_Damage"),
+            _KitchenSkill051_AtkUpTimer     = player_data:get_field("_KitchenSkill051_AtkUpTimer"),
+            _KitchenSkill054_Timer          = player_data:get_field("_KitchenSkill054_Timer"),
 
-        if St._EndFlow == St.WaitFadeCameraDemo or St._EndFlow == St.LoadCameraDemo or St._EndFlow == St.LoadWaitCameraDemo or St._EndFlow == St.StartCameraDemo or St._EndFlow == St.CameraDemo or St._EndFlow == St.Stamp or St._EndFlow == St.WaitFadeOut then
-            return
-        end
+            _EndFlow                        = quest_manager:get_field("_EndFlow"),
+            Flows                           = {
+                [end_flow_type:get_field("WaitFadeCameraDemo"):get_data(nil)] = true,
+                [end_flow_type:get_field("LoadCameraDemo"):get_data(nil)]     = true,
+                [end_flow_type:get_field("LoadWaitCameraDemo"):get_data(nil)] = true,
+                [end_flow_type:get_field("StartCameraDemo"):get_data(nil)]    = true,
+                [end_flow_type:get_field("CameraDemo"):get_data(nil)]         = true,
+                [end_flow_type:get_field("Stamp"):get_data(nil)]              = true,
+                [end_flow_type:get_field("WaitFadeOut"):get_data(nil)]        = true
+            }
+        }
 
-        if ChangedLanguage() then UI = getUI() end
+        if St.Flows[St._EndFlow] then return end
 
-        reset = false
+        if is_changed_language() then UI = get_ui() end
 
         -- 0 Pl_EquipSkill_None
         -- 1 Pl_EquipSkill_000 攻撃
@@ -1188,59 +1204,42 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerManager"):get_method("updat
         -- 63 Pl_KitchenSkill_062
         -- 64 Pl_KitchenSkill_063
         -- 57 Max
+    end,
+    function(retval)
+    end)
 
+sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("onDestroy()"),
+    function(args)
+        Pl                = nil
+        Sd                = nil
+        St                = nil
 
-        -- 0 Concert_000 自分強化
-        -- 1 Concert_001 攻撃力UP
-        -- 2 Concert_002 防御力UP
-        -- 3 Concert_003 会心率UP
-        -- 4 Concert_004 属性攻撃力UP
-        -- 5 Concert_005 攻撃力＆防御力UP
-        -- 6 Concert_006 攻撃力＆会心率UP
-        -- 7 Concert_007 のけぞり無効
-        -- 8 Concert_008 聴覚保護【小】
-        -- 9 Concert_009 聴覚保護【大】
-        -- 10 Concert_010 振動無効
-        -- 11 Concert_011 風圧無効
-        -- 12 Concert_012 気絶無効
-        -- 13 Concert_013 全属性やられ無効
-        -- 14 Concert_014 精霊王の加護
-        -- 15 Concert_015 体力回復【小】
-        -- 16 Concert_016 体力回復【大】
-        -- 17 Concert_017 解毒＆体力回復【小】
-        -- 18 Concert_018 体力継続回復
-        -- 19 Concert_019 スタミナ消費軽減
-        -- 20 Concert_020 スタミナ回復速度UP
-        -- 21 Concert_021 斬れ味消費軽減
-        -- 22 Concert_022 地形ダメージ無効
-        -- 23 Concert_023 高周衝撃波
-        -- 24 Concert_024 音の防壁
-        -- 25 Concert_025 気炎の旋律
-        -- 26 Concert_026 斬れ味継続回復
-        -- 27 Concert_027 斬れ味延長効果
-        -- 28 Concert_Max
-        -- 28 Concert_Invalid
+        player_manager    = nil
+        master_player_id  = nil
+        player_base       = nil
+        player_data       = nil
+        player_skill_list = nil
+        gui_manager       = nil
+        gui_hud           = nil
+        player_info       = nil
+        quest_manager     = nil
     end,
     function(retval)
         return retval
     end)
 
 
-local preDamage      = nil
-local postDamage     = nil
-local isMasterPlayer = false
-local isReduce       = false
-
+local pre_damage, post_damage, is_master_player, is_reduce
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
     function(args)
-        isMasterPlayer = sdk.to_managed_object(args[2]):call("isMasterPlayer()")
+        is_master_player = sdk.to_managed_object(args[2]):call("isMasterPlayer()")
 
-        if not isMasterPlayer then return end
+        if not is_master_player then return end
 
-        preDamage = sdk.to_float(args[3])
+        pre_damage = sdk.to_float(args[3])
 
         if Pl.EquipSkill._223.Condition[1] and St._EquipSkill223Accumulator == 0 then
-            preDamage = preDamage * Pl.EquipSkill._223.Param[1][Sd.EquipSkill[Pl.EquipSkill._223.Id]:get_field("SkillLv")]
+            pre_damage = pre_damage * Pl.EquipSkill._223.Param[1][Sd.EquipSkill[Pl.EquipSkill._223.Id]:get_field("SkillLv")]
             Pl.EquipSkill._223.Condition[1] = false
         end
     end,
@@ -1250,39 +1249,39 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("che
 
 sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)"),
     function(args)
-        postDamage = nil
+        post_damage = nil
 
-        if not preDamage then return end
+        if not pre_damage then return end
 
-        postDamage = sdk.to_float(args[3])
+        post_damage = sdk.to_float(args[3])
 
         if sdk.to_float(args[10]) < 0 then
             if Pl.KitchenSkill._048.Condition[1] then
-                preDamage = preDamage * Pl.KitchenSkill._048.Param[2][Sd.KitchenSkill[Pl.KitchenSkill._048.Id]:get_field("_SkillLv")]
+                pre_damage = pre_damage * Pl.KitchenSkill._048.Param[2][Sd.KitchenSkill[Pl.KitchenSkill._048.Id]:get_field("_SkillLv")]
                 Pl.KitchenSkill._048.Condition[1] = false
             end
         end
     end,
     function(retval)
-        if not isMasterPlayer or not postDamage or not preDamage then
+        if not is_master_player or not post_damage or not pre_damage then
             return retval
         end
 
-        if preDamage + postDamage > 0.0001 then
-            isReduce = true
+        if pre_damage + post_damage > 0.0001 then
+            is_reduce = true
         end
 
-        preDamage = nil
+        pre_damage = nil
     end)
 
 sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigger(System.UInt32, via.GameObject)"),
     function(args)
         if sdk.to_int64(args[2]) == 0x2ACF664E then
-            if isReduce then
-                getChatManager():call("reqAddChatInfomation(System.String, System.UInt32)", UI.MSG.Co[1], GUI_COMMON_MEAL_SKILL_NOTICE)
+            if is_reduce then
+                AddChatInfomation(3)
             end
         end
-        isReduce = false
+        is_reduce = false
     end,
     function(retval)
         return retval
@@ -1292,11 +1291,13 @@ sdk.hook(sdk.find_type_definition("via.wwise.WwiseContainer"):get_method("trigge
 local success, ModUI = pcall(require, "ModOptionsMenu.ModMenuApi")
 
 if success then
-    local preLoad
-    local filepath = "Improved Skill Notifications/config.json"
-    local conf     = json.load_file(filepath) or {}
+    local config_path = "Improved Skill Notifications/config.json"
+    local config      = json.load_file(config_path) or {}
 
-    local function pairsByKeys(t)
+    local Pl_C, Sd_C
+    local first_open  = true
+
+    local function pairs_by_keys(t)
         local keys = {}
         for key in pairs(t) do
             table.insert(keys, key)
@@ -1311,82 +1312,73 @@ if success then
         end
     end
 
-    local function removeCRLF(msg)
-        return msg:gsub("<COL[^>]*>{0}</COL[^>]*>[\n\r]", "%1 "):gsub("[\n\r]<COL[^>]*>{0}</COL[^>]*>", " %1"):gsub("[\n\r]", "")
+    local function remove_new_line(str)
+        return str:gsub("<COL[^>]*>{0}</COL[^>]*>[\n\r]", "%1 "):gsub("[\n\r]<COL[^>]*>{0}</COL[^>]*>", " %1"):gsub("[\n\r]", "")
     end
 
-    local function rgb2Hex(r, g, b, str)
-        return ("<COLOR %02X%02X%02X>%s</COLOR>"):format(r, g, b, str)
-    end
-
-    local function normTbl(tbl, base)
+    local function normalize_config(current_config, reference)
         local result = {}
 
-        for i, _, v in pairsByKeys(base) do
-            local find
-            local defaultTable = { v.Enum, v.Notice[1], v.Notice[2], 1 }
+        for i, _, v in pairs_by_keys(reference) do
+            local found
+            local default_table = { v.Enum, v.Notice[1], v.Notice[2], 1 }
 
-            if tbl then
-                for _, w in ipairs(tbl) do
-                    if not find and w[1] == v.Enum then
+            if current_config then
+                for _, w in ipairs(current_config) do
+                    if not found and w[1] == v.Enum then
                         if #w ~= 4 then
-                            w = defaultTable
+                            w = default_table
                         end
                         table.insert(result, w)
-                        find = true
+                        found = true
                     end
                 end
             end
-            if not find then
-                table.insert(result, i, defaultTable)
+            if not found then
+                table.insert(result, i, default_table)
             end
         end
 
         return result
     end
 
-    local function saveConfig()
-        fs.write(filepath, json.dump_string(conf))
+    local function save_config()
+        fs.write(config_path, json.dump_string(config))
     end
 
-    local function set()
-        if Pl then
-            conf.EquipSkill   = normTbl(conf.EquipSkill, Pl.EquipSkill)
-            conf.KitchenSkill = normTbl(conf.KitchenSkill, Pl.KitchenSkill)
+    local function initialize()
+        config.EquipSkill          = normalize_config(config.EquipSkill, Pl_C.EquipSkill)
+        config.KitchenSkill        = normalize_config(config.KitchenSkill, Pl_C.KitchenSkill)
 
-            -- Create a copy with table.unpack() to avoid referencing the same table
-            local t           = { 0xFF, 0xFF, 0xFF, 1 }
-            conf.COL          = conf.COL or {}
-            while #conf.COL ~= 2 do
-                if #conf.COL > 2 then
-                    table.remove(conf.COL, #conf.COL)
-                end
-                if #conf.COL < 2 then
-                    table.insert(conf.COL, { table.unpack(t) })
-                end
+        -- Create a copy with table.unpack() to avoid referencing the same table
+        local default_color_config = { 0xFF, 0xFF, 0xFF, 1 }
+        config.COL                 = config.COL or {}
+        while #config.COL ~= 2 do
+            if #config.COL > 2 then
+                table.remove(config.COL, #config.COL)
             end
-            for _, v in ipairs(conf.COL) do
-                if #v < 4 then
-                    v = { table.unpack(t) }
-                end
+            if #config.COL < 2 then
+                table.insert(config.COL, { table.unpack(default_color_config) })
             end
-
-            saveConfig()
-
-            preLoad = true
         end
-        return preLoad
+        for _, v in ipairs(config.COL) do
+            if #v < 4 then
+                v = { table.unpack(default_color_config) }
+            end
+        end
+
+        save_config()
     end
 
-    local function getSkillSettingsOptionNames()
+    local function get_skill_option_table()
         local t = {
-            Pl.EquipSkill,
-            Pl.KitchenSkill
+            Pl_C.EquipSkill,
+            Pl_C.KitchenSkill
         }
 
         for i, v in ipairs(t) do
             UI.Options.SkillSettings.optionNames[i] = {}
-            for j, _, w in pairsByKeys(v) do
+            for j, _, w in pairs_by_keys(v) do
                 UI.Options.SkillSettings.optionNames[i][j] = {}
                 if w.Notice[1] then
                     table.insert(UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.msg[2])
@@ -1404,19 +1396,19 @@ if success then
         end
     end
 
-    local function getSkillSettings()
+    local function get_skill_settings()
         local t = { {
             Header       = UI.Header.EquipSkill,
-            getSkillId   = getPlEquipSkillId,
-            getSkillName = getEquipSkillName,
-            confSkill    = conf.EquipSkill,
-            SdSkill      = Sd.EquipSkill,
+            getSkillId   = get_player_equip_skill_id,
+            getSkillName = get_equip_skill_name,
+            confSkill    = config.EquipSkill,
+            SdSkill      = Sd_C.EquipSkill,
         }, {
             Header       = UI.Header.KitchenSkill,
-            getSkillId   = getPlKitchenSkillId,
-            getSkillName = getKitchenSkillName,
-            confSkill    = conf.KitchenSkill,
-            SdSkill      = Sd.KitchenSkill
+            getSkillId   = get_player_kitchen_skill_id,
+            getSkillName = get_kitchen_skill_name,
+            confSkill    = config.KitchenSkill,
+            SdSkill      = Sd_C.KitchenSkill
         }, }
 
         for i, v in ipairs(t) do
@@ -1425,12 +1417,12 @@ if success then
                 local id = v.getSkillId(w[1])
                 if w[4] > #UI.Options.SkillSettings.optionNames[i][j] then
                     w[4] = 1
-                    saveConfig()
+                    save_config()
                 end
                 UI.Options.SkillSettings.curValue[j] = w[4]
                 UI.Options.SkillSettings.label = v.getSkillName(nil, id)
                 if UI.Options.SkillSettings.curValue[j] ~= 1 then
-                    UI.Options.SkillSettings.label = ("<COLOR FFE29D>%s</COLOR>"):format(UI.Options.SkillSettings.label)
+                    UI.Options.SkillSettings.label = set_rgb_color_to_string(UI.Options.SkillSettings.label, 0xFF, 0xE2, 0x9D)
                 end
 
                 if not UI.Options.EquipSkills.isFilter or v.SdSkill[id] then
@@ -1453,26 +1445,26 @@ if success then
                         end
                         w[4] = UI.Options.SkillSettings.curValue[j]
 
-                        saveConfig()
+                        save_config()
                     end
                 end
             end
         end
     end
 
-    local function getColorSettings()
-        for i, v in ipairs(conf.COL) do
+    local function get_color_options()
+        for i, v in ipairs(config.COL) do
             UI.Options.COLOR.curValue[i] = v[4]
 
             UI.Options.COLOR.wasChanged, UI.Options.COLOR.newIndex = ModUI.Options(UI.Options.COLOR.label[i], UI.Options.COLOR.curValue[i], UI.Options.COLOR.optionNames, UI.Options.COLOR.optionMessages, UI.Options.COLOR.toolTip, UI.Options.COLOR.isImmediateUpdate)
             if UI.Options.COLOR.wasChanged then
                 UI.Options.COLOR.curValue[i] = UI.Options.COLOR.newIndex
                 v[4] = UI.Options.COLOR.curValue[i]
-                saveConfig()
+                save_config()
             end
 
             if UI.Options.COLOR.curValue[i] == 2 then
-                UI.Options.COLOR.label[i] = removeCRLF(UI.MSG.Pl[i]):gsub("{0}", rgb2Hex(v[1], v[2], v[3], getMessageByName("EnemyIndex112_MR")))
+                UI.Options.COLOR.label[i] = remove_new_line(UI.MSG.Pl[i]):gsub("{0}", set_rgb_color_to_string(get_message_by_name("EnemyIndex112_MR"), v[1], v[2], v[3]))
                 ModUI.SetIndent(18)
 
                 for j = 1, #UI.Slider.label do
@@ -1482,32 +1474,47 @@ if success then
                     if UI.Slider.wasChanged then
                         UI.Slider.curValue[i][j] = UI.Slider.newValue
                         v[j] = UI.Slider.curValue[i][j]
-                        saveConfig()
+                        save_config()
                     end
                 end
 
                 ModUI.SetIndent(0)
             elseif UI.Options.COLOR.curValue[i] == 1 then
-                UI.Options.COLOR.label[i] = removeCRLF(UI.MSG.Pl[i]):gsub("{0}", getMessageByName("EnemyIndex112_MR"))
+                UI.Options.COLOR.label[i] = remove_new_line(UI.MSG.Pl[i]):gsub("{0}", get_message_by_name("EnemyIndex112_MR"))
             end
         end
     end
 
+    local config_player_manager, config_master_player_id, config_player_skill_list
     ModUI.OnMenu(UI.OnMenu.name, UI.OnMenu.description, function()
-        if ChangedLanguage() then
-            getSkillSettingsOptionNames()
-        end
+        if is_changed_language() then get_skill_option_table() end
 
-        if not getPlayerBase(getPlayerManager(), getMasterPlayerID(getPlayerManager())) then
-            ModUI.Label(UI.Label.label, UI.Label.displayValue, UI.Label.toolTip)
-            return
-        end
-
-        if not preLoad then
-            if not set() then
+        if first_open then
+            config_player_manager = get_player_manager()
+            if not config_player_manager then
+                ModUI.Label(UI.Label.label, UI.Label.displayValue, UI.Label.toolTip)
                 return
             end
-            getSkillSettingsOptionNames()
+
+            config_master_player_id = get_master_player_id(config_player_manager)
+            if not config_master_player_id then
+                ModUI.Label(UI.Label.label, UI.Label.displayValue, UI.Label.toolTip)
+                return
+            end
+
+            config_player_skill_list = get_player_skill_list(config_player_manager, config_master_player_id)
+
+            Pl_C = get_skill_data(config_player_manager)
+
+            Sd_C = {
+                EquipSkill   = get_equip_skill_data(config_player_skill_list),
+                KitchenSkill = get_kitchen_skill_data(config_player_skill_list)
+            }
+
+            initialize()
+            get_skill_option_table()
+
+            first_open = false
         end
 
         UI.Options.Selector.wasChanged, UI.Options.Selector.newIndex = ModUI.Options(UI.Options.Selector.label, UI.Options.Selector.curValue, UI.Options.Selector.optionNames, UI.Options.Selector.optionMessages, UI.Options.Selector.toolTip, UI.Options.Selector.isImmediateUpdate)
@@ -1518,58 +1525,79 @@ if success then
         ModUI.Header()
 
         if UI.Options.Selector.curValue == 1 then
-            UI.Options.EquipSkills.wasChanged, UI.Options.EquipSkills.newIndex = ModUI.Options(UI.Options.EquipSkills.label, UI.Options.EquipSkills.curValue, UI.Options.EquipSkills.optionNames, UI.Options.EquipSkills.optionMessages, UI.Options.EquipSkills.toolTip, UI.Options.EquipSkills.isImmediateUpdate)
-            if UI.Options.EquipSkills.wasChanged then
-                UI.Options.EquipSkills.curValue = UI.Options.EquipSkills.newIndex
+            if config_player_skill_list then
+                UI.Options.EquipSkills.wasChanged, UI.Options.EquipSkills.newIndex = ModUI.Options(UI.Options.EquipSkills.label, UI.Options.EquipSkills.curValue, UI.Options.EquipSkills.optionNames, UI.Options.EquipSkills.optionMessages, UI.Options.EquipSkills.toolTip, UI.Options.EquipSkills.isImmediateUpdate)
+                if UI.Options.EquipSkills.wasChanged then
+                    UI.Options.EquipSkills.curValue = UI.Options.EquipSkills.newIndex
 
-                if UI.Options.EquipSkills.curValue == 2 then
-                    UI.Options.EquipSkills.isFilter = true
-                else
-                    UI.Options.EquipSkills.isFilter = false
+                    if UI.Options.EquipSkills.curValue == 2 then
+                        UI.Options.EquipSkills.isFilter = true
+                    else
+                        UI.Options.EquipSkills.isFilter = false
+                    end
                 end
+            else
+                ModUI.Label(UI.Options.EquipSkills.label, UI.Options.EquipSkills.optionNames[1], UI.Options.EquipSkills.toolTip)
             end
 
-            getSkillSettings()
+            get_skill_settings()
         elseif UI.Options.Selector.curValue == 2 then
-            getColorSettings()
+            get_color_options()
         end
     end)
 
-    local function skip(args)
+    sdk.hook(sdk.find_type_definition("snow.gui.GuiOptionWindow"):get_method("doClose()"),
+        function(args)
+        end,
+        function(retval)
+            Pl_C                     = nil
+            Sd_C                     = nil
+
+            config_player_manager    = nil
+            config_master_player_id  = nil
+            config_player_skill_list = nil
+
+            first_open               = true
+
+            return retval
+        end)
+
+
+    local function skip_chat_info(args)
         local t = { {
-            confSkill    = conf.EquipSkill,
-            getSkillName = getEquipSkillName,
-            getPlSkillId = getPlEquipSkillId
+            skill_config        = config.EquipSkill,
+            getSkillName        = get_equip_skill_name,
+            get_player_skill_id = get_player_equip_skill_id
         }, {
-            confSkill    = conf.KitchenSkill,
-            getSkillName = getKitchenSkillName,
-            getPlSkillId = getPlKitchenSkillId
+            skill_config        = config.KitchenSkill,
+            getSkillName        = get_kitchen_skill_name,
+            get_player_skill_id = get_player_kitchen_skill_id
         } }
 
         for i, v in ipairs(t) do
-            local preMessage = sdk.to_managed_object(args[3]):call("ToString()")
+            local pre_message = sdk.to_managed_object(args[3]):call("ToString()")
 
-            for _, w in ipairs(v.confSkill) do
-                for j, x in ipairs(conf.COL) do
-                    local id = v.getPlSkillId(w[1])
-                    local skillName = v.getSkillName(nil, id)
-                    local postMessage
+            for _, w in ipairs(v.skill_config) do
+                for j, x in ipairs(config.COL) do
+                    local id = v.get_player_skill_id(w[1])
+                    local skill_name = v.getSkillName(nil, id)
+                    local post_message
 
                     if i == 2 and (id == 31 or id == 32) then
-                        postMessage = UI.MSG.Ot[1]
+                        post_message = UI.MSG.Ot[1]
                     else
-                        postMessage = UI.MSG.Pl[j]
+                        post_message = UI.MSG.Pl[j]
                     end
-                    postMessage = postMessage:gsub("{0}", skillName)
+                    post_message = post_message:gsub("{0}", skill_name)
 
-                    if preMessage == postMessage then
+                    if pre_message == post_message then
                         if not w[j + 1] then
                             return true
                         end
                         if x[4] == 2 then
-                            args[3] = sdk.to_ptr(sdk.create_managed_string(postMessage:gsub("<COL[^>]*>{0}</COL[^>]*>", skillName):gsub(skillName, rgb2Hex(x[1], x[2], x[3], skillName))))
+                            args[3] = sdk.to_ptr(sdk.create_managed_string(post_message:gsub("<COL[^>]*>{0}</COL[^>]*>", skill_name):gsub(skill_name, set_rgb_color_to_string(skill_name, x[1], x[2], x[3]))))
+                            return false
                         end
-                        break
                     end
                 end
             end
@@ -1578,8 +1606,8 @@ if success then
 
     sdk.hook(sdk.find_type_definition("snow.gui.ChatManager"):get_method("reqAddChatInfomation(System.String, System.UInt32)"),
         function(args)
-            if conf.COL and conf.EquipSkill and conf.KitchenSkill then
-                if skip(args) then
+            if config.COL and config.EquipSkill and config.KitchenSkill then
+                if skip_chat_info(args) then
                     return sdk.PreHookResult.SKIP_ORIGINAL
                 end
             end
