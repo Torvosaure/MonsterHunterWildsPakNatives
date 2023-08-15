@@ -442,7 +442,8 @@ local function get_ui()
             description = ""
         },
         Slider = {
-            label             = { set_rgb_color_to_string("R", 0xFF, 0x00, 0x00), set_rgb_color_to_string("G", 0x00, 0xFF, 0x00), set_rgb_color_to_string("B", 0x00, 0x00, 0xFF) },
+            label             = { set_rgb_color_to_string("R", 0xFF, 0x00, 0x00), set_rgb_color_to_string("G", 0x00, 0xFF, 0x00),
+                set_rgb_color_to_string("B", 0x00, 0x00, 0xFF) },
             curValue          = {},
             min               = 0x0,
             max               = 0xFF,
@@ -1230,7 +1231,9 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("onD
 
 
 local pre_damage, post_damage, is_master_player, is_reduce
-sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
+sdk.hook(
+    sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method(
+        "checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)"),
     function(args)
         is_master_player = sdk.to_managed_object(args[2]):call("isMasterPlayer()")
 
@@ -1247,7 +1250,9 @@ sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("che
         return retval
     end)
 
-sdk.hook(sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method("damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)"),
+sdk.hook(
+    sdk.find_type_definition("snow.player.PlayerQuestBase"):get_method(
+        "damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)"),
     function(args)
         post_damage = nil
 
@@ -1398,17 +1403,17 @@ if success then
 
     local function get_skill_settings()
         local t = { {
-            Header       = UI.Header.EquipSkill,
-            getSkillId   = get_player_equip_skill_id,
-            getSkillName = get_equip_skill_name,
-            confSkill    = config.EquipSkill,
-            SdSkill      = Sd_C.EquipSkill,
+            Header         = UI.Header.EquipSkill,
+            getSkillId     = get_player_equip_skill_id,
+            get_skill_name = get_equip_skill_name,
+            confSkill      = config.EquipSkill,
+            SdSkill        = Sd_C.EquipSkill,
         }, {
-            Header       = UI.Header.KitchenSkill,
-            getSkillId   = get_player_kitchen_skill_id,
-            getSkillName = get_kitchen_skill_name,
-            confSkill    = config.KitchenSkill,
-            SdSkill      = Sd_C.KitchenSkill
+            Header         = UI.Header.KitchenSkill,
+            getSkillId     = get_player_kitchen_skill_id,
+            get_skill_name = get_kitchen_skill_name,
+            confSkill      = config.KitchenSkill,
+            SdSkill        = Sd_C.KitchenSkill
         }, }
 
         for i, v in ipairs(t) do
@@ -1420,13 +1425,15 @@ if success then
                     save_config()
                 end
                 UI.Options.SkillSettings.curValue[j] = w[4]
-                UI.Options.SkillSettings.label = v.getSkillName(nil, id)
+                UI.Options.SkillSettings.label = v.get_skill_name(nil, id)
                 if UI.Options.SkillSettings.curValue[j] ~= 1 then
                     UI.Options.SkillSettings.label = set_rgb_color_to_string(UI.Options.SkillSettings.label, 0xFF, 0xE2, 0x9D)
                 end
 
                 if not UI.Options.EquipSkills.isFilter or v.SdSkill[id] then
-                    UI.Options.SkillSettings.wasChanged, UI.Options.SkillSettings.newIndex = ModUI.Options(UI.Options.SkillSettings.label, UI.Options.SkillSettings.curValue[j], UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.optionMessages, UI.Options.SkillSettings.toolTip, UI.Options.SkillSettings.isImmediateUpdate)
+                    UI.Options.SkillSettings.wasChanged, UI.Options.SkillSettings.newIndex = ModUI.Options(UI.Options.SkillSettings.label,
+                        UI.Options.SkillSettings.curValue[j], UI.Options.SkillSettings.optionNames[i][j], UI.Options.SkillSettings.optionMessages,
+                        UI.Options.SkillSettings.toolTip, UI.Options.SkillSettings.isImmediateUpdate)
                     if UI.Options.SkillSettings.wasChanged then
                         UI.Options.SkillSettings.curValue[j] = UI.Options.SkillSettings.newIndex
 
@@ -1456,7 +1463,8 @@ if success then
         for i, v in ipairs(config.COL) do
             UI.Options.COLOR.curValue[i] = v[4]
 
-            UI.Options.COLOR.wasChanged, UI.Options.COLOR.newIndex = ModUI.Options(UI.Options.COLOR.label[i], UI.Options.COLOR.curValue[i], UI.Options.COLOR.optionNames, UI.Options.COLOR.optionMessages, UI.Options.COLOR.toolTip, UI.Options.COLOR.isImmediateUpdate)
+            UI.Options.COLOR.wasChanged, UI.Options.COLOR.newIndex = ModUI.Options(UI.Options.COLOR.label[i], UI.Options.COLOR.curValue[i],
+                UI.Options.COLOR.optionNames, UI.Options.COLOR.optionMessages, UI.Options.COLOR.toolTip, UI.Options.COLOR.isImmediateUpdate)
             if UI.Options.COLOR.wasChanged then
                 UI.Options.COLOR.curValue[i] = UI.Options.COLOR.newIndex
                 v[4] = UI.Options.COLOR.curValue[i]
@@ -1464,13 +1472,15 @@ if success then
             end
 
             if UI.Options.COLOR.curValue[i] == 2 then
-                UI.Options.COLOR.label[i] = remove_new_line(UI.MSG.Pl[i]):gsub("{0}", set_rgb_color_to_string(get_message_by_name("EnemyIndex112_MR"), v[1], v[2], v[3]))
+                UI.Options.COLOR.label[i] = remove_new_line(UI.MSG.Pl[i]):gsub("{0}",
+                    set_rgb_color_to_string(get_message_by_name("EnemyIndex112_MR"), v[1], v[2], v[3]))
                 ModUI.SetIndent(18)
 
                 for j = 1, #UI.Slider.label do
                     UI.Slider.curValue[i] = { [j] = v[j] }
 
-                    UI.Slider.wasChanged, UI.Slider.newValue = ModUI.Slider(UI.Slider.label[j], UI.Slider.curValue[i][j], UI.Slider.min, UI.Slider.max, UI.Slider.toolTip, UI.Slider.isImmediateUpdate)
+                    UI.Slider.wasChanged, UI.Slider.newValue = ModUI.Slider(UI.Slider.label[j], UI.Slider.curValue[i][j], UI.Slider.min, UI.Slider.max,
+                        UI.Slider.toolTip, UI.Slider.isImmediateUpdate)
                     if UI.Slider.wasChanged then
                         UI.Slider.curValue[i][j] = UI.Slider.newValue
                         v[j] = UI.Slider.curValue[i][j]
@@ -1517,7 +1527,8 @@ if success then
             first_open = false
         end
 
-        UI.Options.Selector.wasChanged, UI.Options.Selector.newIndex = ModUI.Options(UI.Options.Selector.label, UI.Options.Selector.curValue, UI.Options.Selector.optionNames, UI.Options.Selector.optionMessages, UI.Options.Selector.toolTip, UI.Options.Selector.isImmediateUpdate)
+        UI.Options.Selector.wasChanged, UI.Options.Selector.newIndex = ModUI.Options(UI.Options.Selector.label, UI.Options.Selector.curValue,
+            UI.Options.Selector.optionNames, UI.Options.Selector.optionMessages, UI.Options.Selector.toolTip, UI.Options.Selector.isImmediateUpdate)
         if UI.Options.Selector.wasChanged then
             UI.Options.Selector.curValue = UI.Options.Selector.newIndex
         end
@@ -1526,7 +1537,9 @@ if success then
 
         if UI.Options.Selector.curValue == 1 then
             if config_player_skill_list then
-                UI.Options.EquipSkills.wasChanged, UI.Options.EquipSkills.newIndex = ModUI.Options(UI.Options.EquipSkills.label, UI.Options.EquipSkills.curValue, UI.Options.EquipSkills.optionNames, UI.Options.EquipSkills.optionMessages, UI.Options.EquipSkills.toolTip, UI.Options.EquipSkills.isImmediateUpdate)
+                UI.Options.EquipSkills.wasChanged, UI.Options.EquipSkills.newIndex = ModUI.Options(UI.Options.EquipSkills.label, UI.Options.EquipSkills.curValue,
+                    UI.Options.EquipSkills.optionNames, UI.Options.EquipSkills.optionMessages, UI.Options.EquipSkills.toolTip,
+                    UI.Options.EquipSkills.isImmediateUpdate)
                 if UI.Options.EquipSkills.wasChanged then
                     UI.Options.EquipSkills.curValue = UI.Options.EquipSkills.newIndex
 
@@ -1566,11 +1579,11 @@ if success then
     local function skip_chat_info(args)
         local t = { {
             skill_config        = config.EquipSkill,
-            getSkillName        = get_equip_skill_name,
+            get_skill_name      = get_equip_skill_name,
             get_player_skill_id = get_player_equip_skill_id
         }, {
             skill_config        = config.KitchenSkill,
-            getSkillName        = get_kitchen_skill_name,
+            get_skill_name      = get_kitchen_skill_name,
             get_player_skill_id = get_player_kitchen_skill_id
         } }
 
@@ -1580,7 +1593,7 @@ if success then
             for _, w in ipairs(v.skill_config) do
                 for j, x in ipairs(config.COL) do
                     local id = v.get_player_skill_id(w[1])
-                    local skill_name = v.getSkillName(nil, id)
+                    local skill_name = v.get_skill_name(nil, id)
                     local post_message
 
                     if i == 2 and (id == 31 or id == 32) then
@@ -1595,7 +1608,8 @@ if success then
                             return true
                         end
                         if x[4] == 2 then
-                            args[3] = sdk.to_ptr(sdk.create_managed_string(post_message:gsub("<COL[^>]*>{0}</COL[^>]*>", skill_name):gsub(skill_name, set_rgb_color_to_string(skill_name, x[1], x[2], x[3]))))
+                            args[3] = sdk.to_ptr(sdk.create_managed_string(post_message:gsub("<COL[^>]*>{0}</COL[^>]*>", skill_name):gsub(skill_name,
+                                set_rgb_color_to_string(skill_name, x[1], x[2], x[3]))))
                             return false
                         end
                     end

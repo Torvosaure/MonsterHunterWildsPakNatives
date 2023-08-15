@@ -1,4 +1,5 @@
 
-*build64*
+.xmake
+
 *.vscode
 *.zip
