@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "PluginA",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${LOCALAPPDATA}/.xmake/packages/**"
+            ],
+            "defines": [
+                "MHRISE",
+                "REENGINE_AT",
+                "REENGINE_PACKED"
+            ],
+            "cppStandard": "c++20"
+        },
+        {
+            "name": "PluginW",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${LOCALAPPDATA}/.xmake/packages/**"
+            ],
+            "defines": [
+                "UNICODE",
+                "_UNICODE",
+                "MHRISE",
+                "REENGINE_AT",
+                "REENGINE_PACKED"
+            ],
+            "cppStandard": "c++20"
+        }
+    ],
+    "version": 4
+}

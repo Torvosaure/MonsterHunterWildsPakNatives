@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cppvsdbg",
+            "request": "attach",
+            "name": "cppvsdbg",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}

@@ -1,15 +1,25 @@
-set_project("Cursor Always Center")
+includes("..\\..\\deps\\xmake.lua")
 
-set_languages("cxx20")
-set_plat("windows")
-set_arch("x64")
-
-set_strip("all")
-set_symbols("hidden")
-set_optimize("fastest")
-set_runtimes("MD")
+add_requires("reframework-api master")
 
 target("CursorAlwaysCenter")
     set_kind("shared")
-    add_files("src/**.cpp")
-    add_includedirs("../../deps/REFramework/include")
+    add_files("src\\**.cpp")
+    add_packages("reframework-api")
+
+    on_package(function(target)
+        import("utils.archive")
+
+        local dist_path = path.join(os.projectdir(), "dist", target:name() .. ".zip")
+
+        os.rm(dist_path)
+
+        local tmp_dir = path.join(val("tmpdir"), ".dist")
+        local plugins_dir = path.join(tmp_dir, "reframework", "plugins")
+
+        os.mkdir(plugins_dir)
+        os.cp(target:targetfile(), plugins_dir)
+        archive.archive(dist_path, "reframework", { curdir = tmp_dir, compress = "best" })
+
+        os.rm(tmp_dir)
+    end)
