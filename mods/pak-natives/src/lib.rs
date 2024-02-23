@@ -3,7 +3,7 @@ mod structure;
 mod utils;
 
 use pak::Pak;
-use std::{ffi::c_void, panic};
+use std::{ffi::c_void, process};
 use windows::{
     core::{self, PCWSTR},
     Win32::{
@@ -33,7 +33,7 @@ pub extern "stdcall" fn DllMain(handle: HINSTANCE, reason: DWORD, _reserved: LPV
                 let utype = MB_OKCANCEL | MB_ICONERROR;
 
                 if unsafe { MessageBoxW(None, txt, caption, utype) } == IDCANCEL {
-                    panic!();
+                    process::exit(1);
                 }
             }
         }
