@@ -1,0 +1,54 @@
+diff --git a/refresh.template.py b/refresh.template.py
+index fc99cc7..c4c21f6 100644
+--- a/refresh.template.py
++++ b/refresh.template.py
+@@ -1419,8 +1419,11 @@ def main():
+     There should be actionable warnings, above, that led to this.""")
+         sys.exit(1)
+ 
++    output_path = pathlib.Path(*{prefix})
++    output_path.mkdir(parents=True, exist_ok=True)
++
+     # Chain output into compile_commands.json
+-    with open('compile_commands.json', 'w') as output_file:
++    with open(output_path.joinpath('compile_commands.json'), 'w') as output_file:
+         json.dump(
+             compile_command_entries,
+             output_file,
+diff --git a/refresh_compile_commands.bzl b/refresh_compile_commands.bzl
+index 0210d42..6e56274 100644
+--- a/refresh_compile_commands.bzl
++++ b/refresh_compile_commands.bzl
+@@ -64,6 +64,7 @@ def refresh_compile_commands(
+         targets = None,
+         exclude_headers = None,
+         exclude_external_sources = False,
++        prefix = None,
+         **kwargs):  # For the other common attributes. Tags, compatible_with, etc. https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes.
+     # Convert the various, acceptable target shorthands into the dictionary format
+     # In Python, `type(x) == y` is an antipattern, but [Starlark doesn't support inheritance](https://bazel.build/rules/language), so `isinstance` doesn't exist, and this is the correct way to switch on type.
+@@ -89,7 +90,7 @@ def refresh_compile_commands(
+ 
+     # Generate the core, runnable python script from refresh.template.py
+     script_name = name + ".py"
+-    _expand_template(name = script_name, labels_to_flags = targets, exclude_headers = exclude_headers, exclude_external_sources = exclude_external_sources, **kwargs)
++    _expand_template(name = script_name, labels_to_flags = targets, exclude_headers = exclude_headers, exclude_external_sources = exclude_external_sources, prefix = prefix, **kwargs)
+ 
+     # Combine them so the wrapper calls the main script
+     native.py_binary(
+@@ -115,6 +116,7 @@ def _expand_template_impl(ctx):
+             "{exclude_headers}": repr(ctx.attr.exclude_headers),
+             "{exclude_external_sources}": repr(ctx.attr.exclude_external_sources),
+             "{print_args_executable}": repr(ctx.executable._print_args_executable.path),
++            "{prefix}": repr(ctx.attr.prefix),
+         },
+     )
+     return DefaultInfo(files = depset([script]))
+@@ -129,6 +131,7 @@ _expand_template = rule(
+         # For Windows INCLUDE. If this were eliminated, for example by the resolution of https://github.com/clangd/clangd/issues/123, we'd be able to just use a macro and skylib's expand_template rule: https://github.com/bazelbuild/bazel-skylib/pull/330
+         # Once https://github.com/bazelbuild/bazel/pull/17108 is widely released, we should be able to eliminate this and get INCLUDE directly. Perhaps for 7.0? Should be released in the sucessor to 6.0
+         "_cc_toolchain": attr.label(default = "@bazel_tools//tools/cpp:current_cc_toolchain"),
++        "prefix": attr.string_list(),
+     },
+     toolchains = ["@bazel_tools//tools/cpp:toolchain_type"],  # Needed for find_cpp_toolchain with --incompatible_enable_cc_toolchain_resolution
+     implementation = _expand_template_impl,

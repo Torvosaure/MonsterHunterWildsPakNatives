@@ -355,7 +355,7 @@
     "workspace": {
         "checkThirdParty": false,
         "ignoreDir": [
-            ".vscode"
+            "xmake.lua"
         ],
         "ignoreSubmodules": true,
         "library": [

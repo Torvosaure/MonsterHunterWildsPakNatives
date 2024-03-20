@@ -1,0 +1,13 @@
+bazel_dep(name = "glm", version = "0.9.9.8")
+bazel_dep(name = "spdlog", version = "1.13.0")
+
+bazel_dep(name = "rules_pkg", version = "0.10.1")
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+    commit = "5bcb0bd8a917b2b48fb5dc55818515f4be3b63ff",
+    patches = ["//deps:hedron_compile_commands.patch"],
+    patch_strip = 1,
+)

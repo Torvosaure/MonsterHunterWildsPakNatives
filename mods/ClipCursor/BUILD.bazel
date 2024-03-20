@@ -1,0 +1,36 @@
+load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+
+name = "ClipCursor"
+
+cc_binary(
+    name = name,
+    deps = ["@reframework//:api"],
+    srcs = glob(["src/**/*.cpp"]),
+    copts = [
+        "/GL",
+        "/GR-",
+        "/std:c++20",
+        "/external:anglebrackets",
+        "/external:W0",
+        "/W4",
+    ],
+    linkopts = ["/LTCG"],
+    linkshared = True,
+    features = ["treat_warnings_as_errors"],
+)
+
+pkg_zip(
+    name = "pkg",
+    srcs = [name],
+    compression_level = 9,
+    out = name + ".zip",
+    tags = ["manual"],
+)
+
+refresh_compile_commands(
+    name = "refresh_compile_commands",
+    targets = [name],
+    prefix = [".vscode", "compile_commands", name],
+    tags = ["manual"],
+)

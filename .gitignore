@@ -1,9 +1,10 @@
+/.venv/
 /.vscode/*
-/.xmake/
-/build/
+/bazel-*/
+/dist/
 /target/
 
-*.zip
+/tools/il2cpp_dump.json.compact.json
 
 !/.vscode/c_cpp_properties.json
 !/.vscode/launch.json

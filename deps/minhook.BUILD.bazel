@@ -1,0 +1,19 @@
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "minhook",
+    srcs = [
+        "src/buffer.c",
+        "src/hook.c",
+        "src/trampoline.c",
+        "src/hde/hde64.c",
+    ],
+    hdrs = ["include/MinHook.h"],
+    copts = ["/W0"],
+    strip_include_prefix = "include",
+)
+
+cc_library(
+    name = "hde",
+    includes = ["src/hde"],
+)

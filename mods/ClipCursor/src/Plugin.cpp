@@ -27,26 +27,26 @@ extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFram
                 auto *const obj = static_cast<API::ManagedObject *>(argv[1]);
 
                 static auto *const this_t = obj->get_type_definition();
-                static auto *const scene_manager = tdb->find_type("via.SceneManager");
-                static auto *const scene_view = tdb->find_type("via.SceneView");
+                static auto *backup_view_cursor_position_f = this_t->find_field("_mos_BackupViewCursorPosition");
+                static auto *backup_is_mouse_cursor_f = this_t->find_field("_mos_Backup_isMouseCursor");
 
-                static auto *const get_main_view = scene_manager->find_method("get_MainView()");
-                static auto *const get_window_size = scene_view->find_method("get_WindowSize()");
+                static auto *const scene_manager_t = tdb->find_type("via.SceneManager");
+                static auto *const get_main_view_m = scene_manager_t->find_method("get_MainView()");
 
-                static auto *backup_view_cursor_position = this_t->find_field("_mos_BackupViewCursorPosition");
-                static auto *backup_is_mouse_cursor = this_t->find_field("_mos_Backup_isMouseCursor");
+                static auto *const scene_view_t = tdb->find_type("via.SceneView");
+                static auto *const get_window_size_m = scene_view_t->find_method("get_WindowSize()");
 
-                auto *const main_view = get_main_view->call<API::ManagedObject *>(vmctx, nullptr);
+                auto *const main_view = get_main_view_m->call<API::ManagedObject *>(vmctx);
 
                 std::array<float, 2> window_size{};
-                get_window_size->call(&window_size, vmctx, main_view);
+                get_window_size_m->call(&window_size, vmctx, main_view);
 
                 std::array<float, 2> pos{};
                 pos[0] = window_size[0] / 2.0F;
                 pos[1] = window_size[1] / 2.0F;
 
-                backup_view_cursor_position->get_data<std::array<float, 2>>(obj) = pos;
-                backup_is_mouse_cursor->get_data<bool>(obj) = true;
+                backup_view_cursor_position_f->get_data<std::array<float, 2>>(obj) = pos;
+                backup_is_mouse_cursor_f->get_data<bool>(obj) = true;
 
                 return REFRAMEWORK_HOOK_SKIP_ORIGINAL;
             },
