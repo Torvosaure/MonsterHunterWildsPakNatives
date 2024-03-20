@@ -1,0 +1,413 @@
+{
+    "file_name": "Namespaces",
+    "root_namespace": "Namespaces",
+    "game_name": "MHRISE",
+    "headers": [
+        "Utils/Sdk.hpp"
+    ],
+    "initializer_name": "initialize",
+    "namespaces": {
+        "snow.player.PlayerLobbyBase": {
+            "fields": [],
+            "methods": [
+                "isLobbyCommonTag(snow.player.LobbyCommonTag)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.gui.COMMON": {
+            "fields": [
+                "GUI_COMMON_NOTICE_SIDE_OPEN"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "via.Behavior": {
+            "fields": [],
+            "methods": [],
+            "reflection_properties": [
+                "Enabled"
+            ],
+            "include_type": false
+        },
+        "snow.player.EquipSkill_223": {
+            "fields": [
+                "_DamageReduceLv1",
+                "_DamageReduceLv2"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.data.DataDef.PlKitchenSkillId": {
+            "fields": [
+                "Pl_KitchenSkill_002",
+                "Pl_KitchenSkill_024",
+                "Pl_KitchenSkill_028",
+                "Pl_KitchenSkill_048",
+                "Pl_KitchenSkill_051",
+                "Pl_KitchenSkill_052",
+                "Pl_KitchenSkill_054"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.quest.QuestType": {
+            "fields": [
+                "TOUR",
+                "HYAKURYU"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerIndex": {
+            "fields": [
+                "Pl3",
+                "Max"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerBase.PlBaseActionFlag": {
+            "fields": [
+                "IsWholeBodyTime",
+                "IsHornWallHyperArmor",
+                "EquipSkill227_TriggerAttack",
+                "EquipSkill227_TriggerDamage"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": true
+        },
+        "snow.player.PlayerSkillList.SkillEndFlags": {
+            "fields": [
+                "Kitchen_024",
+                "Equip_220"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": true
+        },
+        "snow.BitSetFlagBase": {
+            "fields": [],
+            "methods": [
+                "isOn(System.UInt32)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerManager": {
+            "fields": [
+                "_PlayerUserDataSkillParameter"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerQuestBase": {
+            "fields": [
+                "_PlayerUserDataQuestCommon",
+                "<DamageReflex>k__BackingField",
+                "_EquipSkill_036_Timer",
+                "_IsGuardPrevFrame",
+                "_EquipSkill229UseUpFlg",
+                "_EquipSkill230Lv",
+                "_EquipSkill230DamageReduce"
+            ],
+            "methods": [
+                "isActiveEquipSkill230()"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.Bow": {
+            "fields": [
+                "_EquipSkill216_BottleUpTimer"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.Situation": {
+            "fields": [
+                "ReceiveKitchen052"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerData": {
+            "fields": [
+                "_vitalContext",
+                "_r_Vital",
+                "_SlidingTimer",
+                "_SlidingPowerupTimer",
+                "_CounterattackPowerupTimer",
+                "_DieCount",
+                "_IsEnable_KitchenSkill048_Reduce",
+                "_KitchenSkill051_AtkUpTimer",
+                "_KitchenSkill054_Timer",
+                "_DisasterTurnPowerUpTimer",
+                "_EquipSkill208_AtkUpTimer",
+                "_EquipSkill223DamageReduce",
+                "_HornMusicDamageReduce",
+                "_EquipSkill232Absorption",
+                "_EquipSkill232Timer"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.data.DataShortcut": {
+            "fields": [],
+            "methods": [
+                "getName(snow.data.DataDef.PlEquipSkillId)",
+                "getName(snow.data.DataDef.PlKitchenSkillId)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.gui.ChatManager": {
+            "fields": [],
+            "methods": [
+                "reqAddChatInfomation(System.String, System.UInt32)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.hit.DamageType": {
+            "fields": [
+                "None"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerSkillList": {
+            "fields": [],
+            "methods": [
+                "hasSkill(snow.data.DataDef.PlEquipSkillId, System.UInt32)",
+                "getKitchenSkillLv(snow.data.DataDef.PlKitchenSkillId)",
+                "getSkillData(snow.data.DataDef.PlEquipSkillId)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.EquipSkill_232": {
+            "fields": [
+                "_SkillLv1",
+                "_SkillLv2",
+                "_SkillLv3"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerDamageInfo": {
+            "fields": [
+                "damage_type"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "via.dve.DeviceContext`1<System.Single>": {
+            "fields": [],
+            "methods": [
+                "read()"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerWeaponType": {
+            "fields": [
+                "HeavyBowgun"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.EquipSkillParameter": {
+            "fields": [
+                "_EquipSkill_042_SlidingTime",
+                "_EquipSkill_223",
+                "_EquipSkill_230_ReduceDamageRate",
+                "_EquipSkill_232"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerBase": {
+            "fields": [
+                "_PlayerIndex",
+                "_refPlayerData",
+                "_refPlayerSkillList",
+                "_playerWeaponType",
+                "_SharpnessGaugeBoostTimer",
+                "<RefPlayerInput>k__BackingField",
+                "<RefPlayerAIControl>k__BackingField",
+                "<HunterWireSkill231Num>k__BackingField",
+                "<PlBaseActionFlags>k__BackingField",
+                "_IsEnableEquipSkill225"
+            ],
+            "methods": [
+                "isMaster()",
+                "isPredicamentPowerUp()",
+                "isDebuffState()",
+                "isKitchenSkillPredicamentPowerUp()"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerCondition": {
+            "fields": [
+                "_common",
+                "_commonOld"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.QuestManager": {
+            "fields": [
+                "_ActiveQuestData",
+                "_QuestType"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.OdangoSkillParameter": {
+            "fields": [
+                "_KitchenSkill_028_Lv3",
+                "_KitchenSkill_028_Lv4",
+                "_KitchenSkill_048_Lv1_Reduce",
+                "_KitchenSkill_048_Lv2_Reduce",
+                "_KitchenSkill_048_Lv3_Reduce",
+                "_KitchenSkill_048_Lv4_Reduce",
+                "_KitchenSkill_052_Lv1",
+                "_KitchenSkill_052_Lv2",
+                "_KitchenSkill_052_Lv3",
+                "_KitchenSkill_052_Lv4"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "via.Component": {
+            "fields": [],
+            "methods": [],
+            "reflection_properties": [
+                "GameObject"
+            ],
+            "include_type": false
+        },
+        "snow.player.EquipSkill_232_LvParam": {
+            "fields": [
+                "_Absorption_Lv1",
+                "_Absorption_Lv2"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.DamageReflexInfo.Type": {
+            "fields": [
+                "KitchenSkill_051_Dive"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerSkillData": {
+            "fields": [
+                "SkillLv"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "via.gui.message": {
+            "fields": [],
+            "methods": [
+                "get(System.Guid)",
+                "getGuidByName(System.String)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerUserDataQuestCommon": {
+            "fields": [
+                "_HornMusicDamageReduce"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.data.DataDef.PlEquipSkillId": {
+            "fields": [
+                "Pl_EquipSkill_001",
+                "Pl_EquipSkill_002",
+                "Pl_EquipSkill_003",
+                "Pl_EquipSkill_004",
+                "Pl_EquipSkill_008",
+                "Pl_EquipSkill_009",
+                "Pl_EquipSkill_024",
+                "Pl_EquipSkill_036",
+                "Pl_EquipSkill_042",
+                "Pl_EquipSkill_090",
+                "Pl_EquipSkill_091",
+                "Pl_EquipSkill_102",
+                "Pl_EquipSkill_105",
+                "Pl_EquipSkill_204",
+                "Pl_EquipSkill_206",
+                "Pl_EquipSkill_208",
+                "Pl_EquipSkill_209",
+                "Pl_EquipSkill_215",
+                "Pl_EquipSkill_216",
+                "Pl_EquipSkill_220",
+                "Pl_EquipSkill_222",
+                "Pl_EquipSkill_223",
+                "Pl_EquipSkill_226",
+                "Pl_EquipSkill_227",
+                "Pl_EquipSkill_229",
+                "Pl_EquipSkill_230",
+                "Pl_EquipSkill_231",
+                "Pl_EquipSkill_232"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerUserDataSkillParameter": {
+            "fields": [
+                "_EquipSkillParameter",
+                "_OdangoSkillParameter"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.DamageReflexInfo": {
+            "fields": [
+                "<CheckType>k__BackingField"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "System.String": {
+            "fields": [],
+            "methods": [
+                "Format(System.String, System.Object)"
+            ],
+            "reflection_properties": [],
+            "include_type": false
+        }
+    }
+}
