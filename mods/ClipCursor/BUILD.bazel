@@ -17,7 +17,15 @@ cc_binary(
     ],
     linkopts = ["/LTCG"],
     linkshared = True,
-    features = ["treat_warnings_as_errors"],
+        features = select({
+        ":opt_mode": ["treat_warnings_as_errors"],
+        "//conditions:default": [],
+    }),
+)
+
+config_setting(
+    name = "opt_mode",
+    values = {"compilation_mode": "opt"},
 )
 
 pkg_zip(
