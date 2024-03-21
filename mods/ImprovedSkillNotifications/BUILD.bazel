@@ -1,10 +1,10 @@
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 
-name = "ImprovedSkillNotifications"
+NAME = "ImprovedSkillNotifications"
 
 cc_binary(
-    name = name,
+    name = NAME,
     deps = ["@reframework//:sdk-mhrise"],
     srcs = glob(["src/**/*.cpp"]),
     copts = [
@@ -23,15 +23,15 @@ cc_binary(
 
 pkg_zip(
     name = "pkg",
-    srcs = [name],
+    srcs = [NAME],
     compression_level = 9,
-    out = name + ".zip",
+    out = NAME + ".zip",
     tags = ["manual"],
 )
 
 refresh_compile_commands(
     name = "refresh_compile_commands",
-    targets = [name],
-    prefix = [".vscode", "compile_commands", name],
+    targets = [NAME],
+    prefix = [".vscode", "compile_commands", NAME],
     tags = ["manual"],
 )
