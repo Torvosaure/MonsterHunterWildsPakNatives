@@ -104,7 +104,9 @@
             "fields": [
                 "_PlayerUserDataSkillParameter"
             ],
-            "methods": [],
+            "methods": [
+                "findMasterPlayer()"
+            ],
             "reflection_properties": [],
             "include_type": false
         },
@@ -188,7 +190,9 @@
             "include_type": false
         },
         "snow.player.PlayerSkillList": {
-            "fields": [],
+            "fields": [
+                "_SkillEndFlags"
+            ],
             "methods": [
                 "hasSkill(snow.data.DataDef.PlEquipSkillId, System.UInt32)",
                 "getKitchenSkillLv(snow.data.DataDef.PlKitchenSkillId)",
@@ -257,6 +261,7 @@
             ],
             "methods": [
                 "isMaster()",
+                "isMasterPlayer()",
                 "isPredicamentPowerUp()",
                 "isDebuffState()",
                 "isKitchenSkillPredicamentPowerUp()"

@@ -84,7 +84,8 @@ void Namespaces::mhrise::initialize()
          "isOn(System.UInt32)", snow::BitSetFlagBase::isOn11030);
 
     init("snow.player.PlayerManager",
-         "_PlayerUserDataSkillParameter", snow::player::PlayerManager::PlayerUserDataSkillParameter);
+         "_PlayerUserDataSkillParameter", snow::player::PlayerManager::PlayerUserDataSkillParameter,
+         "findMasterPlayer()", snow::player::PlayerManager::findMasterPlayer208467);
 
     init("snow.player.PlayerQuestBase",
          "_PlayerUserDataQuestCommon", snow::player::PlayerQuestBase::PlayerUserDataQuestCommon,
@@ -130,6 +131,7 @@ void Namespaces::mhrise::initialize()
          "None", snow::hit::DamageType::None);
 
     init("snow.player.PlayerSkillList",
+         "_SkillEndFlags", snow::player::PlayerSkillList::SkillEndFlags_,
          "hasSkill(snow.data.DataDef.PlEquipSkillId, System.UInt32)", snow::player::PlayerSkillList::hasSkill208056,
          "getKitchenSkillLv(snow.data.DataDef.PlKitchenSkillId)", snow::player::PlayerSkillList::getKitchenSkillLv208058,
          "getSkillData(snow.data.DataDef.PlEquipSkillId)", snow::player::PlayerSkillList::getSkillData208060);
@@ -166,6 +168,7 @@ void Namespaces::mhrise::initialize()
          "<PlBaseActionFlags>k__BackingField", snow::player::PlayerBase::PlBaseActionFlags_b,
          "_IsEnableEquipSkill225", snow::player::PlayerBase::IsEnableEquipSkill225,
          "isMaster()", snow::player::PlayerBase::isMaster597332,
+         "isMasterPlayer()", snow::player::PlayerBase::isMasterPlayer597334,
          "isPredicamentPowerUp()", snow::player::PlayerBase::isPredicamentPowerUp597588,
          "isDebuffState()", snow::player::PlayerBase::isDebuffState597593,
          "isKitchenSkillPredicamentPowerUp()", snow::player::PlayerBase::isKitchenSkillPredicamentPowerUp597616);

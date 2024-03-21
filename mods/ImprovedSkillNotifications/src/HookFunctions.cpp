@@ -5,12 +5,12 @@
 
 using namespace Namespaces;
 
-void HookFunctions::on_11026(sdk::VMContext * /* vmctx */, REManagedObject *obj, uint32_t &flag)
+void HookFunctions::on_11026(sdk::VMContext * /* vmctx */, ::REManagedObject *obj, uint32_t &flag)
 {
     process_bit_set_flag(obj, flag, true);
 }
 
-void HookFunctions::off_11027(sdk::VMContext * /* vmctx */, REManagedObject *obj, uint32_t &flag)
+void HookFunctions::off_11027(sdk::VMContext * /* vmctx */, ::REManagedObject *obj, uint32_t &flag)
 {
     process_bit_set_flag(obj, flag, false);
 }
@@ -730,7 +730,7 @@ void HookFunctions::calc_total_defence_597545(sdk::VMContext * /* vmctx */, REMa
     }
 }
 
-void HookFunctions::process_bit_set_flag(REManagedObject *obj, const uint32_t &flag, const bool is_on)
+void HookFunctions::process_bit_set_flag(::REManagedObject *obj, const uint32_t &flag, const bool is_on)
 {
     auto *const t = utility::re_managed_object::get_type_definition(obj);
 
@@ -741,39 +741,64 @@ void HookFunctions::process_bit_set_flag(REManagedObject *obj, const uint32_t &f
 
     const auto generic_types = t->get_generic_argument_types();
 
+    const auto get_master_player = []() -> ::REManagedObject * {
+        static auto *const player_manager = sdk::get_managed_singleton<REManagedObject>("snow.player.PlayerManager");
+        auto *const master_player = mhrise::snow::player::PlayerManager::findMasterPlayer208467->call(sdk::get_thread_context(), player_manager);
+
+        return master_player;
+    };
+
     if (generic_types[0]->is_a(mhrise::snow::player::PlayerBase::PlBaseActionFlag::RETypeDefinition))
     {
+        const auto is_master_player = [&obj, &get_master_player]() -> bool {
+            return obj == mhrise::snow::player::PlayerBase::PlBaseActionFlags_b->get_data(get_master_player());
+        };
+
+        // 10 Pl_EquipSkill_009 渾身 Maximum Might | ON, OFF
         if (flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::IsWholeBodyTime->get_data()))
         {
-            // 10 Pl_EquipSkill_009 渾身 Maximum Might (ON, OFF)
-
-            const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_009->get_data();
-            ChatManager::get()->process_skill_e(skill_id, is_on);
+            if (is_master_player())
+            {
+                const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_009->get_data();
+                ChatManager::get()->process_skill_e(skill_id, is_on);
+            }
         }
-        else if (is_on && (flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerAttack->get_data()) ||
-                           flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerDamage->get_data())))
+        // 139 Pl_EquipSkill_227 粉塵纏 Powder Mantle | ON
+        else if (flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerAttack->get_data()) ||
+                 flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerDamage->get_data()))
         {
-            // 139 Pl_EquipSkill_227 粉塵纏 Powder Mantle (ON)
-
-            const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_227->get_data();
-            ChatManager::get()->process_skill_e(skill_id, true);
+            if (is_on && is_master_player())
+            {
+                const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_227->get_data();
+                ChatManager::get()->process_skill_e(skill_id, true);
+            }
         }
     }
     else if (generic_types[0]->is_a(mhrise::snow::player::PlayerSkillList::SkillEndFlags::RETypeDefinition))
     {
+        const auto is_master_player = [&obj, &get_master_player]() -> bool {
+            auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(get_master_player());
+
+            return obj == mhrise::snow::player::PlayerSkillList::SkillEndFlags_->get_data(player_skill_list);
+        };
+
+        // 25 Pl_KitchenSkill_024 おだんごド根性 Dango Moxie | ON
         if (is_on && flag == static_cast<uint32_t>(mhrise::snow::player::PlayerSkillList::SkillEndFlags::Kitchen_024->get_data()))
         {
-            // 25 Pl_KitchenSkill_024 おだんごド根性 (ON)
-
-            const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_024->get_data();
-            ChatManager::get()->process_skill_k(skill_id, true);
+            if (is_master_player())
+            {
+                const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_024->get_data();
+                ChatManager::get()->process_skill_k(skill_id, true);
+            }
         }
-        else if (is_on && flag == static_cast<uint32_t>(mhrise::snow::player::PlayerSkillList::SkillEndFlags::Equip_220->get_data()))
+        // 132 Pl_EquipSkill_220 根性 Guts | ON
+        else if (is_on && static_cast<uint32_t>(mhrise::snow::player::PlayerSkillList::SkillEndFlags::Equip_220->get_data()))
         {
-            // 132 Pl_EquipSkill_220 根性 Guts (ON)
-
-            const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_220->get_data();
-            ChatManager::get()->process_skill_e(skill_id, true);
+            if (is_master_player())
+            {
+                const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_220->get_data();
+                ChatManager::get()->process_skill_e(skill_id, true);
+            }
         }
     }
 }

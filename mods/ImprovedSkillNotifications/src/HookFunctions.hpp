@@ -10,9 +10,9 @@ class HookFunctions
 {
   public:
     // snow.BitSetFlagBase
-    void on_11026(sdk::VMContext *vmctx, REManagedObject *obj, uint32_t &flag);
+    void on_11026(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &flag);
     // snow.BitSetFlagBase
-    void off_11027(sdk::VMContext *vmctx, REManagedObject *obj, uint32_t &flag);
+    void off_11027(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &flag);
 
     // snow.player.PlayerCondition
     void update_old_205404(sdk::VMContext *vmctx, REManagedObject *obj) const;
@@ -54,7 +54,7 @@ class HookFunctions
     void calc_total_defence_597545(sdk::VMContext *vmctx, REManagedObject *obj);
 
   private:
-    void process_bit_set_flag(REManagedObject *obj, const uint32_t &flag, const bool is_on);
+    void process_bit_set_flag(::REManagedObject *obj, const uint32_t &flag, const bool is_on);
 
     enum class OldCondition : uint8_t
     {

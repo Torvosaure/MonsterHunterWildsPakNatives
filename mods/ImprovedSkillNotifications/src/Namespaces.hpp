@@ -78,6 +78,8 @@ namespace Namespaces
         namespace snow::player::PlayerManager
         {
             inline sdk::REFieldEx<::REManagedObject *> *PlayerUserDataSkillParameter;
+
+            inline sdk::REMethodDefinitionEx<::REManagedObject *, sdk::VMContext *, ::REManagedObject *> *findMasterPlayer208467;
         }
 
         namespace snow::player::PlayerQuestBase
@@ -140,6 +142,8 @@ namespace Namespaces
 
         namespace snow::player::PlayerSkillList
         {
+            inline sdk::REFieldEx<::REManagedObject *> *SkillEndFlags_;
+
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *, uint8_t, uint32_t> *hasSkill208056;
             inline sdk::REMethodDefinitionEx<uint32_t, sdk::VMContext *, ::REManagedObject *, uint32_t> *getKitchenSkillLv208058;
             inline sdk::REMethodDefinitionEx<::REManagedObject *, sdk::VMContext *, ::REManagedObject *, uint8_t> *getSkillData208060;
@@ -189,6 +193,7 @@ namespace Namespaces
             inline sdk::REFieldEx<bool> *IsEnableEquipSkill225;
 
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isMaster597332;
+            inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isMasterPlayer597334;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isPredicamentPowerUp597588;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isDebuffState597593;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isKitchenSkillPredicamentPowerUp597616;
