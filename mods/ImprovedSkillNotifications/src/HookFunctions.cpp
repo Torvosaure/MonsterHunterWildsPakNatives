@@ -71,7 +71,7 @@ void HookFunctions::calc_timer_259659(sdk::VMContext *vmctx, REManagedObject *ob
     const uint32_t lv = 1U;
     if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
     {
-        const bool condition = mhrise::snow::player::Bow::EquipSkill216_BottleUpTimer->get_data(obj) > 0.0F;
+        const bool condition = mhrise::snow::player::Bow::EquipSkill216_BottleUpTimer_->get_data(obj) > 0.0F;
 
         if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_216)))
         {
@@ -112,7 +112,7 @@ void HookFunctions::late_update_400432(sdk::VMContext *vmctx, REManagedObject *o
     const uint32_t lv = 1U;
     if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
     {
-        const bool condition = mhrise::snow::player::PlayerData::DisasterTurnPowerUpTimer->get_data(player_data) > 0.0F;
+        const bool condition = mhrise::snow::player::PlayerData::DisasterTurnPowerUpTimer_->get_data(player_data) > 0.0F;
 
         if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_204)))
         {
@@ -135,7 +135,7 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
     // !25 Pl_EquipSkill_024 剛刃研磨 Protective Polish (OFF)
     if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_024)))
     {
-        if (mhrise::snow::player::PlayerBase::SharpnessGaugeBoostTimer->get_data(obj) <= 0.0F)
+        if (mhrise::snow::player::PlayerBase::SharpnessGaugeBoostTimer_->get_data(obj) <= 0.0F)
         {
             m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_024));
             ChatManager::get()->process_skill_e(mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_024->get_data(), false);
@@ -153,12 +153,12 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
             auto *const player_manager = get_player_manager();
-            auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter->get_data(player_manager);
+            auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter_->get_data(player_manager);
             auto *const equip_skill_parameter =
-                mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter->get_data(player_user_data_skill_parameter);
+                mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter_->get_data(player_user_data_skill_parameter);
 
-            if (mhrise::snow::player::EquipSkillParameter::EquipSkill_042_SlidingTime->get_data(equip_skill_parameter) * 60.0F <=
-                mhrise::snow::player::PlayerData::SlidingTimer->get_data(player_data))
+            if (mhrise::snow::player::EquipSkillParameter::EquipSkill_042_SlidingTime_->get_data(equip_skill_parameter) * 60.0F <=
+                mhrise::snow::player::PlayerData::SlidingTimer_->get_data(player_data))
             {
                 if (!m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_042)))
                 {
@@ -169,7 +169,7 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
             else
             {
                 if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_042)) &&
-                    mhrise::snow::player::PlayerData::SlidingPowerupTimer->get_data(player_data) <= 0.0F)
+                    mhrise::snow::player::PlayerData::SlidingPowerupTimer_->get_data(player_data) <= 0.0F)
                 {
                     m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_042));
                     ChatManager::get()->process_skill_e(skill_id, false);
@@ -190,7 +190,7 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
             if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_208)) &&
-                mhrise::snow::player::PlayerData::EquipSkill208_AtkUpTimer->get_data(player_data) <= 0.0F)
+                mhrise::snow::player::PlayerData::EquipSkill208_AtkUpTimer_->get_data(player_data) <= 0.0F)
             {
                 m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_208));
                 ChatManager::get()->process_skill_e(skill_id, false);
@@ -209,7 +209,7 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            const auto condition = mhrise::snow::player::PlayerQuestBase::EquipSkill229UseUpFlg->get_data(obj);
+            const auto condition = mhrise::snow::player::PlayerQuestBase::EquipSkill229UseUpFlg_->get_data(obj);
 
             if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_229)))
             {
@@ -251,7 +251,7 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
             if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_232)) &&
-                mhrise::snow::player::PlayerData::EquipSkill232Timer->get_data(player_data) <= 0.0F)
+                mhrise::snow::player::PlayerData::EquipSkill232Timer_->get_data(player_data) <= 0.0F)
             {
                 m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_232));
                 ChatManager::get()->process_skill_e(skill_id, false);
@@ -285,7 +285,7 @@ void HookFunctions::set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, REManag
         case 0x2: [[fallthrough]];
         case 0x3: [[fallthrough]];
         case 0x4: {
-            const auto player_index = mhrise::snow::player::PlayerBase::PlayerIndex->get_data(obj);
+            const auto player_index = mhrise::snow::player::PlayerBase::PlayerIndex_->get_data(obj);
             if (player_index + ~mhrise::snow::player::PlayerIndex::Pl3->get_data() < mhrise::snow::player::PlayerIndex::Max->get_data())
             {
                 auto *const player_ai_control = mhrise::snow::player::PlayerBase::RefPlayerAIControl_b->get_data(obj);
@@ -335,28 +335,28 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
     auto *const player_manager = get_player_manager();
-    auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter->get_data(player_manager);
-    auto *const equip_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter->get_data(player_user_data_skill_parameter);
-    auto *const odango_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter->get_data(player_user_data_skill_parameter);
+    auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter_->get_data(player_manager);
+    auto *const equip_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter_->get_data(player_user_data_skill_parameter);
+    auto *const odango_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter_->get_data(player_user_data_skill_parameter);
 
     // 135 Pl_EquipSkill_223 剛心 (?)
-    if (mhrise::snow::player::PlayerData::EquipSkill223DamageReduce->get_data(player_data))
+    if (mhrise::snow::player::PlayerData::EquipSkill223DamageReduce_->get_data(player_data))
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_223->get_data();
         auto *const player_skill_data = mhrise::snow::player::PlayerSkillList::getSkillData208060->call(vmctx, player_skill_list, skill_id);
         const auto skill_lv = mhrise::snow::player::PlayerSkillData::SkillLv->get_data(player_skill_data);
 
-        auto *const equip_skill_223 = mhrise::snow::player::EquipSkillParameter::EquipSkill_223->get_data(equip_skill_parameter);
+        auto *const equip_skill_223 = mhrise::snow::player::EquipSkillParameter::EquipSkill_223_->get_data(equip_skill_parameter);
 
         switch (skill_lv)
         {
             case 0x1: {
-                calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv1->get_data(equip_skill_223), true);
+                calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv1_->get_data(equip_skill_223), true);
 
                 break;
             }
             case 0x2: {
-                calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv2->get_data(equip_skill_223), true);
+                calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv2_->get_data(equip_skill_223), true);
 
                 break;
             }
@@ -365,24 +365,24 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
 
     // 142 Pl_EquipSkill_230 天衣無崩 Heaven-Sent (?)
     if (mhrise::snow::player::PlayerQuestBase::isActiveEquipSkill230400590->call(vmctx, obj) &&
-        mhrise::snow::player::PlayerQuestBase::EquipSkill230DamageReduce->get_data(obj) == false)
+        mhrise::snow::player::PlayerQuestBase::EquipSkill230DamageReduce_->get_data(obj) == false)
     {
-        const auto skill_lv = mhrise::snow::player::PlayerQuestBase::EquipSkill230Lv->get_data(obj);
+        const auto skill_lv = mhrise::snow::player::PlayerQuestBase::EquipSkill230Lv_->get_data(obj);
         if (skill_lv != 0x0 && skill_lv < 0x4)
         {
-            calc_pre_damage_mul(mhrise::snow::player::EquipSkillParameter::EquipSkill_230_ReduceDamageRate->get_data(equip_skill_parameter));
+            calc_pre_damage_mul(mhrise::snow::player::EquipSkillParameter::EquipSkill_230_ReduceDamageRate_->get_data(equip_skill_parameter));
         }
     }
 
     // 24 Concert_024 音の防壁 (?)
-    if (mhrise::snow::player::PlayerData::HornMusicDamageReduce->get_data(player_data))
+    if (mhrise::snow::player::PlayerData::HornMusicDamageReduce_->get_data(player_data))
     {
         const auto flag = mhrise::snow::player::PlayerBase::PlBaseActionFlag::IsHornWallHyperArmor->get_data();
         if (mhrise::snow::BitSetFlagBase::isOn11030->call(vmctx, mhrise::snow::player::PlayerBase::PlBaseActionFlags_b->get_data(obj), flag))
         {
-            auto *const player_user_data_quest_common = mhrise::snow::player::PlayerQuestBase::PlayerUserDataQuestCommon->get_data(obj);
+            auto *const player_user_data_quest_common = mhrise::snow::player::PlayerQuestBase::PlayerUserDataQuestCommon_->get_data(obj);
 
-            calc_pre_damage_mul(mhrise::snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce->get_data(player_user_data_quest_common), true);
+            calc_pre_damage_mul(mhrise::snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce_->get_data(player_user_data_quest_common), true);
         }
     }
 
@@ -395,12 +395,12 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         switch (skill_lv)
         {
             case 0x3: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x4: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4_->get_data(odango_skill_parameter));
 
                 break;
             }
@@ -408,7 +408,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
     }
 
     // 49 Pl_KitchenSkill_048 おだんご防護術 (?)
-    if (!is_guard_damage && mhrise::snow::player::PlayerData::IsEnable_KitchenSkill048_Reduce->get_data(player_data))
+    if (!is_guard_damage && mhrise::snow::player::PlayerData::IsEnable_KitchenSkill048_Reduce_->get_data(player_data))
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_048->get_data();
         const auto skill_lv = mhrise::snow::player::PlayerSkillList::getKitchenSkillLv208058->call(vmctx, player_skill_list, skill_id);
@@ -416,22 +416,22 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         switch (skill_lv)
         {
             case 0x1: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x2: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x3: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x4: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv4_Reduce->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv4_Reduce_->get_data(odango_skill_parameter));
 
                 break;
             }
@@ -447,22 +447,22 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         switch (skill_lv)
         {
             case 0x1: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv1->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv1_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x2: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv2->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv2_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x3: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3_->get_data(odango_skill_parameter));
 
                 break;
             }
             case 0x4: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4->get_data(odango_skill_parameter));
+                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4_->get_data(odango_skill_parameter));
 
                 break;
             }
@@ -489,7 +489,7 @@ void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject 
             auto *const vital_context = mhrise::snow::player::PlayerData::_vitalContext->get_data(player_data);
             const bool condition = static_cast<int32_t>(mhrise::via::dve::DeviceContext_System_Single::read205342->call(vmctx, vital_context)) <
                                        mhrise::snow::player::PlayerData::_r_Vital->get_data(player_data) ||
-                                   mhrise::snow::player::PlayerBase::IsEnableEquipSkill225->get_data(obj);
+                                   mhrise::snow::player::PlayerBase::IsEnableEquipSkill225_->get_data(obj);
 
             if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_003)))
             {
@@ -551,7 +551,7 @@ void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject 
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            const bool condition = mhrise::snow::player::PlayerData::CounterattackPowerupTimer->get_data(player_data) > 0.0F;
+            const bool condition = mhrise::snow::player::PlayerData::CounterattackPowerupTimer_->get_data(player_data) > 0.0F;
 
             if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_105)))
             {
@@ -585,8 +585,8 @@ void HookFunctions::set_skill_036_400647(sdk::VMContext * /* vmctx */, REManaged
     // auto *const player_input = m_ref_player_input_263658f->get_data<REManagedObject *>(obj);
 
     if (mhrise::snow::player::PlayerBase::_playerWeaponType->get_data(obj) != mhrise::snow::player::PlayerWeaponType::HeavyBowgun->get_data() &&
-        mhrise::snow::player::PlayerQuestBase::IsGuardPrevFrame->get_data(obj) &&
-        mhrise::snow::player::PlayerQuestBase::EquipSkill_036_Timer->get_data(obj) > 0.0F)
+        mhrise::snow::player::PlayerQuestBase::IsGuardPrevFrame_->get_data(obj) &&
+        mhrise::snow::player::PlayerQuestBase::EquipSkill_036_Timer_->get_data(obj) > 0.0F)
     {
         ChatManager::get()->process_skill_e(mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_036->get_data(), true);
     }
@@ -614,10 +614,11 @@ void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, 
     {
         auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
         auto *const player_manager = get_player_manager();
-        auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter->get_data(player_manager);
+        auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter_->get_data(player_manager);
         auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
-        auto *const equip_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter->get_data(player_user_data_skill_parameter);
-        auto *const equip_skill_232 = mhrise::snow::player::EquipSkillParameter::EquipSkill_232->get_data(equip_skill_parameter);
+        auto *const equip_skill_parameter =
+            mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter_->get_data(player_user_data_skill_parameter);
+        auto *const equip_skill_232 = mhrise::snow::player::EquipSkillParameter::EquipSkill_232_->get_data(equip_skill_parameter);
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_232->get_data();
         auto *const skill_data = mhrise::snow::player::PlayerSkillList::getSkillData208060->call(vmctx, player_skill_list, skill_id);
@@ -628,23 +629,23 @@ void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, 
         switch (skill_lv)
         {
             case 0x1: {
-                lv_param = mhrise::snow::player::EquipSkill_232::SkillLv1->get_data(equip_skill_232);
+                lv_param = mhrise::snow::player::EquipSkill_232::SkillLv1_->get_data(equip_skill_232);
                 break;
             }
             case 0x2: {
-                lv_param = mhrise::snow::player::EquipSkill_232::SkillLv2->get_data(equip_skill_232);
+                lv_param = mhrise::snow::player::EquipSkill_232::SkillLv2_->get_data(equip_skill_232);
                 break;
             }
             case 0x3: {
-                lv_param = mhrise::snow::player::EquipSkill_232::SkillLv3->get_data(equip_skill_232);
+                lv_param = mhrise::snow::player::EquipSkill_232::SkillLv3_->get_data(equip_skill_232);
                 break;
             }
         }
 
-        const auto equip_skill232_absorption = mhrise::snow::player::PlayerData::EquipSkill232Absorption->get_data(player_data) + add;
+        const auto equip_skill232_absorption = mhrise::snow::player::PlayerData::EquipSkill232Absorption_->get_data(player_data) + add;
 
-        if (mhrise::snow::player::EquipSkill_232_LvParam::Absorption_Lv1->get_data(lv_param) <= equip_skill232_absorption ||
-            mhrise::snow::player::EquipSkill_232_LvParam::Absorption_Lv2->get_data(lv_param) <= equip_skill232_absorption)
+        if (mhrise::snow::player::EquipSkill_232_LvParam::Absorption_Lv1_->get_data(lv_param) <= equip_skill232_absorption ||
+            mhrise::snow::player::EquipSkill_232_LvParam::Absorption_Lv2_->get_data(lv_param) <= equip_skill232_absorption)
         {
             m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_232));
         }
@@ -672,7 +673,7 @@ void HookFunctions::use_item_401117(sdk::VMContext *vmctx, REManagedObject *obj,
 void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObject *obj)
 {
     static auto *const quest_manager = sdk::get_managed_singleton<REManagedObject>("snow.QuestManager");
-    const auto quest_type = mhrise::snow::QuestManager::QuestType->get_data(quest_manager);
+    const auto quest_type = mhrise::snow::QuestManager::QuestType_->get_data(quest_manager);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
     {
@@ -683,7 +684,7 @@ void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObj
         bool condition = false;
         if (quest_type != mhrise::snow::quest::QuestType::TOUR->get_data() && quest_type != mhrise::snow::quest::QuestType::HYAKURYU->get_data())
         {
-            auto *const quest_data = mhrise::snow::QuestManager::ActiveQuestData->get_data(quest_manager);
+            auto *const quest_data = mhrise::snow::QuestManager::ActiveQuestData_->get_data(quest_manager);
 
             if (quest_data != nullptr)
             {
@@ -692,7 +693,7 @@ void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObj
                 const uint32_t lv = 1U;
                 if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
                 {
-                    if (mhrise::snow::player::PlayerData::DieCount->get_data(player_data) != 0)
+                    if (mhrise::snow::player::PlayerData::DieCount_->get_data(player_data) != 0)
                     {
                         condition = true;
                     }
@@ -710,7 +711,7 @@ void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObj
     {
         // 52 Pl_KitchenSkill_051 おだんご逃走術 (ON, OFF)
 
-        const bool condition = mhrise::snow::player::PlayerData::KitchenSkill051_AtkUpTimer->get_data(player_data) > 0.0F;
+        const bool condition = mhrise::snow::player::PlayerData::KitchenSkill051_AtkUpTimer_->get_data(player_data) > 0.0F;
         if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_KitchenSkill_051)))
         {
             m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_051), condition);
@@ -727,7 +728,7 @@ void HookFunctions::calc_total_defence_597545(sdk::VMContext * /* vmctx */, REMa
 
     // 55 Pl_KitchenSkill_054 おだんご絆術 Dango Connector | OFF
 
-    const bool condition = mhrise::snow::player::PlayerData::KitchenSkill054_Timer->get_data(player_data) > 0.0F;
+    const bool condition = mhrise::snow::player::PlayerData::KitchenSkill054_Timer_->get_data(player_data) > 0.0F;
     if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_KitchenSkill_054)))
     {
         m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_054), condition);

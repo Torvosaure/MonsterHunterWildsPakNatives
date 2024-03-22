@@ -48,8 +48,8 @@ void Namespaces::mhrise::initialize()
          "Enabled", via::Behavior::Enabled);
 
     init("snow.player.EquipSkill_223",
-         "_DamageReduceLv1", snow::player::EquipSkill_223::DamageReduceLv1,
-         "_DamageReduceLv2", snow::player::EquipSkill_223::DamageReduceLv2);
+         "_DamageReduceLv1", snow::player::EquipSkill_223::DamageReduceLv1_,
+         "_DamageReduceLv2", snow::player::EquipSkill_223::DamageReduceLv2_);
 
     init("snow.data.DataDef.PlKitchenSkillId",
          "Pl_KitchenSkill_002", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_002,
@@ -84,23 +84,23 @@ void Namespaces::mhrise::initialize()
          "isOn(System.UInt32)", snow::BitSetFlagBase::isOn11030);
 
     init("snow.player.PlayerManager",
-         "_PlayerUserDataSkillParameter", snow::player::PlayerManager::PlayerUserDataSkillParameter,
+         "_PlayerUserDataSkillParameter", snow::player::PlayerManager::PlayerUserDataSkillParameter_,
          "<PlayerData>k__BackingField", snow::player::PlayerManager::PlayerData_b,
          "findMasterPlayer()", snow::player::PlayerManager::findMasterPlayer208467,
          "getMasterPlayerID()", snow::player::PlayerManager::getMasterPlayerID208468);
 
     init("snow.player.PlayerQuestBase",
-         "_PlayerUserDataQuestCommon", snow::player::PlayerQuestBase::PlayerUserDataQuestCommon,
+         "_PlayerUserDataQuestCommon", snow::player::PlayerQuestBase::PlayerUserDataQuestCommon_,
          "<DamageReflex>k__BackingField", snow::player::PlayerQuestBase::DamageReflex_b,
-         "_EquipSkill_036_Timer", snow::player::PlayerQuestBase::EquipSkill_036_Timer,
-         "_IsGuardPrevFrame", snow::player::PlayerQuestBase::IsGuardPrevFrame,
-         "_EquipSkill229UseUpFlg", snow::player::PlayerQuestBase::EquipSkill229UseUpFlg,
-         "_EquipSkill230Lv", snow::player::PlayerQuestBase::EquipSkill230Lv,
-         "_EquipSkill230DamageReduce", snow::player::PlayerQuestBase::EquipSkill230DamageReduce,
+         "_EquipSkill_036_Timer", snow::player::PlayerQuestBase::EquipSkill_036_Timer_,
+         "_IsGuardPrevFrame", snow::player::PlayerQuestBase::IsGuardPrevFrame_,
+         "_EquipSkill229UseUpFlg", snow::player::PlayerQuestBase::EquipSkill229UseUpFlg_,
+         "_EquipSkill230Lv", snow::player::PlayerQuestBase::EquipSkill230Lv_,
+         "_EquipSkill230DamageReduce", snow::player::PlayerQuestBase::EquipSkill230DamageReduce_,
          "isActiveEquipSkill230()", snow::player::PlayerQuestBase::isActiveEquipSkill230400590);
 
     init("snow.player.Bow",
-         "_EquipSkill216_BottleUpTimer", snow::player::Bow::EquipSkill216_BottleUpTimer);
+         "_EquipSkill216_BottleUpTimer", snow::player::Bow::EquipSkill216_BottleUpTimer_);
 
     init("snow.player.Situation",
          "ReceiveKitchen052", snow::player::Situation::ReceiveKitchen052);
@@ -109,19 +109,19 @@ void Namespaces::mhrise::initialize()
          "_vitalContext", snow::player::PlayerData::_vitalContext,
          "_r_Vital", snow::player::PlayerData::_r_Vital,
          "_condition", snow::player::PlayerData::_condition,
-         "_SlidingTimer", snow::player::PlayerData::SlidingTimer,
-         "_SlidingPowerupTimer", snow::player::PlayerData::SlidingPowerupTimer,
-         "_CounterattackPowerupTimer", snow::player::PlayerData::CounterattackPowerupTimer,
-         "_DieCount", snow::player::PlayerData::DieCount,
-         "_IsEnable_KitchenSkill048_Reduce", snow::player::PlayerData::IsEnable_KitchenSkill048_Reduce,
-         "_KitchenSkill051_AtkUpTimer", snow::player::PlayerData::KitchenSkill051_AtkUpTimer,
-         "_KitchenSkill054_Timer", snow::player::PlayerData::KitchenSkill054_Timer,
-         "_DisasterTurnPowerUpTimer", snow::player::PlayerData::DisasterTurnPowerUpTimer,
-         "_EquipSkill208_AtkUpTimer", snow::player::PlayerData::EquipSkill208_AtkUpTimer,
-         "_EquipSkill223DamageReduce", snow::player::PlayerData::EquipSkill223DamageReduce,
-         "_HornMusicDamageReduce", snow::player::PlayerData::HornMusicDamageReduce,
-         "_EquipSkill232Absorption", snow::player::PlayerData::EquipSkill232Absorption,
-         "_EquipSkill232Timer", snow::player::PlayerData::EquipSkill232Timer);
+         "_SlidingTimer", snow::player::PlayerData::SlidingTimer_,
+         "_SlidingPowerupTimer", snow::player::PlayerData::SlidingPowerupTimer_,
+         "_CounterattackPowerupTimer", snow::player::PlayerData::CounterattackPowerupTimer_,
+         "_DieCount", snow::player::PlayerData::DieCount_,
+         "_IsEnable_KitchenSkill048_Reduce", snow::player::PlayerData::IsEnable_KitchenSkill048_Reduce_,
+         "_KitchenSkill051_AtkUpTimer", snow::player::PlayerData::KitchenSkill051_AtkUpTimer_,
+         "_KitchenSkill054_Timer", snow::player::PlayerData::KitchenSkill054_Timer_,
+         "_DisasterTurnPowerUpTimer", snow::player::PlayerData::DisasterTurnPowerUpTimer_,
+         "_EquipSkill208_AtkUpTimer", snow::player::PlayerData::EquipSkill208_AtkUpTimer_,
+         "_EquipSkill223DamageReduce", snow::player::PlayerData::EquipSkill223DamageReduce_,
+         "_HornMusicDamageReduce", snow::player::PlayerData::HornMusicDamageReduce_,
+         "_EquipSkill232Absorption", snow::player::PlayerData::EquipSkill232Absorption_,
+         "_EquipSkill232Timer", snow::player::PlayerData::EquipSkill232Timer_);
 
     init("snow.data.DataShortcut",
          "getName(snow.data.DataDef.PlEquipSkillId)", snow::data::DataShortcut::getName249386,
@@ -140,9 +140,9 @@ void Namespaces::mhrise::initialize()
          "getSkillData(snow.data.DataDef.PlEquipSkillId)", snow::player::PlayerSkillList::getSkillData208060);
 
     init("snow.player.EquipSkill_232",
-         "_SkillLv1", snow::player::EquipSkill_232::SkillLv1,
-         "_SkillLv2", snow::player::EquipSkill_232::SkillLv2,
-         "_SkillLv3", snow::player::EquipSkill_232::SkillLv3);
+         "_SkillLv1", snow::player::EquipSkill_232::SkillLv1_,
+         "_SkillLv2", snow::player::EquipSkill_232::SkillLv2_,
+         "_SkillLv3", snow::player::EquipSkill_232::SkillLv3_);
 
     init("snow.player.PlayerData[]",
          "Get(System.Int32)", snow::player::PlayerData_Array::Get208192);
@@ -157,22 +157,22 @@ void Namespaces::mhrise::initialize()
          "HeavyBowgun", snow::player::PlayerWeaponType::HeavyBowgun);
 
     init("snow.player.EquipSkillParameter",
-         "_EquipSkill_042_SlidingTime", snow::player::EquipSkillParameter::EquipSkill_042_SlidingTime,
-         "_EquipSkill_223", snow::player::EquipSkillParameter::EquipSkill_223,
-         "_EquipSkill_230_ReduceDamageRate", snow::player::EquipSkillParameter::EquipSkill_230_ReduceDamageRate,
-         "_EquipSkill_232", snow::player::EquipSkillParameter::EquipSkill_232);
+         "_EquipSkill_042_SlidingTime", snow::player::EquipSkillParameter::EquipSkill_042_SlidingTime_,
+         "_EquipSkill_223", snow::player::EquipSkillParameter::EquipSkill_223_,
+         "_EquipSkill_230_ReduceDamageRate", snow::player::EquipSkillParameter::EquipSkill_230_ReduceDamageRate_,
+         "_EquipSkill_232", snow::player::EquipSkillParameter::EquipSkill_232_);
 
     init("snow.player.PlayerBase",
-         "_PlayerIndex", snow::player::PlayerBase::PlayerIndex,
+         "_PlayerIndex", snow::player::PlayerBase::PlayerIndex_,
          "_refPlayerData", snow::player::PlayerBase::_refPlayerData,
          "_refPlayerSkillList", snow::player::PlayerBase::_refPlayerSkillList,
          "_playerWeaponType", snow::player::PlayerBase::_playerWeaponType,
-         "_SharpnessGaugeBoostTimer", snow::player::PlayerBase::SharpnessGaugeBoostTimer,
+         "_SharpnessGaugeBoostTimer", snow::player::PlayerBase::SharpnessGaugeBoostTimer_,
          "<RefPlayerInput>k__BackingField", snow::player::PlayerBase::RefPlayerInput_b,
          "<RefPlayerAIControl>k__BackingField", snow::player::PlayerBase::RefPlayerAIControl_b,
          "<HunterWireSkill231Num>k__BackingField", snow::player::PlayerBase::HunterWireSkill231Num_b,
          "<PlBaseActionFlags>k__BackingField", snow::player::PlayerBase::PlBaseActionFlags_b,
-         "_IsEnableEquipSkill225", snow::player::PlayerBase::IsEnableEquipSkill225,
+         "_IsEnableEquipSkill225", snow::player::PlayerBase::IsEnableEquipSkill225_,
          "isMaster()", snow::player::PlayerBase::isMaster597332,
          "isMasterPlayer()", snow::player::PlayerBase::isMasterPlayer597334,
          "isPredicamentPowerUp()", snow::player::PlayerBase::isPredicamentPowerUp597588,
@@ -184,27 +184,27 @@ void Namespaces::mhrise::initialize()
          "_commonOld", snow::player::PlayerCondition::_commonOld);
 
     init("snow.QuestManager",
-         "_ActiveQuestData", snow::QuestManager::ActiveQuestData,
-         "_QuestType", snow::QuestManager::QuestType);
+         "_ActiveQuestData", snow::QuestManager::ActiveQuestData_,
+         "_QuestType", snow::QuestManager::QuestType_);
 
     init("snow.player.OdangoSkillParameter",
-         "_KitchenSkill_028_Lv3", snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3,
-         "_KitchenSkill_028_Lv4", snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4,
-         "_KitchenSkill_048_Lv1_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce,
-         "_KitchenSkill_048_Lv2_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce,
-         "_KitchenSkill_048_Lv3_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce,
-         "_KitchenSkill_048_Lv4_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv4_Reduce,
-         "_KitchenSkill_052_Lv1", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv1,
-         "_KitchenSkill_052_Lv2", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv2,
-         "_KitchenSkill_052_Lv3", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3,
-         "_KitchenSkill_052_Lv4", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4);
+         "_KitchenSkill_028_Lv3", snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3_,
+         "_KitchenSkill_028_Lv4", snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4_,
+         "_KitchenSkill_048_Lv1_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce_,
+         "_KitchenSkill_048_Lv2_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce_,
+         "_KitchenSkill_048_Lv3_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce_,
+         "_KitchenSkill_048_Lv4_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv4_Reduce_,
+         "_KitchenSkill_052_Lv1", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv1_,
+         "_KitchenSkill_052_Lv2", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv2_,
+         "_KitchenSkill_052_Lv3", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3_,
+         "_KitchenSkill_052_Lv4", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4_);
 
     init("via.Component",
          "GameObject", via::Component::GameObject);
 
     init("snow.player.EquipSkill_232_LvParam",
-         "_Absorption_Lv1", snow::player::EquipSkill_232_LvParam::Absorption_Lv1,
-         "_Absorption_Lv2", snow::player::EquipSkill_232_LvParam::Absorption_Lv2);
+         "_Absorption_Lv1", snow::player::EquipSkill_232_LvParam::Absorption_Lv1_,
+         "_Absorption_Lv2", snow::player::EquipSkill_232_LvParam::Absorption_Lv2_);
 
     init("snow.player.DamageReflexInfo.Type",
          "KitchenSkill_051_Dive", snow::player::DamageReflexInfo::Type::KitchenSkill_051_Dive);
@@ -217,7 +217,7 @@ void Namespaces::mhrise::initialize()
          "getGuidByName(System.String)", via::gui::message::getGuidByName778372);
 
     init("snow.player.PlayerUserDataQuestCommon",
-         "_HornMusicDamageReduce", snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce);
+         "_HornMusicDamageReduce", snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce_);
 
     init("snow.data.DataDef.PlEquipSkillId",
          "Pl_EquipSkill_001", snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_001,
@@ -250,8 +250,8 @@ void Namespaces::mhrise::initialize()
          "Pl_EquipSkill_232", snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_232);
 
     init("snow.player.PlayerUserDataSkillParameter",
-         "_EquipSkillParameter", snow::player::PlayerUserDataSkillParameter::EquipSkillParameter,
-         "_OdangoSkillParameter", snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter);
+         "_EquipSkillParameter", snow::player::PlayerUserDataSkillParameter::EquipSkillParameter_,
+         "_OdangoSkillParameter", snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter_);
 
     init("snow.player.DamageReflexInfo",
          "<CheckType>k__BackingField", snow::player::DamageReflexInfo::CheckType_b);
