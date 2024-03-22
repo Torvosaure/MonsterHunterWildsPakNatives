@@ -39,6 +39,6 @@ pkg_zip(
 refresh_compile_commands(
     name = "refresh_compile_commands",
     targets = [NAME],
-    prefix = [".vscode", "compile_commands", NAME],
+    prefix = [".vscode"],
     tags = ["manual"],
 )
