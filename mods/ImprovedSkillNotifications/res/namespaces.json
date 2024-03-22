@@ -102,10 +102,12 @@
         },
         "snow.player.PlayerManager": {
             "fields": [
-                "_PlayerUserDataSkillParameter"
+                "_PlayerUserDataSkillParameter",
+                "<PlayerData>k__BackingField"
             ],
             "methods": [
-                "findMasterPlayer()"
+                "findMasterPlayer()",
+                "getMasterPlayerID()"
             ],
             "reflection_properties": [],
             "include_type": false
@@ -146,6 +148,7 @@
             "fields": [
                 "_vitalContext",
                 "_r_Vital",
+                "_condition",
                 "_SlidingTimer",
                 "_SlidingPowerupTimer",
                 "_CounterattackPowerupTimer",
@@ -208,6 +211,14 @@
                 "_SkillLv3"
             ],
             "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
+        "snow.player.PlayerData[]": {
+            "fields": [],
+            "methods": [
+                "Get(System.Int32)"
+            ],
             "reflection_properties": [],
             "include_type": false
         },

@@ -85,7 +85,9 @@ void Namespaces::mhrise::initialize()
 
     init("snow.player.PlayerManager",
          "_PlayerUserDataSkillParameter", snow::player::PlayerManager::PlayerUserDataSkillParameter,
-         "findMasterPlayer()", snow::player::PlayerManager::findMasterPlayer208467);
+         "<PlayerData>k__BackingField", snow::player::PlayerManager::PlayerData_b,
+         "findMasterPlayer()", snow::player::PlayerManager::findMasterPlayer208467,
+         "getMasterPlayerID()", snow::player::PlayerManager::getMasterPlayerID208468);
 
     init("snow.player.PlayerQuestBase",
          "_PlayerUserDataQuestCommon", snow::player::PlayerQuestBase::PlayerUserDataQuestCommon,
@@ -106,6 +108,7 @@ void Namespaces::mhrise::initialize()
     init("snow.player.PlayerData",
          "_vitalContext", snow::player::PlayerData::_vitalContext,
          "_r_Vital", snow::player::PlayerData::_r_Vital,
+         "_condition", snow::player::PlayerData::_condition,
          "_SlidingTimer", snow::player::PlayerData::SlidingTimer,
          "_SlidingPowerupTimer", snow::player::PlayerData::SlidingPowerupTimer,
          "_CounterattackPowerupTimer", snow::player::PlayerData::CounterattackPowerupTimer,
@@ -140,6 +143,9 @@ void Namespaces::mhrise::initialize()
          "_SkillLv1", snow::player::EquipSkill_232::SkillLv1,
          "_SkillLv2", snow::player::EquipSkill_232::SkillLv2,
          "_SkillLv3", snow::player::EquipSkill_232::SkillLv3);
+
+    init("snow.player.PlayerData[]",
+         "Get(System.Int32)", snow::player::PlayerData_Array::Get208192);
 
     init("snow.player.PlayerDamageInfo",
          "damage_type", snow::player::PlayerDamageInfo::damage_type);

@@ -15,7 +15,7 @@ class HookFunctions
     void off_11027(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &flag);
 
     // snow.player.PlayerCondition
-    void update_old_205404(sdk::VMContext *vmctx, REManagedObject *obj) const;
+    void update_old_205404(sdk::VMContext *vmctx, REManagedObject *obj);
 
     // snow.player.Bow
     void calc_timer_259659(sdk::VMContext *vmctx, REManagedObject *obj);
@@ -54,6 +54,7 @@ class HookFunctions
     void calc_total_defence_597545(sdk::VMContext *vmctx, REManagedObject *obj);
 
   private:
+    ::REManagedObject *get_player_manager();
     void process_bit_set_flag(::REManagedObject *obj, const uint32_t &flag, const bool is_on);
 
     enum class OldCondition : uint8_t
@@ -79,19 +80,20 @@ class HookFunctions
 
     enum class PlayerCondition : uint64_t
     {
-        Pl_EquipSkill_001 = 1ULL << 0x1E, // 2 挑戦者 Agitator
-        Pl_EquipSkill_002 = 1ULL << 0x1B, // 3 フルチャージ Peak Performance
-        Pl_EquipSkill_008 = 1ULL << 0x1D, // 9 力の解放 Latent Power
-        Pl_EquipSkill_036 = 1ULL << 0x1F, // 37 攻めの守勢 Offensive Guard
-        // Pl_EquipSkill_090 = 1ULL << 0x1A, // 91 火事場力 Heroics
-        Pl_EquipSkill_102 = 1ULL << 0x1C, // 103 龍気活性 Dragonheart
-        Pl_EquipSkill_206 = 1ULL << 0x20, // 118 顕如盤石 Defiance
-        Pl_EquipSkill_209 = 1ULL << 0x28, // 121 煽衛 Embolden
-        Pl_EquipSkill_215 = 1ULL << 0x21, // 127 研磨術【鋭】 Grinder (S)
-        Pl_EquipSkill_222 = 1ULL << 0x36, // 134 状態異常確定蓄積 Status Trigger
-        Pl_EquipSkill_226 = 1ULL << 0x39, // 138 風纏 Wind Mantle
-        Pl_EquipSkill_230 = 1ULL << 0x12, // 142 天衣無崩 Heaven-Sent
+        Pl_EquipSkill_001 = 1ULL << 0x1E, // 2 Pl_EquipSkill_001 挑戦者 Agitator
+        Pl_EquipSkill_002 = 1ULL << 0x1B, // 3 Pl_EquipSkill_002 フルチャージ Peak Performance
+        Pl_EquipSkill_008 = 1ULL << 0x1D, // 9 Pl_EquipSkill_008 力の解放 Latent Power
+        Pl_EquipSkill_036 = 1ULL << 0x1F, // 37 Pl_EquipSkill_036 攻めの守勢 Offensive Guard
+        Pl_EquipSkill_102 = 1ULL << 0x1C, // 103 Pl_EquipSkill_102 龍気活性 Dragonheart
+        Pl_EquipSkill_206 = 1ULL << 0x20, // 118 Pl_EquipSkill_206 顕如盤石 Defiance
+        Pl_EquipSkill_209 = 1ULL << 0x28, // 121 Pl_EquipSkill_209 煽衛 Embolden
+        Pl_EquipSkill_215 = 1ULL << 0x21, // 127 Pl_EquipSkill_215 研磨術【鋭】 Grinder (S)
+        Pl_EquipSkill_222 = 1ULL << 0x36, // 134 Pl_EquipSkill_222 状態異常確定蓄積 Status Trigger
+        Pl_EquipSkill_226 = 1ULL << 0x39, // 138 Pl_EquipSkill_226 風纏 Wind Mantle
+        Pl_EquipSkill_230 = 1ULL << 0x12, // 142 Pl_EquipSkill_230 天衣無崩 Heaven-Sent
     };
+
+    ::REManagedObject *m_player_manager{};
 
     std::bitset<Utils::enum_cast(OldCondition::Count)> m_old_condition{};
     float m_pre_damage{};

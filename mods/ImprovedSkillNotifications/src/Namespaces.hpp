@@ -78,8 +78,10 @@ namespace Namespaces
         namespace snow::player::PlayerManager
         {
             inline sdk::REFieldEx<::REManagedObject *> *PlayerUserDataSkillParameter;
+            inline sdk::REFieldEx<::REManagedObject *> *PlayerData_b;
 
             inline sdk::REMethodDefinitionEx<::REManagedObject *, sdk::VMContext *, ::REManagedObject *> *findMasterPlayer208467;
+            inline sdk::REMethodDefinitionEx<uint8_t, sdk::VMContext *, ::REManagedObject *> *getMasterPlayerID208468;
         }
 
         namespace snow::player::PlayerQuestBase
@@ -109,6 +111,7 @@ namespace Namespaces
         {
             inline sdk::REFieldEx<::REManagedObject *> *_vitalContext;
             inline sdk::REFieldEx<int32_t> *_r_Vital;
+            inline sdk::REFieldEx<::REManagedObject *> *_condition;
             inline sdk::REFieldEx<float> *SlidingTimer;
             inline sdk::REFieldEx<float> *SlidingPowerupTimer;
             inline sdk::REFieldEx<float> *CounterattackPowerupTimer;
@@ -154,6 +157,11 @@ namespace Namespaces
             inline sdk::REFieldEx<::REManagedObject *> *SkillLv1;
             inline sdk::REFieldEx<::REManagedObject *> *SkillLv2;
             inline sdk::REFieldEx<::REManagedObject *> *SkillLv3;
+        }
+
+        namespace snow::player::PlayerData_Array
+        {
+            inline sdk::REMethodDefinitionEx<::REManagedObject *, sdk::VMContext *, ::REManagedObject *, int32_t> *Get208192;
         }
 
         namespace snow::player::PlayerDamageInfo

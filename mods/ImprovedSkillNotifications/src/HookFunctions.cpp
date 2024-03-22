@@ -15,8 +15,18 @@ void HookFunctions::off_11027(sdk::VMContext * /* vmctx */, ::REManagedObject *o
     process_bit_set_flag(obj, flag, false);
 }
 
-void HookFunctions::update_old_205404(sdk::VMContext * /* vmctx */, REManagedObject *obj) const
+void HookFunctions::update_old_205404(sdk::VMContext *vmctx, REManagedObject *obj)
 {
+    auto *const player_manager = get_player_manager();
+    auto *const player_data_array = mhrise::snow::player::PlayerManager::PlayerData_b->get_data(player_manager);
+    const auto master_player_id = mhrise::snow::player::PlayerManager::getMasterPlayerID208468->call(vmctx, player_manager);
+    auto *const player_data = mhrise::snow::player::PlayerData_Array::Get208192->call(vmctx, player_data_array, master_player_id);
+
+    if (player_data == nullptr || obj != mhrise::snow::player::PlayerData::_condition->get_data(player_data))
+    {
+        return;
+    }
+
     const auto common = mhrise::snow::player::PlayerCondition::_common->get_data(obj);
     const auto common_old = mhrise::snow::player::PlayerCondition::_commonOld->get_data(obj);
 
@@ -142,7 +152,7 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            static auto *const player_manager = sdk::get_managed_singleton<REManagedObject>("snow.player.PlayerManager");
+            auto *const player_manager = get_player_manager();
             auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter->get_data(player_manager);
             auto *const equip_skill_parameter =
                 mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter->get_data(player_user_data_skill_parameter);
@@ -324,7 +334,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
-    static auto *const player_manager = sdk::get_managed_singleton<REManagedObject>("snow.player.PlayerManager");
+    auto *const player_manager = get_player_manager();
     auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter->get_data(player_manager);
     auto *const equip_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter->get_data(player_user_data_skill_parameter);
     auto *const odango_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter->get_data(player_user_data_skill_parameter);
@@ -603,7 +613,7 @@ void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, 
     if (!m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_232)))
     {
         auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
-        static auto *const player_manager = sdk::get_managed_singleton<REManagedObject>("snow.player.PlayerManager");
+        auto *const player_manager = get_player_manager();
         auto *const player_user_data_skill_parameter = mhrise::snow::player::PlayerManager::PlayerUserDataSkillParameter->get_data(player_manager);
         auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
         auto *const equip_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter->get_data(player_user_data_skill_parameter);
@@ -730,6 +740,16 @@ void HookFunctions::calc_total_defence_597545(sdk::VMContext * /* vmctx */, REMa
     }
 }
 
+::REManagedObject *HookFunctions::get_player_manager()
+{
+    if (m_player_manager == nullptr)
+    {
+        m_player_manager = sdk::get_managed_singleton<REManagedObject>("snow.player.PlayerManager");
+    }
+
+    return m_player_manager;
+}
+
 void HookFunctions::process_bit_set_flag(::REManagedObject *obj, const uint32_t &flag, const bool is_on)
 {
     auto *const t = utility::re_managed_object::get_type_definition(obj);
@@ -741,8 +761,8 @@ void HookFunctions::process_bit_set_flag(::REManagedObject *obj, const uint32_t 
 
     const auto generic_types = t->get_generic_argument_types();
 
-    const auto get_master_player = []() -> ::REManagedObject * {
-        static auto *const player_manager = sdk::get_managed_singleton<REManagedObject>("snow.player.PlayerManager");
+    const auto get_master_player = [&]() -> ::REManagedObject * {
+        auto *const player_manager = get_player_manager();
         auto *const master_player = mhrise::snow::player::PlayerManager::findMasterPlayer208467->call(sdk::get_thread_context(), player_manager);
 
         return master_player;
@@ -764,10 +784,10 @@ void HookFunctions::process_bit_set_flag(::REManagedObject *obj, const uint32_t 
             }
         }
         // 139 Pl_EquipSkill_227 粉塵纏 Powder Mantle | ON
-        else if (flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerAttack->get_data()) ||
-                 flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerDamage->get_data()))
+        else if (is_on && (flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerAttack->get_data()) ||
+                           flag == static_cast<uint32_t>(mhrise::snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerDamage->get_data())))
         {
-            if (is_on && is_master_player())
+            if (is_master_player())
             {
                 const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_227->get_data();
                 ChatManager::get()->process_skill_e(skill_id, true);
@@ -792,7 +812,7 @@ void HookFunctions::process_bit_set_flag(::REManagedObject *obj, const uint32_t 
             }
         }
         // 132 Pl_EquipSkill_220 根性 Guts | ON
-        else if (is_on && static_cast<uint32_t>(mhrise::snow::player::PlayerSkillList::SkillEndFlags::Equip_220->get_data()))
+        else if (is_on && flag == static_cast<uint32_t>(mhrise::snow::player::PlayerSkillList::SkillEndFlags::Equip_220->get_data()))
         {
             if (is_master_player())
             {
