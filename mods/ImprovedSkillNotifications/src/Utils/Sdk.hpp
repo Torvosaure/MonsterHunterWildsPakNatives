@@ -27,7 +27,7 @@ namespace sdk
       public:
         T get_data(::REManagedObject *obj) const
         {
-            return utility::re_managed_object::get_field<T>(obj, static_cast<VariableDescriptor *>(const_cast<ReflectionPropertyEx *>(this)));
+            return utility::re_managed_object::get_field<T>(obj, static_cast<::VariableDescriptor *>(const_cast<ReflectionPropertyEx *>(this)));
         }
     };
 }

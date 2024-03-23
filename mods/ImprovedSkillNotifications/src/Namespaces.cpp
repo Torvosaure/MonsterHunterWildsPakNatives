@@ -219,6 +219,10 @@ void Namespaces::mhrise::initialize()
     init("snow.player.PlayerUserDataQuestCommon",
          "_HornMusicDamageReduce", snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce_);
 
+    init("snow.data.ContentsIdSystem.ItemId",
+         "I_Normal_0010", snow::data::ContentsIdSystem::ItemId::I_Normal_0010,
+         "I_Normal_0499", snow::data::ContentsIdSystem::ItemId::I_Normal_0499);
+
     init("snow.data.DataDef.PlEquipSkillId",
          "Pl_EquipSkill_001", snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_001,
          "Pl_EquipSkill_002", snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_002,

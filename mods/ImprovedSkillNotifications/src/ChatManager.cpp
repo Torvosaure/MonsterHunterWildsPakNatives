@@ -6,10 +6,10 @@ using namespace Namespaces;
 
 void ChatManager::initialize()
 {
-    s_instance = std::make_unique<ChatManager>();
+    s_instance = std::make_unique<::ChatManager>();
 }
 
-std::unique_ptr<ChatManager> &ChatManager::get()
+std::unique_ptr<::ChatManager> &ChatManager::get()
 {
     return s_instance;
 }
@@ -21,12 +21,12 @@ void ChatManager::req_add_chat_infomation(std::wstring_view str) const
     req_add_chat_infomation(txt);
 }
 
-void ChatManager::req_add_chat_infomation(SystemString *txt) const
+void ChatManager::req_add_chat_infomation(::SystemString *const txt) const
 {
     auto *const vmctx = sdk::get_thread_context();
-    static auto *const gui_chat_manager = sdk::get_managed_singleton<REManagedObject>("snow.gui.ChatManager");
+    static auto *const gui_chat_manager = sdk::get_managed_singleton<::REManagedObject>("snow.gui.ChatManager");
 
-    const uint32_t wise_trigger = mhrise::snow::gui::COMMON::GUI_COMMON_NOTICE_SIDE_OPEN->get_data();
+    const auto wise_trigger = mhrise::snow::gui::COMMON::GUI_COMMON_NOTICE_SIDE_OPEN->get_data();
 
     mhrise::snow::gui::ChatManager::reqAddChatInfomation244588->call(vmctx, gui_chat_manager, txt, wise_trigger);
 }
@@ -55,7 +55,7 @@ void ChatManager::send_damage_reduce_message() const
     req_add_chat_infomation(txt);
 }
 
-void ChatManager::process_skill(SystemString *obj, const bool is_on) const
+void ChatManager::process_skill(::SystemString *const obj, const bool is_on) const
 {
     auto *const vmctx = sdk::get_thread_context();
 
@@ -67,7 +67,7 @@ void ChatManager::process_skill(SystemString *obj, const bool is_on) const
     req_add_chat_infomation(txt);
 }
 
-SystemString *ChatManager::get_message_by_name(SystemString *name) const
+::SystemString *ChatManager::get_message_by_name(::SystemString *const name) const
 {
     auto *const vmctx = sdk::get_thread_context();
 

@@ -265,6 +265,12 @@ namespace Namespaces
             inline sdk::REFieldEx<float> *HornMusicDamageReduce_;
         }
 
+        namespace snow::data::ContentsIdSystem::ItemId
+        {
+            inline sdk::REFieldEx<uint32_t, true> *I_Normal_0010;
+            inline sdk::REFieldEx<uint32_t, true> *I_Normal_0499;
+        }
+
         namespace snow::data::DataDef::PlEquipSkillId
         {
             inline sdk::REFieldEx<uint8_t, true> *Pl_EquipSkill_001;

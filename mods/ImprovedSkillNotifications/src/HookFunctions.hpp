@@ -15,19 +15,17 @@ class HookFunctions
     void off_11027(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &flag);
 
     // snow.player.PlayerCondition
-    void update_old_205404(sdk::VMContext *vmctx, REManagedObject *obj);
+    void update_old_205404(sdk::VMContext *vmctx, ::REManagedObject *obj);
 
     // snow.player.Bow
-    void calc_timer_259659(sdk::VMContext *vmctx, REManagedObject *obj);
+    void calc_timer_259659(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.Bow
-    void execute_equip_skill216_259713(sdk::VMContext *vmctx, REManagedObject *obj, uint32_t &lv);
+    void execute_equip_skill216_259713(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &lv);
 
     // snow.player.PlayerQuestBase
-    void on_destroy_400430(sdk::VMContext *vmctx, REManagedObject *obj);
+    void late_update_400432(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
-    void late_update_400432(sdk::VMContext *vmctx, REManagedObject *obj);
-    // snow.player.PlayerQuestBase
-    void calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *obj);
+    void calc_timer_400436(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
     void set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, REManagedObject *obj, bool is_duplicate);
     // snow.player.PlayerQuestBase
@@ -40,13 +38,15 @@ class HookFunctions
     // snow.player.PlayerQuestBase
     void set_skill_036_400647(sdk::VMContext *vmctx, REManagedObject *obj);
     // snow.player.PlayerQuestBase
-    void activate_equip_skill208_400665(sdk::VMContext *vmctx, REManagedObject *obj);
+    void activate_equip_skill208_400665(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
     void activate_equip_skill231_400669(sdk::VMContext *vmctx, REManagedObject *obj);
     // snow.player.PlayerQuestBase
-    void add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, REManagedObject *obj, float &add);
+    void add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, ::REManagedObject *obj, float &add);
     // snow.player.PlayerQuestBase
-    void use_item_401117(sdk::VMContext *vmctx, REManagedObject *obj, uint32_t &itemID, bool isThrow);
+    void start_400947(sdk::VMContext *vmctx, ::REManagedObject *obj);
+    // snow.player.PlayerQuestBase
+    void use_item_401117(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &item_id, bool is_throw);
 
     // snow.player.PlayerBase
     void calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObject *obj);

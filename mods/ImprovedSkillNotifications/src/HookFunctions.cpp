@@ -15,7 +15,7 @@ void HookFunctions::off_11027(sdk::VMContext * /* vmctx */, ::REManagedObject *o
     process_bit_set_flag(obj, flag, false);
 }
 
-void HookFunctions::update_old_205404(sdk::VMContext *vmctx, REManagedObject *obj)
+void HookFunctions::update_old_205404(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
     auto *const player_manager = get_player_manager();
     auto *const player_data_array = mhrise::snow::player::PlayerManager::PlayerData_b->get_data(player_manager);
@@ -61,8 +61,13 @@ void HookFunctions::update_old_205404(sdk::VMContext *vmctx, REManagedObject *ob
     process_condition(PlayerCondition::Pl_EquipSkill_230, mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_230->get_data(), true);
 }
 
-void HookFunctions::calc_timer_259659(sdk::VMContext *vmctx, REManagedObject *obj)
+void HookFunctions::calc_timer_259659(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     // 128 Pl_EquipSkill_216 刃鱗磨き Bladescale Hone | ON?, OFF
 
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
@@ -79,7 +84,7 @@ void HookFunctions::calc_timer_259659(sdk::VMContext *vmctx, REManagedObject *ob
 
             if (!condition)
             {
-                ChatManager::get()->process_skill_e(skill_id, condition);
+                ChatManager::get()->process_skill_e(skill_id, false);
             }
         }
     }
@@ -89,20 +94,25 @@ void HookFunctions::calc_timer_259659(sdk::VMContext *vmctx, REManagedObject *ob
     }
 }
 
-void HookFunctions::execute_equip_skill216_259713(sdk::VMContext * /* vmctx */, REManagedObject * /* obj */, uint32_t & /* lv */)
+void HookFunctions::execute_equip_skill216_259713(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t & /* lv */)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     // 128 Pl_EquipSkill_216 刃鱗磨き Bladescale Hone | ON?
 
     m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_216));
 }
 
-void HookFunctions::on_destroy_400430(sdk::VMContext * /* vmctx */, REManagedObject * /* obj */)
+void HookFunctions::late_update_400432(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
-    m_old_condition.reset();
-}
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
 
-void HookFunctions::late_update_400432(sdk::VMContext *vmctx, REManagedObject *obj)
-{
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
@@ -130,23 +140,43 @@ void HookFunctions::late_update_400432(sdk::VMContext *vmctx, REManagedObject *o
     }
 }
 
-void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *obj)
+void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
-    // !25 Pl_EquipSkill_024 剛刃研磨 Protective Polish (OFF)
-    if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_024)))
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
     {
-        if (mhrise::snow::player::PlayerBase::SharpnessGaugeBoostTimer_->get_data(obj) <= 0.0F)
-        {
-            m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_024));
-            ChatManager::get()->process_skill_e(mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_024->get_data(), false);
-        }
+        return;
     }
 
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
     {
-        // 43 Pl_EquipSkill_042 滑走強化 Affinity Sliding (ON, OFF)
+        // 25 Pl_EquipSkill_024 剛刃研磨 Protective Polish | ON?, OFF
+
+        const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_024->get_data();
+        const uint32_t lv = 1U;
+        if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
+        {
+            const bool condition = mhrise::snow::player::PlayerBase::SharpnessGaugeBoostTimer_->get_data(obj) > 0.0F;
+
+            if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_024)))
+            {
+                m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_024), condition);
+
+                if (!condition)
+                {
+                    ChatManager::get()->process_skill_e(mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_024->get_data(), false);
+                }
+            }
+        }
+        else
+        {
+            m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_024));
+        }
+    }
+
+    {
+        // 43 Pl_EquipSkill_042 滑走強化 Affinity Sliding | ON, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_042->get_data();
         const uint32_t lv = 1U;
@@ -183,17 +213,22 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
     }
 
     {
-        // 120 Pl_EquipSkill_208 巧撃 Adrenaline Rush (OFF)
+        // 120 Pl_EquipSkill_208 巧撃 Adrenaline Rush | ON?, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_208->get_data();
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_208)) &&
-                mhrise::snow::player::PlayerData::EquipSkill208_AtkUpTimer_->get_data(player_data) <= 0.0F)
+            const bool condition = mhrise::snow::player::PlayerData::EquipSkill208_AtkUpTimer_->get_data(player_data) > 0.0F;
+
+            if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_208)))
             {
-                m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_208));
-                ChatManager::get()->process_skill_e(skill_id, false);
+                m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_208), condition);
+
+                if (!condition)
+                {
+                    ChatManager::get()->process_skill_e(skill_id, false);
+                }
             }
         }
         else
@@ -203,13 +238,13 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
     }
 
     {
-        // 141 Pl_EquipSkill_229 龍気変換 Dragon Conversion (ON, OFF)
+        // 141 Pl_EquipSkill_229 龍気変換 Dragon Conversion | ON, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_229->get_data();
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            const auto condition = mhrise::snow::player::PlayerQuestBase::EquipSkill229UseUpFlg_->get_data(obj);
+            const bool condition = mhrise::snow::player::PlayerQuestBase::EquipSkill229UseUpFlg_->get_data(obj);
 
             if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_229)))
             {
@@ -224,17 +259,22 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
     }
 
     {
-        // 143 Pl_EquipSkill_231 狂竜症【翔】 Frenzied Bloodlust (OFF)
+        // 143 Pl_EquipSkill_231 狂竜症【翔】 Frenzied Bloodlust | ON?, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_231->get_data();
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_231)) &&
-                mhrise::snow::player::PlayerBase::HunterWireSkill231Num_b->get_data(obj) == 0U)
+            const bool condition = mhrise::snow::player::PlayerBase::HunterWireSkill231Num_b->get_data(obj) > 0U;
+
+            if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_231)))
             {
-                m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_231));
-                ChatManager::get()->process_skill_e(skill_id, false);
+                m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_231), condition);
+
+                if (!condition)
+                {
+                    ChatManager::get()->process_skill_e(skill_id, false);
+                }
             }
         }
         else
@@ -244,17 +284,22 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, REManagedObject *ob
     }
 
     {
-        // 144 Pl_EquipSkill_232 血氣覚醒 Blood Awakening (OFF)
+        // 144 Pl_EquipSkill_232 血氣覚醒 Blood Awakening | ON?, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_232->get_data();
         const uint32_t lv = 1U;
         if (mhrise::snow::player::PlayerSkillList::hasSkill208056->call(vmctx, player_skill_list, skill_id, lv))
         {
-            if (m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_232)) &&
-                mhrise::snow::player::PlayerData::EquipSkill232Timer_->get_data(player_data) <= 0.0F)
+            const bool condition = mhrise::snow::player::PlayerData::EquipSkill232Timer_->get_data(player_data) > 0.0F;
+
+            if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_232)))
             {
-                m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_232));
-                ChatManager::get()->process_skill_e(skill_id, false);
+                m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_232), condition);
+
+                if (!condition)
+                {
+                    ChatManager::get()->process_skill_e(skill_id, false);
+                }
             }
         }
         else
@@ -592,23 +637,38 @@ void HookFunctions::set_skill_036_400647(sdk::VMContext * /* vmctx */, REManaged
     }
 }
 
-void HookFunctions::activate_equip_skill208_400665(sdk::VMContext * /* vmctx */, REManagedObject * /* obj */)
+void HookFunctions::activate_equip_skill208_400665(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
-    // 128 PPl_EquipSkill_208 巧撃 Adrenaline Rush (ON)
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
+    // 120 Pl_EquipSkill_208 巧撃 Adrenaline Rush | ON
 
     m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_208));
 }
 
-void HookFunctions::activate_equip_skill231_400669(sdk::VMContext * /* vmctx */, REManagedObject * /* obj */)
+void HookFunctions::activate_equip_skill231_400669(sdk::VMContext *vmctx, REManagedObject *obj)
 {
-    // 143 Pl_EquipSkill_231 狂竜症【翔】 Frenzied Bloodlust (ON)
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
+    // 143 Pl_EquipSkill_231 狂竜症【翔】 Frenzied Bloodlust | ON
 
     m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_231));
 }
 
-void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, REManagedObject *obj, float &add)
+void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, ::REManagedObject *obj, float &add)
 {
-    // 144 Pl_EquipSkill_232 血氣覚醒 Blood Awakening (ON)
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
+    // 144 Pl_EquipSkill_232 血氣覚醒 Blood Awakening | ON
 
     if (!m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_232)))
     {
@@ -652,21 +712,36 @@ void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, 
     }
 }
 
-void HookFunctions::use_item_401117(sdk::VMContext *vmctx, REManagedObject *obj, uint32_t & /* itemID */, bool /* isThrow */)
+void HookFunctions::start_400947(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
-    // 25 Pl_EquipSkill_024 剛刃研磨 Protective Polish (ON, OFF)
-
-    auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
-
-    const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_024->get_data();
-    if (mhrise::snow::player::PlayerSkillList::getSkillData208060->call(vmctx, player_skill_list, skill_id) != nullptr)
+    if (mhrise::snow::player::PlayerBase::isMaster597332->call(vmctx, obj) == false)
     {
-        m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_024));
-        ChatManager::get()->process_skill_e(skill_id, true);
+        return;
     }
-    else
+
+    m_old_condition.reset();
+}
+
+void HookFunctions::use_item_401117(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &item_id, bool /* is_throw */)
+{
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
     {
-        m_old_condition.reset(Utils::enum_cast(OldCondition::Pl_EquipSkill_024));
+        return;
+    }
+
+    if (item_id == mhrise::snow::data::ContentsIdSystem::ItemId::I_Normal_0010->get_data() ||
+        item_id == mhrise::snow::data::ContentsIdSystem::ItemId::I_Normal_0499->get_data())
+    {
+        auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
+
+        // 25 Pl_EquipSkill_024 剛刃研磨 Protective Polish | ON
+
+        const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_024->get_data();
+        if (mhrise::snow::player::PlayerSkillList::getSkillData208060->call(vmctx, player_skill_list, skill_id) != nullptr)
+        {
+            m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_024));
+            ChatManager::get()->process_skill_e(skill_id, true);
+        }
     }
 }
 

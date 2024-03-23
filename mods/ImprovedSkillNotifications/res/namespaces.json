@@ -365,6 +365,15 @@
             "reflection_properties": [],
             "include_type": false
         },
+        "snow.data.ContentsIdSystem.ItemId": {
+            "fields": [
+                "I_Normal_0010",
+                "I_Normal_0499"
+            ],
+            "methods": [],
+            "reflection_properties": [],
+            "include_type": false
+        },
         "snow.data.DataDef.PlEquipSkillId": {
             "fields": [
                 "Pl_EquipSkill_001",
