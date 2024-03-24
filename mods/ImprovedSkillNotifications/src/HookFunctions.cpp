@@ -371,7 +371,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REM
     float pre_damage_mul = 1.0F;
 
     const auto calc_pre_damage_mul = [&pre_damage_mul](const float &f, const bool is_percent = false) -> void {
-        pre_damage_mul *= is_percent ? 1.0F - static_cast<double>(f) / 100.0F : static_cast<double>(f);
+        pre_damage_mul *= is_percent ? 1.0F - f / 100.0F : f;
     };
 
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);

@@ -1,0 +1,33 @@
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [ClipCursor, ImprovedSkillNotifications]
+        option: [{name: Release, mode: opt}, {name: Debug, mode: dbg}]
+
+    name: ${{ matrix.target }} (${{ matrix.option.name }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.8.1
+
+      - name: Build ${{ matrix.target }}
+        run: |
+          bazelisk build //mods/${{ matrix.target }} -c ${{ matrix.option.mode }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}-${{ matrix.option.name }}
+          path: |
+            ${{ github.workspace }}/bazel-bin/mods/${{ matrix.target }}/${{ matrix.target }}.dll
+            ${{ github.workspace }}/bazel-bin/mods/${{ matrix.target }}/${{ matrix.target }}.pdb
