@@ -22,12 +22,12 @@ namespace sdk
         T call(Args... args) const { return REMethodDefinition::call<T, Args...>(args...); }
     };
 
-    template <typename T> class ReflectionPropertyEx : public VariableDescriptor
-    {
-      public:
-        T get_data(::REManagedObject *obj) const
-        {
-            return utility::re_managed_object::get_field<T>(obj, static_cast<::VariableDescriptor *>(const_cast<ReflectionPropertyEx *>(this)));
-        }
-    };
+    // template <typename T> class ReflectionPropertyEx : public VariableDescriptor
+    // {
+    //   public:
+    //     T get_data(::REManagedObject *obj) const
+    //     {
+    //         return utility::re_managed_object::get_field<T>(obj, static_cast<::VariableDescriptor *>(const_cast<ReflectionPropertyEx *>(this)));
+    //     }
+    // };
 }

@@ -23,14 +23,6 @@
             "reflection_properties": [],
             "include_type": false
         },
-        "via.Behavior": {
-            "fields": [],
-            "methods": [],
-            "reflection_properties": [
-                "Enabled"
-            ],
-            "include_type": false
-        },
         "snow.player.EquipSkill_223": {
             "fields": [
                 "_DamageReduceLv1",
@@ -58,15 +50,6 @@
             "fields": [
                 "TOUR",
                 "HYAKURYU"
-            ],
-            "methods": [],
-            "reflection_properties": [],
-            "include_type": false
-        },
-        "snow.player.PlayerIndex": {
-            "fields": [
-                "Pl3",
-                "Max"
             ],
             "methods": [],
             "reflection_properties": [],
@@ -115,7 +98,6 @@
         "snow.player.PlayerQuestBase": {
             "fields": [
                 "_PlayerUserDataQuestCommon",
-                "<DamageReflex>k__BackingField",
                 "_EquipSkill_036_Timer",
                 "_IsGuardPrevFrame",
                 "_EquipSkill229UseUpFlg",
@@ -259,13 +241,10 @@
         },
         "snow.player.PlayerBase": {
             "fields": [
-                "_PlayerIndex",
                 "_refPlayerData",
                 "_refPlayerSkillList",
                 "_playerWeaponType",
                 "_SharpnessGaugeBoostTimer",
-                "<RefPlayerInput>k__BackingField",
-                "<RefPlayerAIControl>k__BackingField",
                 "<HunterWireSkill231Num>k__BackingField",
                 "<PlBaseActionFlags>k__BackingField",
                 "_IsEnableEquipSkill225"
@@ -315,26 +294,10 @@
             "reflection_properties": [],
             "include_type": false
         },
-        "via.Component": {
-            "fields": [],
-            "methods": [],
-            "reflection_properties": [
-                "GameObject"
-            ],
-            "include_type": false
-        },
         "snow.player.EquipSkill_232_LvParam": {
             "fields": [
                 "_Absorption_Lv1",
                 "_Absorption_Lv2"
-            ],
-            "methods": [],
-            "reflection_properties": [],
-            "include_type": false
-        },
-        "snow.player.DamageReflexInfo.Type": {
-            "fields": [
-                "KitchenSkill_051_Dive"
             ],
             "methods": [],
             "reflection_properties": [],
@@ -413,14 +376,6 @@
             "fields": [
                 "_EquipSkillParameter",
                 "_OdangoSkillParameter"
-            ],
-            "methods": [],
-            "reflection_properties": [],
-            "include_type": false
-        },
-        "snow.player.DamageReflexInfo": {
-            "fields": [
-                "<CheckType>k__BackingField"
             ],
             "methods": [],
             "reflection_properties": [],

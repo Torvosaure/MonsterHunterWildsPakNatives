@@ -18,11 +18,6 @@ namespace Namespaces
             inline sdk::REFieldEx<uint32_t, true> *GUI_COMMON_NOTICE_SIDE_OPEN;
         }
 
-        namespace via::Behavior
-        {
-            inline sdk::ReflectionPropertyEx<bool> *Enabled;
-        }
-
         namespace snow::player::EquipSkill_223
         {
             inline sdk::REFieldEx<float> *DamageReduceLv1_;
@@ -44,12 +39,6 @@ namespace Namespaces
         {
             inline sdk::REFieldEx<uint32_t, true> *TOUR;
             inline sdk::REFieldEx<uint32_t, true> *HYAKURYU;
-        }
-
-        namespace snow::player::PlayerIndex
-        {
-            inline sdk::REFieldEx<uint8_t, true> *Pl3;
-            inline sdk::REFieldEx<uint8_t, true> *Max;
         }
 
         namespace snow::player::PlayerBase::PlBaseActionFlag
@@ -87,7 +76,6 @@ namespace Namespaces
         namespace snow::player::PlayerQuestBase
         {
             inline sdk::REFieldEx<::REManagedObject *> *PlayerUserDataQuestCommon_;
-            inline sdk::REFieldEx<::REManagedObject *> *DamageReflex_b;
             inline sdk::REFieldEx<float> *EquipSkill_036_Timer_;
             inline sdk::REFieldEx<bool> *IsGuardPrevFrame_;
             inline sdk::REFieldEx<bool> *EquipSkill229UseUpFlg_;
@@ -189,13 +177,10 @@ namespace Namespaces
 
         namespace snow::player::PlayerBase
         {
-            inline sdk::REFieldEx<uint8_t> *PlayerIndex_;
             inline sdk::REFieldEx<::REManagedObject *> *_refPlayerData;
             inline sdk::REFieldEx<::REManagedObject *> *_refPlayerSkillList;
             inline sdk::REFieldEx<int32_t> *_playerWeaponType;
             inline sdk::REFieldEx<float> *SharpnessGaugeBoostTimer_;
-            inline sdk::REFieldEx<::REManagedObject *> *RefPlayerInput_b;
-            inline sdk::REFieldEx<::REManagedObject *> *RefPlayerAIControl_b;
             inline sdk::REFieldEx<uint32_t> *HunterWireSkill231Num_b;
             inline sdk::REFieldEx<::REManagedObject *> *PlBaseActionFlags_b;
             inline sdk::REFieldEx<bool> *IsEnableEquipSkill225_;
@@ -233,20 +218,10 @@ namespace Namespaces
             inline sdk::REFieldEx<float> *KitchenSkill_052_Lv4_;
         }
 
-        namespace via::Component
-        {
-            inline sdk::ReflectionPropertyEx<::REManagedObject *> *GameObject;
-        }
-
         namespace snow::player::EquipSkill_232_LvParam
         {
             inline sdk::REFieldEx<float> *Absorption_Lv1_;
             inline sdk::REFieldEx<float> *Absorption_Lv2_;
-        }
-
-        namespace snow::player::DamageReflexInfo::Type
-        {
-            inline sdk::REFieldEx<int32_t, true> *KitchenSkill_051_Dive;
         }
 
         namespace snow::player::PlayerSkillData
@@ -307,11 +282,6 @@ namespace Namespaces
         {
             inline sdk::REFieldEx<::REManagedObject *> *EquipSkillParameter_;
             inline sdk::REFieldEx<::REManagedObject *> *OdangoSkillParameter_;
-        }
-
-        namespace snow::player::DamageReflexInfo
-        {
-            inline sdk::REFieldEx<int32_t> *CheckType_b;
         }
 
         namespace System::String

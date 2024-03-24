@@ -116,7 +116,7 @@ void HookFunctions::late_update_400432(sdk::VMContext *vmctx, ::REManagedObject 
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
-    // 116 Pl_EquipSkill_204 災禍転福 Coalescence (ON, OFF)
+    // 116 Pl_EquipSkill_204 災禍転福 Coalescence | ON?, OFF
 
     const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_204->get_data();
     const uint32_t lv = 1U;
@@ -309,20 +309,18 @@ void HookFunctions::calc_timer_400436(sdk::VMContext *vmctx, ::REManagedObject *
     }
 }
 
-void HookFunctions::set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, REManagedObject *obj, bool /* is_duplicate */)
+void HookFunctions::set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, ::REManagedObject *obj, bool /* is_duplicate */)
 {
-    auto *const player_input = mhrise::snow::player::PlayerBase::RefPlayerInput_b->get_data(obj);
-    if (player_input == nullptr || mhrise::via::Component::GameObject->get_data(player_input) == nullptr ||
-        mhrise::via::Behavior::Enabled->get_data(player_input) == false)
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
     {
         return;
     }
 
+    auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
+
     // 55 Pl_KitchenSkill_054 おだんご絆術 Dango Connector | ON?
 
     const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_054->get_data();
-
-    auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
     const auto skill_lv = mhrise::snow::player::PlayerSkillList::getKitchenSkillLv208058->call(vmctx, player_skill_list, skill_id);
     switch (skill_lv)
     {
@@ -330,16 +328,6 @@ void HookFunctions::set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, REManag
         case 0x2: [[fallthrough]];
         case 0x3: [[fallthrough]];
         case 0x4: {
-            const auto player_index = mhrise::snow::player::PlayerBase::PlayerIndex_->get_data(obj);
-            if (player_index + ~mhrise::snow::player::PlayerIndex::Pl3->get_data() < mhrise::snow::player::PlayerIndex::Max->get_data())
-            {
-                auto *const player_ai_control = mhrise::snow::player::PlayerBase::RefPlayerAIControl_b->get_data(obj);
-                if (!(player_ai_control == nullptr || mhrise::via::Component::GameObject->get_data(player_ai_control) == nullptr))
-                {
-                    return;
-                }
-            }
-
             m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_054));
 
             break;
@@ -347,24 +335,34 @@ void HookFunctions::set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, REManag
     }
 }
 
-void HookFunctions::damage_vital_400600(sdk::VMContext * /* vmctx */, REManagedObject * /* obj */, float &damage, bool is_r_vital, bool is_slip_damage,
+void HookFunctions::damage_vital_400600(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, bool is_r_vital, bool is_slip_damage,
                                         bool /* is_guard_damage */, bool equip225_enable_damage, bool equip225_change_damage)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     if (is_r_vital && !is_slip_damage && !equip225_enable_damage && !equip225_change_damage)
     {
-        if (damage + m_pre_damage > 0) // There is a slight rounding error due to SSE.
+        if (damage + m_pre_damage > 0)
         {
-            // 57 Pl_EquipSkill_056 精霊の加護 Divine Blessing (ON)
-            // 14 Concert_014 精霊王の加護 (ON)
+            // 57 Pl_EquipSkill_056 精霊の加護 Divine Blessing | ON
+            // 14 Concert_014 精霊王の加護 Divine Protection | ON
 
             ChatManager::get()->send_damage_reduce_message();
         }
     }
 }
 
-void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REManagedObject *obj, float &damage, float & /* heal */, REManagedObject *dmi,
+void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, float & /* heal */, ::REManagedObject *dmi,
                                                     bool is_guard_damage)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     if (damage == 0.0F)
     {
         return;
@@ -373,7 +371,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
     float pre_damage_mul = 1.0F;
 
     const auto calc_pre_damage_mul = [&pre_damage_mul](const float &f, const bool is_percent = false) -> void {
-        pre_damage_mul *= is_percent ? 1.0F - f / 100.0F : f;
+        pre_damage_mul *= is_percent ? 1.0F - static_cast<double>(f) / 100.0F : static_cast<double>(f);
     };
 
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
@@ -384,7 +382,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
     auto *const equip_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::EquipSkillParameter_->get_data(player_user_data_skill_parameter);
     auto *const odango_skill_parameter = mhrise::snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter_->get_data(player_user_data_skill_parameter);
 
-    // 135 Pl_EquipSkill_223 剛心 (?)
+    // 135 Pl_EquipSkill_223 剛心 Intrepid Heart | ?
     if (mhrise::snow::player::PlayerData::EquipSkill223DamageReduce_->get_data(player_data))
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_223->get_data();
@@ -397,18 +395,16 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         {
             case 0x1: {
                 calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv1_->get_data(equip_skill_223), true);
-
                 break;
             }
             case 0x2: {
                 calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv2_->get_data(equip_skill_223), true);
-
                 break;
             }
         }
     }
 
-    // 142 Pl_EquipSkill_230 天衣無崩 Heaven-Sent (?)
+    // 142 Pl_EquipSkill_230 天衣無崩 Heaven-Sent | ?
     if (mhrise::snow::player::PlayerQuestBase::isActiveEquipSkill230400590->call(vmctx, obj) &&
         mhrise::snow::player::PlayerQuestBase::EquipSkill230DamageReduce_->get_data(obj) == false)
     {
@@ -419,7 +415,8 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         }
     }
 
-    // 24 Concert_024 音の防壁 (?)
+    // 24 Concert_024 音の防壁 Sonic Barrier | ?
+    // TODO: This may not be necessary.
     if (mhrise::snow::player::PlayerData::HornMusicDamageReduce_->get_data(player_data))
     {
         const auto flag = mhrise::snow::player::PlayerBase::PlBaseActionFlag::IsHornWallHyperArmor->get_data();
@@ -431,7 +428,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         }
     }
 
-    // 29	Pl_KitchenSkill_028	おだんごふんばり術 (?)
+    // 29 Pl_KitchenSkill_028 おだんごふんばり術 Dango Feet | ?
     if (mhrise::snow::player::PlayerDamageInfo::damage_type->get_data(dmi) + ~mhrise::snow::hit::DamageType::None->get_data() < 0x2)
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_028->get_data();
@@ -441,18 +438,16 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         {
             case 0x3: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x4: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4_->get_data(odango_skill_parameter));
-
                 break;
             }
         }
     }
 
-    // 49 Pl_KitchenSkill_048 おだんご防護術 (?)
+    // 49 Pl_KitchenSkill_048 おだんご防護術 Dango Defender | ?
     if (!is_guard_damage && mhrise::snow::player::PlayerData::IsEnable_KitchenSkill048_Reduce_->get_data(player_data))
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_048->get_data();
@@ -462,28 +457,24 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         {
             case 0x1: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x2: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x3: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x4: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv4_Reduce_->get_data(odango_skill_parameter));
-
                 break;
             }
         }
     }
 
-    // 53 Pl_KitchenSkill_052 おだんご具足術 (ON)
+    // 53 Pl_KitchenSkill_052 おだんご具足術 Dango Guard | ON
     if (mhrise::snow::player::PlayerLobbyBase::isLobbyCommonTag252656->call(vmctx, obj, mhrise::snow::player::Situation::ReceiveKitchen052->get_data()))
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_052->get_data();
@@ -493,22 +484,18 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
         {
             case 0x1: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv1_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x2: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv2_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x3: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3_->get_data(odango_skill_parameter));
-
                 break;
             }
             case 0x4: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4_->get_data(odango_skill_parameter));
-
                 break;
             }
         }
@@ -519,13 +506,18 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, REMan
     m_pre_damage = damage * pre_damage_mul;
 }
 
-void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject *obj)
+void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     auto *const player_skill_list = mhrise::snow::player::PlayerBase::_refPlayerSkillList->get_data(obj);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
     {
-        // 4 Pl_EquipSkill_003 逆恨み Resentment (ON, OFF)
+        // 4 Pl_EquipSkill_003 逆恨み Resentment | ON, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_003->get_data();
         const uint32_t lv = 1U;
@@ -549,7 +541,7 @@ void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject 
     }
 
     {
-        // 5 Pl_EquipSkill_004 死中に活 Resuscitate (ON, OFF)
+        // 5 Pl_EquipSkill_004 死中に活 Resuscitate | ON, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_004->get_data();
         const uint32_t lv = 1U;
@@ -570,12 +562,13 @@ void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject 
     }
 
     {
-        // 91 Pl_EquipSkill_090 火事場力 Heroics (ON, OFF)
+        // 91 Pl_EquipSkill_090 火事場力 Heroics | ON, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_090->get_data();
         if (mhrise::snow::player::PlayerSkillList::getSkillData208060->call(vmctx, player_skill_list, skill_id) != nullptr)
         {
-            const bool condition = mhrise::snow::player::PlayerBase::isPredicamentPowerUp597588->call(vmctx, obj);
+            const bool condition = mhrise::snow::player::PlayerBase::isPredicamentPowerUp597588->call(vmctx, obj) &&
+                                   mhrise::snow::player::PlayerBase::isKitchenSkillPredicamentPowerUp597616->call(vmctx, obj) == false;
 
             if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_090)))
             {
@@ -590,7 +583,7 @@ void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject 
     }
 
     {
-        // 106 Pl_EquipSkill_105 逆襲 Counterstrike (ON, OFF)
+        // 106 Pl_EquipSkill_105 逆襲 Counterstrike | ON, OFF
 
         const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_105->get_data();
         const uint32_t lv = 1U;
@@ -611,29 +604,35 @@ void HookFunctions::set_condition_400615(sdk::VMContext *vmctx, REManagedObject 
     }
 
     {
-        // 3 Pl_KitchenSkill_002 おだんご火事場力 (ON, OFF)
+        // 3 Pl_KitchenSkill_002 おだんご火事場力 | ON, OFF
 
-        const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_002->get_data();
         const bool condition = mhrise::snow::player::PlayerBase::isKitchenSkillPredicamentPowerUp597616->call(vmctx, obj);
+
         if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_KitchenSkill_002)))
         {
             m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_002), condition);
+
+            const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_002->get_data();
             ChatManager::get()->process_skill_k(skill_id, condition);
         }
     }
 }
 
-void HookFunctions::set_skill_036_400647(sdk::VMContext * /* vmctx */, REManagedObject *obj)
+void HookFunctions::set_skill_036_400647(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
-    // 37 Pl_EquipSkill_036 攻めの守勢 Offensive Guard (ON)
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
 
-    // auto *const player_input = m_ref_player_input_263658f->get_data<REManagedObject *>(obj);
+    // 37 Pl_EquipSkill_036 攻めの守勢 Offensive Guard | ON
 
     if (mhrise::snow::player::PlayerBase::_playerWeaponType->get_data(obj) != mhrise::snow::player::PlayerWeaponType::HeavyBowgun->get_data() &&
         mhrise::snow::player::PlayerQuestBase::IsGuardPrevFrame_->get_data(obj) &&
         mhrise::snow::player::PlayerQuestBase::EquipSkill_036_Timer_->get_data(obj) > 0.0F)
     {
-        ChatManager::get()->process_skill_e(mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_036->get_data(), true);
+        const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_036->get_data();
+        ChatManager::get()->process_skill_e(skill_id, true);
     }
 }
 
@@ -644,19 +643,19 @@ void HookFunctions::activate_equip_skill208_400665(sdk::VMContext *vmctx, ::REMa
         return;
     }
 
-    // 120 Pl_EquipSkill_208 巧撃 Adrenaline Rush | ON
+    // 120 Pl_EquipSkill_208 巧撃 Adrenaline Rush | ON?
 
     m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_208));
 }
 
-void HookFunctions::activate_equip_skill231_400669(sdk::VMContext *vmctx, REManagedObject *obj)
+void HookFunctions::activate_equip_skill231_400669(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
     if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
     {
         return;
     }
 
-    // 143 Pl_EquipSkill_231 狂竜症【翔】 Frenzied Bloodlust | ON
+    // 143 Pl_EquipSkill_231 狂竜症【翔】 Frenzied Bloodlust | ON?
 
     m_old_condition.set(Utils::enum_cast(OldCondition::Pl_EquipSkill_231));
 }
@@ -668,7 +667,7 @@ void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, 
         return;
     }
 
-    // 144 Pl_EquipSkill_232 血氣覚醒 Blood Awakening | ON
+    // 144 Pl_EquipSkill_232 血氣覚醒 Blood Awakening | ON?
 
     if (!m_old_condition.test(Utils::enum_cast(OldCondition::Pl_EquipSkill_232)))
     {
@@ -745,8 +744,13 @@ void HookFunctions::use_item_401117(sdk::VMContext *vmctx, ::REManagedObject *ob
     }
 }
 
-void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObject *obj)
+void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     static auto *const quest_manager = sdk::get_managed_singleton<REManagedObject>("snow.QuestManager");
     const auto quest_type = mhrise::snow::QuestManager::QuestType_->get_data(quest_manager);
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
@@ -754,9 +758,9 @@ void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObj
     {
         // 92 Pl_EquipSkill_091 不屈 Fortify | ON, OFF
 
-        const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_091->get_data();
-
         bool condition = false;
+
+        const auto skill_id = mhrise::snow::data::DataDef::PlEquipSkillId::Pl_EquipSkill_091->get_data();
         if (quest_type != mhrise::snow::quest::QuestType::TOUR->get_data() && quest_type != mhrise::snow::quest::QuestType::HYAKURYU->get_data())
         {
             auto *const quest_data = mhrise::snow::QuestManager::ActiveQuestData_->get_data(quest_manager);
@@ -784,9 +788,10 @@ void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObj
     }
 
     {
-        // 52 Pl_KitchenSkill_051 おだんご逃走術 (ON, OFF)
+        // 52 Pl_KitchenSkill_051 おだんご逃走術 Dango Hunter | ON, OFF
 
         const bool condition = mhrise::snow::player::PlayerData::KitchenSkill051_AtkUpTimer_->get_data(player_data) > 0.0F;
+
         if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_KitchenSkill_051)))
         {
             m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_051), condition);
@@ -797,13 +802,19 @@ void HookFunctions::calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObj
     }
 }
 
-void HookFunctions::calc_total_defence_597545(sdk::VMContext * /* vmctx */, REManagedObject *obj)
+void HookFunctions::calc_total_defence_597545(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
+    if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
+    {
+        return;
+    }
+
     auto *const player_data = mhrise::snow::player::PlayerBase::_refPlayerData->get_data(obj);
 
     // 55 Pl_KitchenSkill_054 おだんご絆術 Dango Connector | OFF
 
     const bool condition = mhrise::snow::player::PlayerData::KitchenSkill054_Timer_->get_data(player_data) > 0.0F;
+
     if (condition != m_old_condition.test(Utils::enum_cast(OldCondition::Pl_KitchenSkill_054)))
     {
         m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_054), condition);
@@ -811,7 +822,7 @@ void HookFunctions::calc_total_defence_597545(sdk::VMContext * /* vmctx */, REMa
         if (!condition)
         {
             const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_054->get_data();
-            ChatManager::get()->process_skill_k(skill_id, condition);
+            ChatManager::get()->process_skill_k(skill_id, false);
         }
     }
 }

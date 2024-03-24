@@ -44,9 +44,6 @@ void Namespaces::mhrise::initialize()
     init("snow.gui.COMMON",
          "GUI_COMMON_NOTICE_SIDE_OPEN", snow::gui::COMMON::GUI_COMMON_NOTICE_SIDE_OPEN);
 
-    init("via.Behavior",
-         "Enabled", via::Behavior::Enabled);
-
     init("snow.player.EquipSkill_223",
          "_DamageReduceLv1", snow::player::EquipSkill_223::DamageReduceLv1_,
          "_DamageReduceLv2", snow::player::EquipSkill_223::DamageReduceLv2_);
@@ -63,10 +60,6 @@ void Namespaces::mhrise::initialize()
     init("snow.quest.QuestType",
          "TOUR", snow::quest::QuestType::TOUR,
          "HYAKURYU", snow::quest::QuestType::HYAKURYU);
-
-    init("snow.player.PlayerIndex",
-         "Pl3", snow::player::PlayerIndex::Pl3,
-         "Max", snow::player::PlayerIndex::Max);
 
     init("snow.player.PlayerBase.PlBaseActionFlag",
          "IsWholeBodyTime", snow::player::PlayerBase::PlBaseActionFlag::IsWholeBodyTime,
@@ -91,7 +84,6 @@ void Namespaces::mhrise::initialize()
 
     init("snow.player.PlayerQuestBase",
          "_PlayerUserDataQuestCommon", snow::player::PlayerQuestBase::PlayerUserDataQuestCommon_,
-         "<DamageReflex>k__BackingField", snow::player::PlayerQuestBase::DamageReflex_b,
          "_EquipSkill_036_Timer", snow::player::PlayerQuestBase::EquipSkill_036_Timer_,
          "_IsGuardPrevFrame", snow::player::PlayerQuestBase::IsGuardPrevFrame_,
          "_EquipSkill229UseUpFlg", snow::player::PlayerQuestBase::EquipSkill229UseUpFlg_,
@@ -163,13 +155,10 @@ void Namespaces::mhrise::initialize()
          "_EquipSkill_232", snow::player::EquipSkillParameter::EquipSkill_232_);
 
     init("snow.player.PlayerBase",
-         "_PlayerIndex", snow::player::PlayerBase::PlayerIndex_,
          "_refPlayerData", snow::player::PlayerBase::_refPlayerData,
          "_refPlayerSkillList", snow::player::PlayerBase::_refPlayerSkillList,
          "_playerWeaponType", snow::player::PlayerBase::_playerWeaponType,
          "_SharpnessGaugeBoostTimer", snow::player::PlayerBase::SharpnessGaugeBoostTimer_,
-         "<RefPlayerInput>k__BackingField", snow::player::PlayerBase::RefPlayerInput_b,
-         "<RefPlayerAIControl>k__BackingField", snow::player::PlayerBase::RefPlayerAIControl_b,
          "<HunterWireSkill231Num>k__BackingField", snow::player::PlayerBase::HunterWireSkill231Num_b,
          "<PlBaseActionFlags>k__BackingField", snow::player::PlayerBase::PlBaseActionFlags_b,
          "_IsEnableEquipSkill225", snow::player::PlayerBase::IsEnableEquipSkill225_,
@@ -199,15 +188,9 @@ void Namespaces::mhrise::initialize()
          "_KitchenSkill_052_Lv3", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3_,
          "_KitchenSkill_052_Lv4", snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4_);
 
-    init("via.Component",
-         "GameObject", via::Component::GameObject);
-
     init("snow.player.EquipSkill_232_LvParam",
          "_Absorption_Lv1", snow::player::EquipSkill_232_LvParam::Absorption_Lv1_,
          "_Absorption_Lv2", snow::player::EquipSkill_232_LvParam::Absorption_Lv2_);
-
-    init("snow.player.DamageReflexInfo.Type",
-         "KitchenSkill_051_Dive", snow::player::DamageReflexInfo::Type::KitchenSkill_051_Dive);
 
     init("snow.player.PlayerSkillData",
          "SkillLv", snow::player::PlayerSkillData::SkillLv);
@@ -256,9 +239,6 @@ void Namespaces::mhrise::initialize()
     init("snow.player.PlayerUserDataSkillParameter",
          "_EquipSkillParameter", snow::player::PlayerUserDataSkillParameter::EquipSkillParameter_,
          "_OdangoSkillParameter", snow::player::PlayerUserDataSkillParameter::OdangoSkillParameter_);
-
-    init("snow.player.DamageReflexInfo",
-         "<CheckType>k__BackingField", snow::player::DamageReflexInfo::CheckType_b);
 
     init("System.String",
          "Format(System.String, System.Object)", System::String::Format722162);

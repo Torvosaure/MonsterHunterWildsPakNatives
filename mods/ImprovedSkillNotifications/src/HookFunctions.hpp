@@ -27,20 +27,20 @@ class HookFunctions
     // snow.player.PlayerQuestBase
     void calc_timer_400436(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
-    void set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, REManagedObject *obj, bool is_duplicate);
+    void set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, ::REManagedObject *obj, bool is_duplicate);
     // snow.player.PlayerQuestBase
-    void damage_vital_400600(sdk::VMContext *vmctx, REManagedObject *obj, float &damage, bool is_r_vital, bool is_slip_damage, bool is_guard_damage,
+    void damage_vital_400600(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, bool is_r_vital, bool is_slip_damage, bool is_guard_damage,
                              bool equip225_enable_damage, bool equip225_change_damage);
     // snow.player.PlayerQuestBase
-    void check_damage_calc_damage_400603(sdk::VMContext *vmctx, REManagedObject *obj, float &damage, float &heal, REManagedObject *dmi, bool is_guard_damage);
+    void check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, float &heal, ::REManagedObject *dmi, bool is_guard_damage);
     // snow.player.PlayerQuestBase
-    void set_condition_400615(sdk::VMContext *vmctx, REManagedObject *obj);
+    void set_condition_400615(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
-    void set_skill_036_400647(sdk::VMContext *vmctx, REManagedObject *obj);
+    void set_skill_036_400647(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
     void activate_equip_skill208_400665(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
-    void activate_equip_skill231_400669(sdk::VMContext *vmctx, REManagedObject *obj);
+    void activate_equip_skill231_400669(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
     void add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, ::REManagedObject *obj, float &add);
     // snow.player.PlayerQuestBase
@@ -49,9 +49,9 @@ class HookFunctions
     void use_item_401117(sdk::VMContext *vmctx, ::REManagedObject *obj, uint32_t &item_id, bool is_throw);
 
     // snow.player.PlayerBase
-    void calc_total_attack_597536(sdk::VMContext *vmctx, REManagedObject *obj);
+    void calc_total_attack_597536(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerBase
-    void calc_total_defence_597545(sdk::VMContext *vmctx, REManagedObject *obj);
+    void calc_total_defence_597545(sdk::VMContext *vmctx, ::REManagedObject *obj);
 
   private:
     ::REManagedObject *get_player_manager();
