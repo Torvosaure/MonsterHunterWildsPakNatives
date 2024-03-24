@@ -36,7 +36,6 @@
             "fields": [
                 "Pl_KitchenSkill_002",
                 "Pl_KitchenSkill_024",
-                "Pl_KitchenSkill_028",
                 "Pl_KitchenSkill_048",
                 "Pl_KitchenSkill_051",
                 "Pl_KitchenSkill_052",
@@ -58,7 +57,6 @@
         "snow.player.PlayerBase.PlBaseActionFlag": {
             "fields": [
                 "IsWholeBodyTime",
-                "IsHornWallHyperArmor",
                 "EquipSkill227_TriggerAttack",
                 "EquipSkill227_TriggerDamage"
             ],
@@ -97,7 +95,6 @@
         },
         "snow.player.PlayerQuestBase": {
             "fields": [
-                "_PlayerUserDataQuestCommon",
                 "_EquipSkill_036_Timer",
                 "_IsGuardPrevFrame",
                 "_EquipSkill229UseUpFlg",
@@ -141,7 +138,6 @@
                 "_DisasterTurnPowerUpTimer",
                 "_EquipSkill208_AtkUpTimer",
                 "_EquipSkill223DamageReduce",
-                "_HornMusicDamageReduce",
                 "_EquipSkill232Absorption",
                 "_EquipSkill232Timer"
             ],
@@ -163,14 +159,6 @@
             "methods": [
                 "reqAddChatInfomation(System.String, System.UInt32)"
             ],
-            "reflection_properties": [],
-            "include_type": false
-        },
-        "snow.hit.DamageType": {
-            "fields": [
-                "None"
-            ],
-            "methods": [],
             "reflection_properties": [],
             "include_type": false
         },
@@ -201,14 +189,6 @@
             "methods": [
                 "Get(System.Int32)"
             ],
-            "reflection_properties": [],
-            "include_type": false
-        },
-        "snow.player.PlayerDamageInfo": {
-            "fields": [
-                "damage_type"
-            ],
-            "methods": [],
             "reflection_properties": [],
             "include_type": false
         },
@@ -279,8 +259,6 @@
         },
         "snow.player.OdangoSkillParameter": {
             "fields": [
-                "_KitchenSkill_028_Lv3",
-                "_KitchenSkill_028_Lv4",
                 "_KitchenSkill_048_Lv1_Reduce",
                 "_KitchenSkill_048_Lv2_Reduce",
                 "_KitchenSkill_048_Lv3_Reduce",
@@ -317,14 +295,6 @@
                 "get(System.Guid)",
                 "getGuidByName(System.String)"
             ],
-            "reflection_properties": [],
-            "include_type": false
-        },
-        "snow.player.PlayerUserDataQuestCommon": {
-            "fields": [
-                "_HornMusicDamageReduce"
-            ],
-            "methods": [],
             "reflection_properties": [],
             "include_type": false
         },

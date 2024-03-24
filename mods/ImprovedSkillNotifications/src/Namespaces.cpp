@@ -51,7 +51,6 @@ void Namespaces::mhrise::initialize()
     init("snow.data.DataDef.PlKitchenSkillId",
          "Pl_KitchenSkill_002", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_002,
          "Pl_KitchenSkill_024", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_024,
-         "Pl_KitchenSkill_028", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_028,
          "Pl_KitchenSkill_048", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_048,
          "Pl_KitchenSkill_051", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_051,
          "Pl_KitchenSkill_052", snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_052,
@@ -63,7 +62,6 @@ void Namespaces::mhrise::initialize()
 
     init("snow.player.PlayerBase.PlBaseActionFlag",
          "IsWholeBodyTime", snow::player::PlayerBase::PlBaseActionFlag::IsWholeBodyTime,
-         "IsHornWallHyperArmor", snow::player::PlayerBase::PlBaseActionFlag::IsHornWallHyperArmor,
          "EquipSkill227_TriggerAttack", snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerAttack,
          "EquipSkill227_TriggerDamage", snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerDamage,
          snow::player::PlayerBase::PlBaseActionFlag::RETypeDefinition);
@@ -83,7 +81,6 @@ void Namespaces::mhrise::initialize()
          "getMasterPlayerID()", snow::player::PlayerManager::getMasterPlayerID208468);
 
     init("snow.player.PlayerQuestBase",
-         "_PlayerUserDataQuestCommon", snow::player::PlayerQuestBase::PlayerUserDataQuestCommon_,
          "_EquipSkill_036_Timer", snow::player::PlayerQuestBase::EquipSkill_036_Timer_,
          "_IsGuardPrevFrame", snow::player::PlayerQuestBase::IsGuardPrevFrame_,
          "_EquipSkill229UseUpFlg", snow::player::PlayerQuestBase::EquipSkill229UseUpFlg_,
@@ -111,7 +108,6 @@ void Namespaces::mhrise::initialize()
          "_DisasterTurnPowerUpTimer", snow::player::PlayerData::DisasterTurnPowerUpTimer_,
          "_EquipSkill208_AtkUpTimer", snow::player::PlayerData::EquipSkill208_AtkUpTimer_,
          "_EquipSkill223DamageReduce", snow::player::PlayerData::EquipSkill223DamageReduce_,
-         "_HornMusicDamageReduce", snow::player::PlayerData::HornMusicDamageReduce_,
          "_EquipSkill232Absorption", snow::player::PlayerData::EquipSkill232Absorption_,
          "_EquipSkill232Timer", snow::player::PlayerData::EquipSkill232Timer_);
 
@@ -121,9 +117,6 @@ void Namespaces::mhrise::initialize()
 
     init("snow.gui.ChatManager",
          "reqAddChatInfomation(System.String, System.UInt32)", snow::gui::ChatManager::reqAddChatInfomation244588);
-
-    init("snow.hit.DamageType",
-         "None", snow::hit::DamageType::None);
 
     init("snow.player.PlayerSkillList",
          "_SkillEndFlags", snow::player::PlayerSkillList::SkillEndFlags_,
@@ -138,9 +131,6 @@ void Namespaces::mhrise::initialize()
 
     init("snow.player.PlayerData[]",
          "Get(System.Int32)", snow::player::PlayerData_Array::Get208192);
-
-    init("snow.player.PlayerDamageInfo",
-         "damage_type", snow::player::PlayerDamageInfo::damage_type);
 
     init("via.dve.DeviceContext`1<System.Single>",
          "read()", via::dve::DeviceContext_System_Single::read205342);
@@ -177,8 +167,6 @@ void Namespaces::mhrise::initialize()
          "_QuestType", snow::QuestManager::QuestType_);
 
     init("snow.player.OdangoSkillParameter",
-         "_KitchenSkill_028_Lv3", snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3_,
-         "_KitchenSkill_028_Lv4", snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4_,
          "_KitchenSkill_048_Lv1_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce_,
          "_KitchenSkill_048_Lv2_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce_,
          "_KitchenSkill_048_Lv3_Reduce", snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce_,
@@ -198,9 +186,6 @@ void Namespaces::mhrise::initialize()
     init("via.gui.message",
          "get(System.Guid)", via::gui::message::get778345,
          "getGuidByName(System.String)", via::gui::message::getGuidByName778372);
-
-    init("snow.player.PlayerUserDataQuestCommon",
-         "_HornMusicDamageReduce", snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce_);
 
     init("snow.data.ContentsIdSystem.ItemId",
          "I_Normal_0010", snow::data::ContentsIdSystem::ItemId::I_Normal_0010,

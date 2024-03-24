@@ -28,7 +28,6 @@ namespace Namespaces
         {
             inline sdk::REFieldEx<uint32_t, true> *Pl_KitchenSkill_002;
             inline sdk::REFieldEx<uint32_t, true> *Pl_KitchenSkill_024;
-            inline sdk::REFieldEx<uint32_t, true> *Pl_KitchenSkill_028;
             inline sdk::REFieldEx<uint32_t, true> *Pl_KitchenSkill_048;
             inline sdk::REFieldEx<uint32_t, true> *Pl_KitchenSkill_051;
             inline sdk::REFieldEx<uint32_t, true> *Pl_KitchenSkill_052;
@@ -46,7 +45,6 @@ namespace Namespaces
             inline sdk::RETypeDefinition *RETypeDefinition;
 
             inline sdk::REFieldEx<int32_t, true> *IsWholeBodyTime;
-            inline sdk::REFieldEx<int32_t, true> *IsHornWallHyperArmor;
             inline sdk::REFieldEx<int32_t, true> *EquipSkill227_TriggerAttack;
             inline sdk::REFieldEx<int32_t, true> *EquipSkill227_TriggerDamage;
         }
@@ -75,7 +73,6 @@ namespace Namespaces
 
         namespace snow::player::PlayerQuestBase
         {
-            inline sdk::REFieldEx<::REManagedObject *> *PlayerUserDataQuestCommon_;
             inline sdk::REFieldEx<float> *EquipSkill_036_Timer_;
             inline sdk::REFieldEx<bool> *IsGuardPrevFrame_;
             inline sdk::REFieldEx<bool> *EquipSkill229UseUpFlg_;
@@ -110,7 +107,6 @@ namespace Namespaces
             inline sdk::REFieldEx<float> *DisasterTurnPowerUpTimer_;
             inline sdk::REFieldEx<float> *EquipSkill208_AtkUpTimer_;
             inline sdk::REFieldEx<bool> *EquipSkill223DamageReduce_;
-            inline sdk::REFieldEx<bool> *HornMusicDamageReduce_;
             inline sdk::REFieldEx<float> *EquipSkill232Absorption_;
             inline sdk::REFieldEx<float> *EquipSkill232Timer_;
         }
@@ -124,11 +120,6 @@ namespace Namespaces
         namespace snow::gui::ChatManager
         {
             inline sdk::REMethodDefinitionEx<void, sdk::VMContext *, ::REManagedObject *, ::SystemString *, uint32_t> *reqAddChatInfomation244588;
-        }
-
-        namespace snow::hit::DamageType
-        {
-            inline sdk::REFieldEx<int32_t, true> *None;
         }
 
         namespace snow::player::PlayerSkillList
@@ -150,11 +141,6 @@ namespace Namespaces
         namespace snow::player::PlayerData_Array
         {
             inline sdk::REMethodDefinitionEx<::REManagedObject *, sdk::VMContext *, ::REManagedObject *, int32_t> *Get208192;
-        }
-
-        namespace snow::player::PlayerDamageInfo
-        {
-            inline sdk::REFieldEx<int32_t> *damage_type;
         }
 
         namespace via::dve::DeviceContext_System_Single
@@ -206,8 +192,6 @@ namespace Namespaces
 
         namespace snow::player::OdangoSkillParameter
         {
-            inline sdk::REFieldEx<float> *KitchenSkill_028_Lv3_;
-            inline sdk::REFieldEx<float> *KitchenSkill_028_Lv4_;
             inline sdk::REFieldEx<float> *KitchenSkill_048_Lv1_Reduce_;
             inline sdk::REFieldEx<float> *KitchenSkill_048_Lv2_Reduce_;
             inline sdk::REFieldEx<float> *KitchenSkill_048_Lv3_Reduce_;
@@ -233,11 +217,6 @@ namespace Namespaces
         {
             inline sdk::REMethodDefinitionEx<::SystemString *, sdk::VMContext *, std::array<uint64_t, 2> *> *get778345;
             inline sdk::REMethodDefinitionEx<void, std::array<uint64_t, 2> *, sdk::VMContext *, ::SystemString *> *getGuidByName778372;
-        }
-
-        namespace snow::player::PlayerUserDataQuestCommon
-        {
-            inline sdk::REFieldEx<float> *HornMusicDamageReduce_;
         }
 
         namespace snow::data::ContentsIdSystem::ItemId

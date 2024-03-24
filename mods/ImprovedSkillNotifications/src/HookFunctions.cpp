@@ -324,10 +324,10 @@ void HookFunctions::set_kitchen_bonds_buff_400571(sdk::VMContext *vmctx, ::REMan
     const auto skill_lv = mhrise::snow::player::PlayerSkillList::getKitchenSkillLv208058->call(vmctx, player_skill_list, skill_id);
     switch (skill_lv)
     {
-        case 0x1: [[fallthrough]];
-        case 0x2: [[fallthrough]];
-        case 0x3: [[fallthrough]];
-        case 0x4: {
+        case 1: [[fallthrough]];
+        case 2: [[fallthrough]];
+        case 3: [[fallthrough]];
+        case 4: {
             m_old_condition.set(Utils::enum_cast(OldCondition::Pl_KitchenSkill_054));
 
             break;
@@ -347,16 +347,20 @@ void HookFunctions::damage_vital_400600(sdk::VMContext *vmctx, ::REManagedObject
     {
         if (damage + m_pre_damage > 0)
         {
-            // 57 Pl_EquipSkill_056 精霊の加護 Divine Blessing | ON
             // 14 Concert_014 精霊王の加護 Divine Protection | ON
+            // 57 Pl_EquipSkill_056 精霊の加護 Divine Blessing | ON | 1, 3, 4
+            // 11 Pl_KitchenSkill_010 おだんご防御術【小】 | ON | 1, 2, 3, 4
+            // 12 Pl_KitchenSkill_011 おだんご防御術【大】 | ON | 1, 2, 3, 4
+            // 24 Concert_024 音の防壁 Sonic Barrier | ON
+            // 29 Pl_KitchenSkill_028 おだんごふんばり術 Dango Feet | ON | 3, 4
 
             ChatManager::get()->send_damage_reduce_message();
         }
     }
 }
 
-void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, float & /* heal */, ::REManagedObject *dmi,
-                                                    bool is_guard_damage)
+void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, float & /* heal */,
+                                                    ::REManagedObject * /* dmi */, bool is_guard_damage)
 {
     if (mhrise::snow::player::PlayerBase::isMasterPlayer597334->call(vmctx, obj) == false)
     {
@@ -393,11 +397,11 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REM
 
         switch (skill_lv)
         {
-            case 0x1: {
+            case 1: {
                 calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv1_->get_data(equip_skill_223), true);
                 break;
             }
-            case 0x2: {
+            case 2: {
                 calc_pre_damage_mul(mhrise::snow::player::EquipSkill_223::DamageReduceLv2_->get_data(equip_skill_223), true);
                 break;
             }
@@ -409,41 +413,9 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REM
         mhrise::snow::player::PlayerQuestBase::EquipSkill230DamageReduce_->get_data(obj) == false)
     {
         const auto skill_lv = mhrise::snow::player::PlayerQuestBase::EquipSkill230Lv_->get_data(obj);
-        if (skill_lv != 0x0 && skill_lv < 0x4)
+        if (skill_lv != 0 && skill_lv < 4)
         {
             calc_pre_damage_mul(mhrise::snow::player::EquipSkillParameter::EquipSkill_230_ReduceDamageRate_->get_data(equip_skill_parameter));
-        }
-    }
-
-    // 24 Concert_024 音の防壁 Sonic Barrier | ?
-    // TODO: This may not be necessary.
-    if (mhrise::snow::player::PlayerData::HornMusicDamageReduce_->get_data(player_data))
-    {
-        const auto flag = mhrise::snow::player::PlayerBase::PlBaseActionFlag::IsHornWallHyperArmor->get_data();
-        if (mhrise::snow::BitSetFlagBase::isOn11030->call(vmctx, mhrise::snow::player::PlayerBase::PlBaseActionFlags_b->get_data(obj), flag))
-        {
-            auto *const player_user_data_quest_common = mhrise::snow::player::PlayerQuestBase::PlayerUserDataQuestCommon_->get_data(obj);
-
-            calc_pre_damage_mul(mhrise::snow::player::PlayerUserDataQuestCommon::HornMusicDamageReduce_->get_data(player_user_data_quest_common), true);
-        }
-    }
-
-    // 29 Pl_KitchenSkill_028 おだんごふんばり術 Dango Feet | ?
-    if (mhrise::snow::player::PlayerDamageInfo::damage_type->get_data(dmi) + ~mhrise::snow::hit::DamageType::None->get_data() < 0x2)
-    {
-        const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_028->get_data();
-        const auto skill_lv = mhrise::snow::player::PlayerSkillList::getKitchenSkillLv208058->call(vmctx, player_skill_list, skill_id);
-
-        switch (skill_lv)
-        {
-            case 0x3: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv3_->get_data(odango_skill_parameter));
-                break;
-            }
-            case 0x4: {
-                calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_028_Lv4_->get_data(odango_skill_parameter));
-                break;
-            }
         }
     }
 
@@ -455,19 +427,19 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REM
 
         switch (skill_lv)
         {
-            case 0x1: {
+            case 1: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv1_Reduce_->get_data(odango_skill_parameter));
                 break;
             }
-            case 0x2: {
+            case 2: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv2_Reduce_->get_data(odango_skill_parameter));
                 break;
             }
-            case 0x3: {
+            case 3: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv3_Reduce_->get_data(odango_skill_parameter));
                 break;
             }
-            case 0x4: {
+            case 4: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_048_Lv4_Reduce_->get_data(odango_skill_parameter));
                 break;
             }
@@ -482,25 +454,27 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REM
 
         switch (skill_lv)
         {
-            case 0x1: {
+            case 1: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv1_->get_data(odango_skill_parameter));
+                ChatManager::get()->process_skill_k(skill_id, true);
                 break;
             }
-            case 0x2: {
+            case 2: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv2_->get_data(odango_skill_parameter));
+                ChatManager::get()->process_skill_k(skill_id, true);
                 break;
             }
-            case 0x3: {
+            case 3: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv3_->get_data(odango_skill_parameter));
+                ChatManager::get()->process_skill_k(skill_id, true);
                 break;
             }
-            case 0x4: {
+            case 4: {
                 calc_pre_damage_mul(mhrise::snow::player::OdangoSkillParameter::KitchenSkill_052_Lv4_->get_data(odango_skill_parameter));
+                ChatManager::get()->process_skill_k(skill_id, true);
                 break;
             }
         }
-
-        ChatManager::get()->process_skill_k(skill_id, true);
     }
 
     m_pre_damage = damage * pre_damage_mul;
@@ -687,15 +661,15 @@ void HookFunctions::add_equip_skill232_absorption_400748(sdk::VMContext *vmctx, 
 
         switch (skill_lv)
         {
-            case 0x1: {
+            case 1: {
                 lv_param = mhrise::snow::player::EquipSkill_232::SkillLv1_->get_data(equip_skill_232);
                 break;
             }
-            case 0x2: {
+            case 2: {
                 lv_param = mhrise::snow::player::EquipSkill_232::SkillLv2_->get_data(equip_skill_232);
                 break;
             }
-            case 0x3: {
+            case 3: {
                 lv_param = mhrise::snow::player::EquipSkill_232::SkillLv3_->get_data(equip_skill_232);
                 break;
             }
