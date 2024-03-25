@@ -12,8 +12,8 @@ cc_library(
 cc_library(
     name = "sdk-mhrise",
     deps = [
-        ":api",
-        ":utility",
+        "api",
+        "utility",
         "@glm",
         "@minhook//:hde",
         "@spdlog",
@@ -35,8 +35,8 @@ cc_library(
 cc_library(
     name = "utility",
     deps = [
-        "@kananlib//:kananlib",
-        "@minhook//:minhook",
+        "@kananlib",
+        "@minhook",
         "@spdlog",
     ],
     srcs = glob(["shared/utility/**/*.cpp"]),

@@ -3,7 +3,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "kananlib",
     deps = [
-        "@bddisasm//:bddisasm",
+        "@bddisasm",
         "@spdlog",
     ],
     srcs = glob(["src/**/*.cpp"]),

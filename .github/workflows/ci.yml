@@ -17,12 +17,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.8.1
-
       - name: Build ${{ matrix.target }}
         run: |
-          bazelisk build //mods/${{ matrix.target }} -c ${{ matrix.option.mode }}
+          bazelisk build //mods/${{ matrix.target }} --compilation_mode ${{ matrix.option.mode }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

@@ -8,14 +8,19 @@ cc_binary(
     deps = ["@reframework//:api"],
     srcs = glob(["src/**/*.cpp"]),
     copts = [
-        "/GL",
         "/GR-",
         "/std:c++20",
         "/external:anglebrackets",
         "/external:W0",
         "/W4",
-    ],
-    linkopts = ["/LTCG"],
+    ] + select({
+        ":opt_mode": ["/GL"],
+        "//conditions:default": [],
+    }),
+    linkopts = select({
+        ":opt_mode": ["/LTCG"],
+        "//conditions:default": [],
+    }),
     linkshared = True,
         features = select({
         ":opt_mode": ["treat_warnings_as_errors"],
@@ -33,12 +38,13 @@ pkg_zip(
     srcs = [NAME],
     compression_level = 9,
     out = NAME + ".zip",
+    package_dir = "reframework/plugins",
     tags = ["manual"],
 )
 
 refresh_compile_commands(
     name = "refresh_compile_commands",
-    targets = [NAME],
+    targets = {NAME: "--compilation_mode dbg"},
     prefix = [".vscode"],
     tags = ["manual"],
 )

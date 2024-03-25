@@ -1,12 +1,6 @@
 #include "HookManager.hpp"
-#include "HookFunctions.hpp"
 
 #include <reframework/API.hpp>
-
-HookManager::HookManager()
-{
-    functions = std::make_unique<::HookFunctions>();
-}
 
 void HookManager::initialize()
 {
@@ -15,6 +9,8 @@ void HookManager::initialize()
 
 std::unique_ptr<HookManager> &HookManager::get()
 {
+    assert(s_instance != nullptr);
+
     return s_instance;
 }
 
@@ -30,7 +26,7 @@ void HookManager::add_hook()
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
                 auto *const flag = reinterpret_cast<uint32_t *>(&argv[2]);
 
-                HookManager::get()->functions->on_11026(vmctx, obj, *flag);
+                HookManager::get()->on_11026(vmctx, obj, *flag);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -43,7 +39,7 @@ void HookManager::add_hook()
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
                 auto *const flag = reinterpret_cast<uint32_t *>(&argv[2]);
 
-                HookManager::get()->functions->off_11027(vmctx, obj, *flag);
+                HookManager::get()->off_11027(vmctx, obj, *flag);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -55,7 +51,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->update_old_205404(vmctx, obj);
+                HookManager::get()->update_old_205404(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -67,7 +63,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->calc_timer_259659(vmctx, obj);
+                HookManager::get()->calc_timer_259659(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -80,7 +76,7 @@ void HookManager::add_hook()
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
                 auto *const lv = reinterpret_cast<uint32_t *>(&argv[2]);
 
-                HookManager::get()->functions->execute_equip_skill216_259713(vmctx, obj, *lv);
+                HookManager::get()->execute_equip_skill216_259713(vmctx, obj, *lv);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -92,7 +88,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->late_update_400432(vmctx, obj);
+                HookManager::get()->late_update_400432(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -104,7 +100,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->calc_timer_400436(vmctx, obj);
+                HookManager::get()->calc_timer_400436(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -117,7 +113,7 @@ void HookManager::add_hook()
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
                 auto *const is_duplicate = reinterpret_cast<bool *>(&argv[2]);
 
-                HookManager::get()->functions->set_kitchen_bonds_buff_400571(vmctx, obj, *is_duplicate);
+                HookManager::get()->set_kitchen_bonds_buff_400571(vmctx, obj, *is_duplicate);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -136,8 +132,8 @@ void HookManager::add_hook()
                 auto *const equip225_enable_damage = reinterpret_cast<bool *>(&argv[6]);
                 auto *const equip225_change_damage = reinterpret_cast<bool *>(&argv[7]);
 
-                HookManager::get()->functions->damage_vital_400600(vmctx, obj, *damage, *is_r_vital, *is_slip_damage, *is_guard_damage, *equip225_enable_damage,
-                                                                   *equip225_change_damage);
+                HookManager::get()->damage_vital_400600(vmctx, obj, *damage, *is_r_vital, *is_slip_damage, *is_guard_damage, *equip225_enable_damage,
+                                                        *equip225_change_damage);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -153,7 +149,7 @@ void HookManager::add_hook()
                 auto *const dmi = static_cast<::REManagedObject *>(argv[4]);
                 auto *const is_guard_damage = reinterpret_cast<bool *>(&argv[5]);
 
-                HookManager::get()->functions->check_damage_calc_damage_400603(vmctx, obj, *damage, *heal, dmi, *is_guard_damage);
+                HookManager::get()->check_damage_calc_damage_400603(vmctx, obj, *damage, *heal, dmi, *is_guard_damage);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -165,7 +161,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->set_condition_400615(vmctx, obj);
+                HookManager::get()->set_condition_400615(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -177,7 +173,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->set_skill_036_400647(vmctx, obj);
+                HookManager::get()->set_skill_036_400647(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -189,7 +185,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->activate_equip_skill208_400665(vmctx, obj);
+                HookManager::get()->activate_equip_skill208_400665(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -201,7 +197,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->activate_equip_skill231_400669(vmctx, obj);
+                HookManager::get()->activate_equip_skill231_400669(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -214,7 +210,7 @@ void HookManager::add_hook()
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
                 auto *const add = reinterpret_cast<float *>(&argv[2]);
 
-                HookManager::get()->functions->add_equip_skill232_absorption_400748(vmctx, obj, *add);
+                HookManager::get()->add_equip_skill232_absorption_400748(vmctx, obj, *add);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -226,7 +222,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->start_400947(vmctx, obj);
+                HookManager::get()->start_400947(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -240,7 +236,7 @@ void HookManager::add_hook()
                 auto *const item_id = reinterpret_cast<uint32_t *>(&argv[2]);
                 auto *const is_throw = reinterpret_cast<bool *>(&argv[3]);
 
-                HookManager::get()->functions->use_item_401117(vmctx, obj, *item_id, *is_throw);
+                HookManager::get()->use_item_401117(vmctx, obj, *item_id, *is_throw);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -252,7 +248,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->calc_total_attack_597536(vmctx, obj);
+                HookManager::get()->calc_total_attack_597536(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
@@ -264,7 +260,7 @@ void HookManager::add_hook()
                 auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                 auto *const obj = static_cast<::REManagedObject *>(argv[1]);
 
-                HookManager::get()->functions->calc_total_defence_597545(vmctx, obj);
+                HookManager::get()->calc_total_defence_597545(vmctx, obj);
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },

@@ -2,10 +2,9 @@
 
 #include "HookFunctions.hpp"
 
-class HookManager
+class HookManager : public HookFunctions
 {
   public:
-    HookManager();
     static void initialize();
     static std::unique_ptr<::HookManager> &get();
 
@@ -13,5 +12,4 @@ class HookManager
 
   private:
     static inline std::unique_ptr<::HookManager> s_instance{};
-    std::unique_ptr<::HookFunctions> functions{};
 };

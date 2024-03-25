@@ -1,8 +1,8 @@
 diff --git a/refresh.template.py b/refresh.template.py
-index fc99cc7..c4c21f6 100644
+index fc99cc7..7bdb88c 100644
 --- a/refresh.template.py
 +++ b/refresh.template.py
-@@ -1419,8 +1419,11 @@ def main():
+@@ -1419,11 +1419,15 @@ def main():
      There should be actionable warnings, above, that led to this.""")
          sys.exit(1)
  
@@ -15,6 +15,11 @@ index fc99cc7..c4c21f6 100644
          json.dump(
              compile_command_entries,
              output_file,
+-            indent=2, # Yay, human readability!
++            indent=4, # Yay, human readability!
+             check_circular=False # For speed.
+         )
++        output_file.write('\n')
 diff --git a/refresh_compile_commands.bzl b/refresh_compile_commands.bzl
 index 0210d42..6e56274 100644
 --- a/refresh_compile_commands.bzl

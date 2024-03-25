@@ -11,6 +11,8 @@ void ChatManager::initialize()
 
 std::unique_ptr<::ChatManager> &ChatManager::get()
 {
+    assert(s_instance != nullptr);
+
     return s_instance;
 }
 

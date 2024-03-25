@@ -32,7 +32,8 @@ class HookFunctions
     void damage_vital_400600(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, bool is_r_vital, bool is_slip_damage, bool is_guard_damage,
                              bool equip225_enable_damage, bool equip225_change_damage);
     // snow.player.PlayerQuestBase
-    void check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, float &heal, ::REManagedObject *dmi, bool is_guard_damage);
+    void check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REManagedObject *obj, float &damage, float &heal, ::REManagedObject *dmi,
+                                         bool is_guard_damage);
     // snow.player.PlayerQuestBase
     void set_condition_400615(sdk::VMContext *vmctx, ::REManagedObject *obj);
     // snow.player.PlayerQuestBase
