@@ -343,7 +343,7 @@ void HookFunctions::damage_vital_400600(sdk::VMContext *vmctx, ::REManagedObject
         return;
     }
 
-    if (is_r_vital && !is_slip_damage && !equip225_enable_damage && !equip225_change_damage)
+    if (is_r_vital && !is_slip_damage && !equip225_enable_damage && !equip225_change_damage) // just in case
     {
         if (damage + m_pre_damage > 0)
         {

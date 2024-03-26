@@ -122,18 +122,28 @@ void HookManager::add_hook()
     tdb->find_method("snow.player.PlayerQuestBase",
                      "damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)")
         ->add_hook(
-            [](int /* argc */, void **argv, REFrameworkTypeDefinitionHandle * /* arg_tys */, unsigned long long /* ret_addr */) -> int {
-                auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
-                auto *const obj = static_cast<::REManagedObject *>(argv[1]);
-                auto *const damage = reinterpret_cast<float *>(&argv[2]);
-                auto *const is_r_vital = reinterpret_cast<bool *>(&argv[3]);
-                auto *const is_slip_damage = reinterpret_cast<bool *>(&argv[4]);
-                auto *const is_guard_damage = reinterpret_cast<bool *>(&argv[5]);
-                auto *const equip225_enable_damage = reinterpret_cast<bool *>(&argv[6]);
-                auto *const equip225_change_damage = reinterpret_cast<bool *>(&argv[7]);
+            [](int /* argc */, void **argv, REFrameworkTypeDefinitionHandle * /* arg_tys */, unsigned long long ret_addr) -> int {
+                static const auto called_func_addr = reinterpret_cast<size_t>(
+                    sdk::find_method_definition("snow.player.PlayerQuestBase",
+                                                "checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)")
+                        ->get_function());
 
-                HookManager::get()->damage_vital_400600(vmctx, obj, *damage, *is_r_vital, *is_slip_damage, *is_guard_damage, *equip225_enable_damage,
-                                                        *equip225_change_damage);
+                constexpr size_t rel_addr = 0x8EE;
+
+                if (ret_addr == called_func_addr + rel_addr)
+                {
+                    auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
+                    auto *const obj = static_cast<::REManagedObject *>(argv[1]);
+                    auto *const damage = reinterpret_cast<float *>(&argv[2]);
+                    auto *const is_r_vital = reinterpret_cast<bool *>(&argv[3]);
+                    auto *const is_slip_damage = reinterpret_cast<bool *>(&argv[4]);
+                    auto *const is_guard_damage = reinterpret_cast<bool *>(&argv[5]);
+                    auto *const equip225_enable_damage = reinterpret_cast<bool *>(&argv[6]);
+                    auto *const equip225_change_damage = reinterpret_cast<bool *>(&argv[7]);
+
+                    HookManager::get()->damage_vital_400600(vmctx, obj, *damage, *is_r_vital, *is_slip_damage, *is_guard_damage, *equip225_enable_damage,
+                                                            *equip225_change_damage);
+                }
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
