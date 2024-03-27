@@ -50,7 +50,7 @@ extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFram
 
                 return REFRAMEWORK_HOOK_SKIP_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     return true;
 }

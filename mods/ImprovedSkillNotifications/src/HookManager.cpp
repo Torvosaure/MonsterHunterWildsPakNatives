@@ -1,5 +1,6 @@
 #include "HookManager.hpp"
 
+#include <cstdint>
 #include <reframework/API.hpp>
 
 void HookManager::initialize()
@@ -30,7 +31,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.BitSetFlagBase", "off(System.UInt32)")
         ->add_hook(
@@ -43,7 +44,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerCondition", "updateOld()")
         ->add_hook(
@@ -55,7 +56,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.Bow", "calcTimer()")
         ->add_hook(
@@ -67,7 +68,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.Bow", "executeEquipSkill216(System.UInt32)")
         ->add_hook(
@@ -80,7 +81,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "lateUpdate()")
         ->add_hook(
@@ -92,7 +93,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "calcTimer()")
         ->add_hook(
@@ -104,7 +105,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "setKitchenBondsBuff(System.Boolean)")
         ->add_hook(
@@ -117,20 +118,22 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase",
                      "damageVital(System.Single, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean)")
         ->add_hook(
             [](int /* argc */, void **argv, REFrameworkTypeDefinitionHandle * /* arg_tys */, unsigned long long ret_addr) -> int {
-                static const auto called_func_addr = reinterpret_cast<size_t>(
-                    sdk::find_method_definition("snow.player.PlayerQuestBase",
-                                                "checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)")
-                        ->get_function());
+                constexpr uint32_t fn_offset = 0x8EE;
 
-                constexpr size_t rel_addr = 0x8EE;
+                static const auto possible_ret_addr =
+                    reinterpret_cast<uintptr_t>(
+                        sdk::find_method_definition("snow.player.PlayerQuestBase",
+                                                    "checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)")
+                            ->get_function()) +
+                    fn_offset;
 
-                if (ret_addr == called_func_addr + rel_addr)
+                if (ret_addr == possible_ret_addr)
                 {
                     auto *const vmctx = static_cast<sdk::VMContext *>(argv[0]);
                     auto *const obj = static_cast<::REManagedObject *>(argv[1]);
@@ -147,7 +150,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "checkDamage_calcDamage(System.Single, System.Single, snow.player.PlayerDamageInfo, System.Boolean)")
         ->add_hook(
@@ -163,7 +166,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "setCondition()")
         ->add_hook(
@@ -175,7 +178,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "setSkill_036()")
         ->add_hook(
@@ -187,7 +190,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "activateEquipSkill208()")
         ->add_hook(
@@ -199,7 +202,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "activateEquipSkill231()")
         ->add_hook(
@@ -211,7 +214,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "addEquipSkill232Absorption(System.Single)")
         ->add_hook(
@@ -224,7 +227,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "start()")
         ->add_hook(
@@ -236,7 +239,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerQuestBase", "useItem(snow.data.ContentsIdSystem.ItemId, System.Boolean)")
         ->add_hook(
@@ -250,7 +253,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerBase", "calcTotalAttack()")
         ->add_hook(
@@ -262,7 +265,7 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 
     tdb->find_method("snow.player.PlayerBase", "calcTotalDefence()")
         ->add_hook(
@@ -274,5 +277,5 @@ void HookManager::add_hook()
 
                 return REFRAMEWORK_HOOK_CALL_ORIGINAL;
             },
-            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, false);
+            [](void ** /* ret_val */, REFrameworkTypeDefinitionHandle /* ret_ty */, unsigned long long /* ret_addr */) -> void {}, true);
 }
