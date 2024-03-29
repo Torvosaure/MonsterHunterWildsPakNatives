@@ -447,7 +447,7 @@ void HookFunctions::check_damage_calc_damage_400603(sdk::VMContext *vmctx, ::REM
     }
 
     // 53 Pl_KitchenSkill_052 おだんご具足術 Dango Guard | ON
-    if (mhrise::snow::player::PlayerLobbyBase::isLobbyCommonTag252656->call(vmctx, obj, mhrise::snow::player::Situation::ReceiveKitchen052->get_data()))
+    if (mhrise::snow::player::PlayerBase::isSituationTag597339->call(vmctx, obj, mhrise::snow::player::Situation::ReceiveKitchen052->get_data()))
     {
         const auto skill_id = mhrise::snow::data::DataDef::PlKitchenSkillId::Pl_KitchenSkill_052->get_data();
         const auto skill_lv = mhrise::snow::player::PlayerSkillList::getKitchenSkillLv208058->call(vmctx, player_skill_list, skill_id);

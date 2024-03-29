@@ -8,11 +8,6 @@ namespace Namespaces
     {
         void initialize();
 
-        namespace snow::player::PlayerLobbyBase
-        {
-            inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *, uint32_t> *isLobbyCommonTag252656;
-        }
-
         namespace snow::gui::COMMON
         {
             inline sdk::REFieldEx<uint32_t, true> *GUI_COMMON_NOTICE_SIDE_OPEN;
@@ -173,6 +168,7 @@ namespace Namespaces
 
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isMaster597332;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isMasterPlayer597334;
+            inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *, uint32_t> *isSituationTag597339;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isPredicamentPowerUp597588;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isDebuffState597593;
             inline sdk::REMethodDefinitionEx<bool, sdk::VMContext *, ::REManagedObject *> *isKitchenSkillPredicamentPowerUp597616;

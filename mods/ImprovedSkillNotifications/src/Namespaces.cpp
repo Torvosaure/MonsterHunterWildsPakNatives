@@ -38,9 +38,6 @@ void Namespaces::mhrise::initialize()
 
     // clang-format off
 
-    init("snow.player.PlayerLobbyBase",
-         "isLobbyCommonTag(snow.player.LobbyCommonTag)", snow::player::PlayerLobbyBase::isLobbyCommonTag252656);
-
     init("snow.gui.COMMON",
          "GUI_COMMON_NOTICE_SIDE_OPEN", snow::gui::COMMON::GUI_COMMON_NOTICE_SIDE_OPEN);
 
@@ -154,6 +151,7 @@ void Namespaces::mhrise::initialize()
          "_IsEnableEquipSkill225", snow::player::PlayerBase::IsEnableEquipSkill225_,
          "isMaster()", snow::player::PlayerBase::isMaster597332,
          "isMasterPlayer()", snow::player::PlayerBase::isMasterPlayer597334,
+         "isSituationTag(snow.player.Situation)", snow::player::PlayerBase::isSituationTag597339,
          "isPredicamentPowerUp()", snow::player::PlayerBase::isPredicamentPowerUp597588,
          "isDebuffState()", snow::player::PlayerBase::isDebuffState597593,
          "isKitchenSkillPredicamentPowerUp()", snow::player::PlayerBase::isKitchenSkillPredicamentPowerUp597616);
