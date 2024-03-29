@@ -1,9 +1,11 @@
+name: Build Mods
+
 on:
   push:
     branches: [master]
 
 jobs:
-  build:
+  cxx:
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -17,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build ${{ matrix.target }}
+      - name: Build
         run: |
           bazelisk build //mods/${{ matrix.target }} --compilation_mode ${{ matrix.option.mode }}
 
@@ -28,3 +30,35 @@ jobs:
           path: |
             ${{ github.workspace }}/bazel-bin/mods/${{ matrix.target }}/${{ matrix.target }}.dll
             ${{ github.workspace }}/bazel-bin/mods/${{ matrix.target }}/${{ matrix.target }}.pdb
+          if-no-files-found: error
+
+  rust:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [{name: PakNatives, package: pak-natives}]
+        option: [{name: Release, profile: release}, {name: Debug, profile: dev}]
+
+    name: ${{ matrix.target.name }} (${{ matrix.option.name }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update Rust
+        run: |
+          rustup update
+
+      - name: Build ${{ matrix.target.name }}
+        run: |
+          cargo build --package ${{ matrix.target.package }} --profile ${{ matrix.option.profile }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target.name }}-${{ matrix.option.name }}
+          path: |
+            ${{ github.workspace }}/target/${{ matrix.option.name }}/${{ matrix.target.name }}.dll
+            ${{ github.workspace }}/target/${{ matrix.option.name }}/${{ matrix.target.name }}.pdb
+          if-no-files-found: error
