@@ -1,0 +1,13 @@
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "safetyhook",
+    deps = ["@zydis"],
+    srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.hpp"]),
+    copts = [
+        "/std:c++latest",
+        "/W0",
+    ],
+    strip_include_prefix = "include",
+)

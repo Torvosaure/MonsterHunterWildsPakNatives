@@ -2,21 +2,21 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 
 new_git_repository(
     name = "bddisasm",
-    build_file = "//deps:bddisasm.BUILD.bazel",
+    build_file = "//third_party:bddisasm.BUILD.bazel",
     remote = "https://github.com/bitdefender/bddisasm.git",
     tag = "v1.37.0",
 )
 
 new_git_repository(
     name = "kananlib",
-    build_file = "//deps:kananlib.BUILD.bazel",
+    build_file = "//third_party:kananlib.BUILD.bazel",
     commit = "b0323a0b005fc9e3944e0ea36dcc98eda4b84eea",
     remote = "https://github.com/cursey/kananlib.git",
 )
 
 new_git_repository(
     name = "minhook",
-    build_file = "//deps:minhook.BUILD.bazel",
+    build_file = "//third_party:minhook.BUILD.bazel",
     commit = "98b74f1fc12d00313d91f10450e5b3e0036175e3",
     remote = "https://github.com/TsudaKageyu/minhook.git",
 )
@@ -24,6 +24,21 @@ new_git_repository(
 new_git_repository(
     name = "reframework",
     branch = "master",
-    build_file = "//deps:reframework.BUILD.bazel",
+    build_file = "//third_party:reframework.BUILD.bazel",
     remote = "https://github.com/praydog/REFramework.git",
+)
+
+new_git_repository(
+    name = "safetyhook",
+    build_file = "//third_party:safetyhook.BUILD.bazel",
+    commit = "44200343bf803f78862426e301e9382e5b28ea2c",
+    remote = "https://github.com/cursey/safetyhook.git",
+)
+
+new_git_repository(
+    name = "zydis",
+    build_file = "//third_party:zydis.BUILD.bazel",
+    init_submodules = True,
+    remote = "https://github.com/zyantific/zydis.git",
+    tag = "v4.0.0",
 )

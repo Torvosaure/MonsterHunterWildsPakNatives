@@ -37,6 +37,7 @@ cc_library(
     deps = [
         "@kananlib",
         "@minhook",
+        "@safetyhook",
         "@spdlog",
     ],
     srcs = glob(["shared/utility/**/*.cpp"]),
