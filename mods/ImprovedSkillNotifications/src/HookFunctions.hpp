@@ -91,6 +91,6 @@ class HookFunctions
         Pl_EquipSkill_230 = 1ULL << 0x12, // 142 Pl_EquipSkill_230 天衣無崩 Heaven-Sent
     };
 
-    Utils::AtomicBitset<OldCondition> m_old_condition{0};
+    Utils::AtomicBitset<OldCondition, uint16_t> m_old_condition{0};
     std::atomic<float> m_pre_damage{0.0F};
 };

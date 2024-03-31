@@ -1,6 +1,5 @@
 #include "HookManager.hpp"
 
-#include <cstdint>
 #include <reframework/API.hpp>
 
 void HookManager::initialize()
