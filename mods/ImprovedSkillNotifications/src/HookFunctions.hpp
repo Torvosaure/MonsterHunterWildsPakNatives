@@ -1,7 +1,5 @@
 #pragma once
 
-#include <bitset>
-
 #include <sdk/RETypeDB.hpp>
 
 #include "Utils/Utils.hpp"
@@ -76,7 +74,6 @@ class HookFunctions
         Pl_KitchenSkill_002,
         Pl_KitchenSkill_051,
         Pl_KitchenSkill_054,
-        Count,
     };
 
     enum class PlayerCondition : uint64_t
@@ -94,8 +91,6 @@ class HookFunctions
         Pl_EquipSkill_230 = 1ULL << 0x12, // 142 Pl_EquipSkill_230 天衣無崩 Heaven-Sent
     };
 
-    ::REManagedObject *m_player_manager{};
-
-    std::bitset<Utils::enum_cast(OldCondition::Count)> m_old_condition{};
-    float m_pre_damage{};
+    Utils::AtomicBitset<OldCondition> m_old_condition{0};
+    std::atomic<float> m_pre_damage{0.0F};
 };
