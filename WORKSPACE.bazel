@@ -10,7 +10,7 @@ new_git_repository(
 new_git_repository(
     name = "kananlib",
     build_file = "//third_party:kananlib.BUILD.bazel",
-    commit = "b0323a0b005fc9e3944e0ea36dcc98eda4b84eea",
+    commit = "0bf5781a38a857f0acea3935425d50a1a5a34d3a",
     remote = "https://github.com/cursey/kananlib.git",
 )
 
@@ -31,7 +31,7 @@ new_git_repository(
 new_git_repository(
     name = "safetyhook",
     build_file = "//third_party:safetyhook.BUILD.bazel",
-    commit = "44200343bf803f78862426e301e9382e5b28ea2c",
+    commit = "4faf792c2d66cbf06f2c942561d053aafd79006b",
     remote = "https://github.com/cursey/safetyhook.git",
 )
 
