@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "f9ec1e983d81d7c69be5c09a0b8683912cbe66cf1c2e08f6a478c7a3de43a086",
+  "moduleFileHash": "1ee48451ac3217ca33a59109df237e7a236f1bdce812d2b20849082832e9cb14",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -1271,7 +1271,7 @@
     },
     "@@rules_java~//java:extensions.bzl%toolchains": {
       "general": {
-        "bzlTransitiveDigest": "tJHbmWnq7m+9eUBnUdv7jZziQ26FmcGL9C5/hU3Q9UQ=",
+        "bzlTransitiveDigest": "0N5b5J9fUzo0sgvH4F3kIEaeXunz4Wy2/UtSFV/eXUY=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -1776,7 +1776,7 @@
     },
     "@@rules_python~//python/extensions:python.bzl%python": {
       "general": {
-        "bzlTransitiveDigest": "mh86AsACwkNSoqpB2hzQpecNE0j+gb57EL0ZjxD3ZRE=",
+        "bzlTransitiveDigest": "IMdPzfoNLlz06lDUvDoajmn/Uz0yQDmK1+WG+jfMMNE=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},

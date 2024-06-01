@@ -3,14 +3,14 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 new_git_repository(
     name = "bddisasm",
     build_file = "//third_party:bddisasm.BUILD.bazel",
+    commit = "70db095765ab2066dd88dfb7bbcc42259ed167c5",
     remote = "https://github.com/bitdefender/bddisasm.git",
-    tag = "v1.37.0",
 )
 
 new_git_repository(
     name = "kananlib",
     build_file = "//third_party:kananlib.BUILD.bazel",
-    commit = "0bf5781a38a857f0acea3935425d50a1a5a34d3a",
+    commit = "cca66766b139994f478ea48befd67a179b7310ab",
     remote = "https://github.com/cursey/kananlib.git",
 )
 
@@ -31,14 +31,14 @@ new_git_repository(
 new_git_repository(
     name = "safetyhook",
     build_file = "//third_party:safetyhook.BUILD.bazel",
-    commit = "4faf792c2d66cbf06f2c942561d053aafd79006b",
+    commit = "b046e123dc69821f2c375161e0adef3c6d9c9db4",
     remote = "https://github.com/cursey/safetyhook.git",
 )
 
 new_git_repository(
     name = "zydis",
     build_file = "//third_party:zydis.BUILD.bazel",
+    commit = "1ba75aeefae37094c7be8eba07ff81d4fe0f1f20",
     init_submodules = True,
     remote = "https://github.com/zyantific/zydis.git",
-    tag = "v4.0.0",
 )

@@ -20,7 +20,8 @@
     },
     "diagnostics": {
         "disable": [
-            "name-style-check"
+            "name-style-check",
+            "spell-check"
         ],
         "disableScheme": [
             "git"
