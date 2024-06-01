@@ -57,6 +57,9 @@ void Namespaces::mhrise::initialize()
          "TOUR", snow::quest::QuestType::TOUR,
          "HYAKURYU", snow::quest::QuestType::HYAKURYU);
 
+    init("snow.player.PlayerIndex",
+         "None", snow::player::PlayerIndex::None);
+
     init("snow.player.PlayerBase.PlBaseActionFlag",
          "IsWholeBodyTime", snow::player::PlayerBase::PlBaseActionFlag::IsWholeBodyTime,
          "EquipSkill227_TriggerAttack", snow::player::PlayerBase::PlBaseActionFlag::EquipSkill227_TriggerAttack,

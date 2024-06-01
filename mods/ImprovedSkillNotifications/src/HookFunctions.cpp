@@ -18,8 +18,14 @@ void HookFunctions::off_11027(sdk::VMContext * /* vmctx */, ::REManagedObject *o
 void HookFunctions::update_old_205404(sdk::VMContext *vmctx, ::REManagedObject *obj)
 {
     auto *const player_manager = get_player_manager();
-    auto *const player_data_array = mhrise::snow::player::PlayerManager::PlayerData_b->get_data(player_manager);
     const auto master_player_id = mhrise::snow::player::PlayerManager::getMasterPlayerID208468->call(vmctx, player_manager);
+
+    if (master_player_id == mhrise::snow::player::PlayerIndex::None->get_data())
+    {
+        return;
+    }
+
+    auto *const player_data_array = mhrise::snow::player::PlayerManager::PlayerData_b->get_data(player_manager);
     auto *const player_data = mhrise::snow::player::PlayerData_Array::Get208192->call(vmctx, player_data_array, master_player_id);
 
     if (player_data == nullptr || obj != mhrise::snow::player::PlayerData::_condition->get_data(player_data))

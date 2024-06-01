@@ -35,6 +35,11 @@ namespace Namespaces
             inline sdk::REFieldEx<uint32_t, true> *HYAKURYU;
         }
 
+        namespace snow::player::PlayerIndex
+        {
+            inline sdk::REFieldEx<uint8_t, true> *None;
+        }
+
         namespace snow::player::PlayerBase::PlBaseActionFlag
         {
             inline sdk::RETypeDefinition *RETypeDefinition;
