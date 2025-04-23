@@ -18,7 +18,7 @@ pub struct Pak {}
 
 impl Pak {
     const NATIVES: &'static str = "natives";
-    const OUT_FILE: &'static str = "re_chunk_000.pak.patch_002.pak";
+    const OUT_FILE: &'static str = "re_chunk_000.pak.sub_000.pak.patch_004.pak";
 
     pub fn create() -> Result<(), Box<dyn Error>> {
         let exe_path = env::current_exe()?;
