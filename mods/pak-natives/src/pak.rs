@@ -2,6 +2,7 @@ use crate::{
     structure::{file_entry::FileEntry, header::Header, magic::Magic, CompressType},
     utils::Utils,
 };
+use configparser::ini::Ini;
 use murmurhash3::murmurhash3_x86_32;
 use path_slash::PathExt;
 use std::{
@@ -18,16 +19,18 @@ pub struct Pak {}
 
 impl Pak {
     const NATIVES: &'static str = "natives";
-    const OUT_FILE: &'static str = "re_chunk_000.pak.sub_000.pak.patch_004.pak";
-
+    
     pub fn create() -> Result<(), Box<dyn Error>> {
+        let mut config = Ini::new()
+        let map = config.load("pakNativesConfig.ini");
+        let out_file_pakname = config.get("paknatives", "pakname").unwrap();
         let exe_path = env::current_exe()?;
         let exe_dir = exe_path.parent().unwrap(); // As long as the path to the executable is returned, the parent directory exists.
 
         let natives_dir = exe_dir.join(Self::NATIVES);
 
         if natives_dir.exists() {
-            let mut out_file = fs::File::create(exe_dir.join(Self::OUT_FILE))?;
+            let mut out_file = fs::File::create(exe_dir.join(out_file_pakname))?;
 
             let files: Vec<PathBuf> = WalkDir::new(natives_dir)
                 .into_iter()
