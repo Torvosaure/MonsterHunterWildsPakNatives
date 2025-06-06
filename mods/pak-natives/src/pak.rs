@@ -28,7 +28,9 @@ impl Pak {
         let exe_dir = exe_path.parent().unwrap(); // As long as the path to the executable is returned, the parent directory exists.
 
         let natives_dir = exe_dir.join(Self::NATIVES);
-
+        if !natives_dir.exists() {
+            fs::create_dir(exe_dir.join(Self::NATIVES))?;
+        }
         if natives_dir.exists() {
             let mut out_file = fs::File::create(exe_dir.join(out_file_pakname))?;
 
